@@ -1,0 +1,16 @@
+Title=Janelia_10Kx40Kx3K_dataset
+
+UsePackedVolume=2
+
+PackedVolumeForm0=Q:\data\J40K_m0\m0_L%d.YUV311
+
+PackedVolumeForm1=R:\data\J40K_m1\m1_L%d.YUV311
+
+VolumeNx=79
+VolumeNy=308
+VolumeNz=25
+VolumeW=10112
+VolumeH=39424
+VolumeD=3200
+
+PreZScale=1000000

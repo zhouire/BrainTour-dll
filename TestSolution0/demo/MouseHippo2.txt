@@ -1,0 +1,15 @@
+UsePackedVolume=2
+PackedVolumeForm0=Q:\data\MouseHippo\m0_L%d.YUV311
+PackedVolumeForm1=R:\data\MouseHippo\m1_L%d.YUV311
+VolumeNx=100
+
+VolumeNy=184
+
+VolumeNz=6
+
+VolumeW=12800
+
+VolumeH=23552
+
+VolumeD=768
+PreZScale=3210000

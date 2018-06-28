@@ -1,0 +1,81 @@
+■ 20180329
+
+OculusCudaTest.exe
+
+- Controller (which handles Touch controllers etc.) handlers can now be delegeted to a DLL.
+
+- VRUserDll is a sample for the controller DLL.
+
+- added a option, "CameraSock", for camera-pose straming:
+
+sample setting for server (source. ex. OculusCudaTest):
+	CameraSock=tcp://*:5555
+
+sample setting for client (sink. ex. TestBrainTour):
+	CameraSock=tcp://localhost:5555
+
+- added a option, "ControllerType", to specify initial controller type.
+
+sample setting:
+	ControllerType=2 // ... fly thorough controller.
+	ControllerType=3 // ... DLL controller.
+
+
+TestBrainTour.exe:
+
+- Now camera-pose can be controlled via socket.
+
+sample setting:
+	CameraSock=tcp://localhost:5555
+
+- procjection matrix in the stream is not used.
+
+
+TestZMQ:
+
+- samples for camera-pose socket server and client.
+- the client receives camera-pose from OculusCudaTest and dump poses to file.
+- the server load the file and stream out poses.
+
+
+Note:
+
+Direct camera-pose streaming from OculusCudaTest to TestBrainTour is not tested.
+I've tested:
+- OculusCudaTest -> TestZMQClient (dump to file) and
+- TestZMQServer (load from file) -> TestBrainTour.
+
+
+■ 20180206
+
+OculusCudaTest.exe
+
+- "R" 視点リセット
+- "B" 背景切り替え
+- Title=XXX ... ウインドウタイトル変更（空白が使えないので注意）
+
+Demo/demo_resources directory
+- ショートカットを相対パスに変更
+- アイコンは絶対パスなので変更必要
+- 設定ファイル更新
+- bat更新
+
+メモリが少ないと Janelia datasetが遅い。デモ機に併せて設定変更が必要か？
+
+
+■ 20180201
+
+- Run 4K (with mouse) のショートカット、bat, アイコンを追加。
+　Touch コントローラーがうまく動かないとき用。
+
+- データセット定義ファイル
+  - Janeria_40K.txt, Format=Mod2 (2SSD対応)
+  - MouseHippo.txt, Format=Mod1 (1SSD用)
+  - Grace_Fly.txt, Format=Mod2 (2SSD用)
+
+Mod2 の Grace_Fly を作る手段は MIT にリリースしていないので、
+データを送るか、Mod1用のファイルを作るかする必要あります。MouseHippoを参考にしてください。
+
+- 左Touch がきかない問題
+  - ヘッドセットあり時に古いコントローラークラスが使われていました。修正
+  - Headset がずっと静止していると、トラッキングが聞かなくなるので、たまに触る必要あります・・・
