@@ -1,10 +1,240 @@
 #pragma once
 
-#include "Win32_GLAppUtil.h";
-#include "AvatarManager.h";
+//#include "Win32_GLAppUtil.h";
+//#include "AvatarManager.h";
+#define GLM_ENABLE_EXPERIMENTAL
+
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
+
 #include <vector>;
 #include <map>;
 
+
+using namespace OVR;
+
+#ifndef VALIDATE
+#define VALIDATE(x, msg) if (!(x)) { MessageBoxA(NULL, (msg), "OculusRoomTiny", MB_ICONERROR | MB_OK); exit(-1); }
+#endif
+
+#ifndef OVR_DEBUG_LOG
+#define OVR_DEBUG_LOG(x)
+#endif
+
+
+
+//---------------------------------------------------------------------------------------
+struct DepthBuffer
+{
+	GLuint        texId;
+
+	DepthBuffer(Sizei size)
+	{
+		glGenTextures(1, &texId);
+		glBindTexture(GL_TEXTURE_2D, texId);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		GLenum internalFormat = GL_DEPTH_COMPONENT24;
+		GLenum type = GL_UNSIGNED_INT;
+		if (GLE_ARB_depth_buffer_float)
+		{
+			internalFormat = GL_DEPTH_COMPONENT32F;
+			type = GL_FLOAT;
+		}
+
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.w, size.h, 0, GL_DEPTH_COMPONENT, type, NULL);
+	}
+	~DepthBuffer()
+	{
+		if (texId)
+		{
+			glDeleteTextures(1, &texId);
+			texId = 0;
+		}
+	}
+};
+
+//--------------------------------------------------------------------------
+struct TextureBuffer
+{
+	GLuint              texId;
+	GLuint              fboId;
+	Sizei               texSize;
+
+	TextureBuffer(bool rendertarget, Sizei size, int mipLevels, unsigned char * data) :
+		texId(0),
+		fboId(0),
+		texSize(0, 0)
+	{
+		texSize = size;
+
+		glGenTextures(1, &texId);
+		glBindTexture(GL_TEXTURE_2D, texId);
+
+		if (rendertarget)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texSize.w, texSize.h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+		if (mipLevels > 1)
+		{
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+
+		if (rendertarget)
+		{
+			glGenFramebuffers(1, &fboId);
+		}
+	}
+
+	~TextureBuffer()
+	{
+		if (texId)
+		{
+			glDeleteTextures(1, &texId);
+			texId = 0;
+		}
+		if (fboId)
+		{
+			glDeleteFramebuffers(1, &fboId);
+			fboId = 0;
+		}
+	}
+
+	Sizei GetSize() const
+	{
+		return texSize;
+	}
+
+	void SetAndClearRenderSurface(DepthBuffer* dbuffer)
+	{
+		VALIDATE(fboId, "Texture wasn't created as a render target");
+
+		GLuint curTexId = texId;
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, curTexId, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, dbuffer->texId, 0);
+
+		glViewport(0, 0, texSize.w, texSize.h);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_FRAMEBUFFER_SRGB);
+	}
+
+	void UnsetRenderSurface()
+	{
+		VALIDATE(fboId, "Texture wasn't created as a render target");
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+	}
+};
+
+//------------------------------------------------------------------------------
+struct ShaderFill
+{
+	GLuint            program;
+	TextureBuffer   * texture;
+
+	ShaderFill(GLuint vertexShader, GLuint pixelShader, TextureBuffer* _texture)
+	{
+		texture = _texture;
+
+		program = glCreateProgram();
+
+		glAttachShader(program, vertexShader);
+		glAttachShader(program, pixelShader);
+
+		glLinkProgram(program);
+
+		glDetachShader(program, vertexShader);
+		glDetachShader(program, pixelShader);
+
+		GLint r;
+		glGetProgramiv(program, GL_LINK_STATUS, &r);
+		if (!r)
+		{
+			GLchar msg[1024];
+			glGetProgramInfoLog(program, sizeof(msg), 0, msg);
+			OVR_DEBUG_LOG(("Linking shaders failed: %s\n", msg));
+		}
+	}
+
+	~ShaderFill()
+	{
+		if (program)
+		{
+			glDeleteProgram(program);
+			program = 0;
+		}
+		if (texture)
+		{
+			delete texture;
+			texture = nullptr;
+		}
+	}
+};
+
+//----------------------------------------------------------------
+struct VertexBuffer
+{
+	GLuint    buffer;
+
+	VertexBuffer(void* vertices, size_t size)
+	{
+		glGenBuffers(1, &buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+	}
+	~VertexBuffer()
+	{
+		if (buffer)
+		{
+			glDeleteBuffers(1, &buffer);
+			buffer = 0;
+		}
+	}
+};
+
+//----------------------------------------------------------------
+struct IndexBuffer
+{
+	GLuint    buffer;
+
+	IndexBuffer(void* indices, size_t size)
+	{
+		glGenBuffers(1, &buffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+	}
+	~IndexBuffer()
+	{
+		if (buffer)
+		{
+			glDeleteBuffers(1, &buffer);
+			buffer = 0;
+		}
+	}
+};
+
+
+//-------------------------------------------------------
 struct Model
 {
 	struct Vertex
@@ -789,7 +1019,7 @@ struct Scene
 		}
 	}
 
-
+/*
 	void ControllerActions(ovrSession session)
 	{
 		ovrInputState touchState;
@@ -831,12 +1061,7 @@ struct Scene
 		static bool canCreateMarker = true;
 		static bool drawingStraightLine = false;
 		static bool drawingCurvedLine = false;
-		/*
-		//forward/backwards movement
-		if (inputStateRight.touchMask == ovrAvatarTouch_Joystick) {
 
-		}
-		*/
 
 		//if we are actively drawing a line
 		if (lineCore.size() > 0) {
@@ -858,14 +1083,6 @@ struct Scene
 			
 			//if we are drawing a curved line
 			else if (drawingCurvedLine) {
-				//only update lineCore if the distance from the last lineCore point is over 0.005
-				//commented out bc the typical behavior looks sufficiently distributed
-				/*
-				if (trans_rightP.Distance(lineCore[lineCore.size() - 1]) >= 0.005) {
-					lineCore.push_back(trans_rightP);
-					allHandQ.push_back(rightQ);
-				}
-				*/
 
 				lineCore.push_back(trans_rightP);
 				allHandQ.push_back(rightQ);
@@ -961,6 +1178,7 @@ struct Scene
 
 
 	}
+	*/
 
 	//move all temp models to the current hand position
 	void moveTempModels(ovrSession session) 
