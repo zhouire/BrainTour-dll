@@ -14,4 +14,4 @@ VolumeH=23552
 VolumeD=768
 PreZScale=3210000
 ControllerType=3
-AvatarShaderPath=C:\bandy\visualization\vr\release_20180626\TestSolution0\Shaders\
+AvatarShaderPath=C:\Users\zhoui\Documents\8keXm\BrainTour-dll\TestSolution0\Shaders\
