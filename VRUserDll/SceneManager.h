@@ -1245,12 +1245,13 @@ struct Scene
 
 	int numModels = Models.size();
 
-	Scene() : numModels(0) {}
-	Scene(bool includeIntensiveGPUobject) :
+	//Scene() : numModels(0) {}
+	Scene() :
 		numModels(0)
 	{
 		CreateTextures();
 	}
+
 	void Release()
 	{
 		while (numModels-- > 0)
@@ -1260,4 +1261,4 @@ struct Scene
 	{
 		Release();
 	}
-};
+}; 
