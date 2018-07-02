@@ -3,9 +3,9 @@ c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1246): war
 c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1090): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
      Creating library C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.lib and object C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.exp
   Generating code
-  26 of 742 functions ( 3.5%) were compiled, the rest were copied from previous compilation.
+  25 of 741 functions ( 3.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    6 functions had inline decision re-evaluated but remain unchanged
+    10 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   VRUserDll.vcxproj -> C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.dll
   VRUserDll.vcxproj -> C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.pdb (Full PDB)

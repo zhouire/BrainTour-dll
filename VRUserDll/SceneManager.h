@@ -732,10 +732,10 @@ struct Scene
 	{
 		Vector3f newMarkerPos;
 
-		glm::vec4 u(0, 0, 0.1f, 1.0f);
+		glm::vec4 u(0, 0, -0.1f, 1.0f);
 		glm::vec4 translate = handQuat * u;
 		newMarkerPos.x = handPos.x + translate.x;
-		newMarkerPos.y = handPos.y - translate.y;
+		newMarkerPos.y = handPos.y + translate.y;
 		newMarkerPos.z = handPos.z + translate.z;
 
 		return newMarkerPos;

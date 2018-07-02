@@ -206,10 +206,38 @@ namespace VRUserProxy {
 		}
 		*/
 
+
 		//Controller actions influencing the scene (A,B,X,Y)
 		roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view, true);
 
+		//R Thumb Pressed
 
+		if (inputState.Buttons & ovrButton_RThumb) {
+			// Zoom
+			DPrintf(" StickZoom\n");
+			float speed = -0.8f;
+			float forward = inputState.Thumbstick[ovrHand_Right].y*speed;
+
+			Vector3f movement = v.Inverted().Transform(Vector3f(0.0f, 0.0f, forward));
+			Position[0] += movement.x;
+			Position[1] += movement.y;
+			Position[2] += movement.z;
+		}
+
+		//R Thumb stick
+		else {
+			DPrintf(" RThumb\n");
+			// Translation
+			float speed = 0.1f;
+			float mx = inputState.Thumbstick[ovrHand_Right].x*speed;
+			float my = inputState.Thumbstick[ovrHand_Right].y*speed;
+			Vector3f movement = v.Inverted().Transform(Vector3f(mx, my, 0.f));
+			Position[0] += movement.x;
+			Position[1] += movement.y;
+			Position[2] += movement.z;
+		}
+
+		/*
 		// R Thumb
 		if (inputState.Buttons & ovrButton_RThumb) {
 			DPrintf(" RThumb\n");
@@ -238,6 +266,10 @@ namespace VRUserProxy {
 			Position[1] += p.y;
 			Position[2] += p.z;
 		}
+		*/
+
+
+
 		// R Hand Trigger for MotionTracking
 		if (inputState.HandTrigger[ovrHand_Right] > 0.1f) {
 			DPrintf(" R Tracking\n");
