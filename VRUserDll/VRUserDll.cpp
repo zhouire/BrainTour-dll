@@ -56,8 +56,10 @@ static void drawCube(float size)
 
 
 
-static std::vector<OVR::Vector3f> worldMarkers;
-static std::vector<OVR::Vector3f> volumeMarkers;
+//static std::vector<OVR::Vector3f> worldMarkers;
+//static std::vector<OVR::Vector3f> volumeMarkers;
+
+static Scene * roomScene = new Scene(false);
 
 
 namespace VRUserProxy {
@@ -65,8 +67,9 @@ namespace VRUserProxy {
 	VRUSERDLL_API int OnInit(APIBundle *p, OVR::GLEContext *context) {
 		proxy = p;
 		OVR::GLEContext::SetCurrentContext(context);
-		worldMarkers.clear();
-		volumeMarkers.clear();
+		//worldMarkers.clear();
+		//volumeMarkers.clear();
+
 		return 0;
 	}
 	bool OnDown(unsigned int last, unsigned int current, unsigned int mask) {
@@ -103,6 +106,10 @@ namespace VRUserProxy {
 		v.M[3][0] = 0.f;
 		v.M[3][1] = 0.f;
 		v.M[3][2] = 0.f;
+
+		//move all temp markers and remove all temp lines before any actions
+		roomScene->moveTempModels(handPoses[ovrHand_Right], gHeadPos, gHeadOrientation, view);
+
 
 		// left trigger
 		if (inputState.IndexTrigger[ovrHand_Left] > 0.5f) {
@@ -149,13 +156,14 @@ namespace VRUserProxy {
 			gPose = q0 * q1.Inverse() * gPose;
 		}
 
+		
 		if (OnDown(lastButtons, inputState.Buttons, ovrButton_X))
 		{
 			// Handle A button down
 			ClipMode = (ClipMode + 1) % 4;
 		}
-
-
+		
+		/*
 		// Foward/Back
 		if (inputState.IndexTrigger[ovrHand_Right] > 0.1f) {
 			DPrintf(" FW\n");
@@ -190,6 +198,11 @@ namespace VRUserProxy {
 			OVR::Matrix4f rot(gPose);
 			volumeMarkers.push_back(rot.Inverted().Transform(view.Inverted().Transform(pos)));
 		}
+		*/
+
+		//Controller actions influencing the scene (A,B,X,Y)
+		roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view, true);
+
 
 		// R Thumb
 		if (inputState.Buttons & ovrButton_RThumb) {
@@ -259,7 +272,7 @@ namespace VRUserProxy {
 	}
 
 	VRUSERDLL_API void DrawPreVolumeRendering(OVR::Matrix4f& view, OVR::Matrix4f& proj, OVR::Quatf& gPose)
-	{
+	{	
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadTransposeMatrixf(&proj.M[0][0]);
@@ -319,7 +332,7 @@ namespace VRUserProxy {
 				glPopMatrix();
 			}
 		}
-
+		/*
 		glColor3f(0.0f, 0.0f, 1.0f);
 		std::vector<OVR::Vector3f>::iterator it;
 		for (it = worldMarkers.begin(); it != worldMarkers.end(); it++)
@@ -329,6 +342,11 @@ namespace VRUserProxy {
 			drawCube(0.1f);
 			glPopMatrix();
 		}
+		*/
+
+		//render all models in scene (markers, lines, etc.)
+		roomScene->Render(view, proj);
+
 
 		OVR::Matrix4f rot(gPose);
 		glMultTransposeMatrixf(&rot.M[0][0]);
@@ -344,6 +362,7 @@ namespace VRUserProxy {
 			}
 		}
 
+		/*
 		glColor3f(1.0f, 0.0f, 1.0f);
 		for (it = volumeMarkers.begin(); it != volumeMarkers.end(); it++)
 		{
@@ -352,6 +371,7 @@ namespace VRUserProxy {
 			drawCube(0.1f);
 			glPopMatrix();
 		}
+		*/
 
 		glPopMatrix();
 
