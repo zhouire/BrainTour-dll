@@ -4,6 +4,7 @@
 #include "stdafx.h"
 
 #include "VRUserDll.hpp"
+#include "SceneManager.h"
 #include <algorithm>
 #include <vector>
 
@@ -115,6 +116,7 @@ namespace VRUserProxy {
 		if (inputState.IndexTrigger[ovrHand_Left] > 0.5f) {
 			RoiMode = 1;
 		}
+
 		// Left Stick is for Volume Clip
 		if (ClipMode) {
 			if (inputState.Buttons & ovrButton_LThumb) {

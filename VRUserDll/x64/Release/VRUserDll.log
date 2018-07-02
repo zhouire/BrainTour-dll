@@ -1,4 +1,13 @@
-﻿     Creating library E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.lib and object E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.exp
+﻿  stdafx.cpp
+  CAPI_GLE.cpp
+  dllmain.cpp
+  VRUserDll.cpp
+e:\classes\2018 summer\urop\braintour-dll\vruserdll\SceneManager.h(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+e:\classes\2018 summer\urop\braintour-dll\vruserdll\SceneManager.h(11): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+e:\classes\2018 summer\urop\braintour-dll\vruserdll\SceneManager.h(1245): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\classes\2018 summer\urop\braintour-dll\vruserdll\SceneManager.h(873): warning C4101: 'dist': unreferenced local variable
+e:\classes\2018 summer\urop\braintour-dll\vruserdll\SceneManager.h(1089): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+     Creating library E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.lib and object E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.exp
   Generating code
   All 743 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code

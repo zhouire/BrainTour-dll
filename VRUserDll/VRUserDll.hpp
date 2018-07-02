@@ -11,7 +11,7 @@
 #include "Extras/OVR_Math.h"
 #include "OVR_CAPI_GL.h"
 
-#include "SceneManager.h"
+//#include "SceneManager.h"
 
 
 namespace VRUserProxy {
