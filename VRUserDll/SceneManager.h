@@ -1032,16 +1032,20 @@ struct Scene
 	void ControllerActions(ovrPosef leftPose, ovrPosef rightPose, Quatf &gPose, Vector3f &gHeadPos, 
 		ovrInputState &inputState, Matrix4f &gHeadOrientation, OVR::Matrix4f& view, bool worldMode)
 	{
-		Vector3f ovr_rightP;
+		Vector3f trans_rightP;
 		glm::quat rightQ;
 
 		//pose and orientation variables for world mode
 		if (worldMode) {
-			Vector3f pos = Vector3f(rightPose.Position);
-			pos = gHeadOrientation.Inverted().Transform(pos - gHeadPos);
-			ovr_rightP = view.Inverted().Transform(pos);
-
 			rightQ = _glmFromOvrQuat(rightPose.Orientation);
+			
+			Vector3f pos = Vector3f(rightPose.Position);
+			Vector3f new_pos = MarkerTranslateToPointer(pos, rightQ);
+			new_pos = gHeadOrientation.Inverted().Transform(new_pos - gHeadPos);
+			//ovr_rightP = view.Inverted().Transform(pos);
+			trans_rightP = view.Inverted().Transform(new_pos);
+
+			
 		}
 
 		//pose and orientation variables for volume mode
@@ -1049,13 +1053,14 @@ struct Scene
 			Vector3f pos = Vector3f(rightPose.Position);
 			pos = gHeadOrientation.Inverted().Transform(pos - gHeadPos);
 			OVR::Matrix4f rot(gPose);
-			ovr_rightP = rot.Inverted().Transform(view.Inverted().Transform(pos));
+			//ovr_rightP = rot.Inverted().Transform(view.Inverted().Transform(pos));
+			trans_rightP = rot.Inverted().Transform(view.Inverted().Transform(pos));
 
 			//not sure if this is correct; might have to do some transforms with the volume rot
 			rightQ = _glmFromOvrQuat(rightPose.Orientation);
 		}
 
-		Vector3f trans_rightP = MarkerTranslateToPointer(ovr_rightP, rightQ);
+		//Vector3f trans_rightP = MarkerTranslateToPointer(ovr_rightP, rightQ);
 
 		//should not be allowed to simply hold button A and continuously make a stream of models; let go and press again
 		static bool canCreateMarker = true;
@@ -1205,15 +1210,14 @@ struct Scene
 	//always in world mode
 	void moveTempModels(ovrPosef rightPose, Vector3f &gHeadPos, Matrix4f &gHeadOrientation, Matrix4f& view)
 	{
-		Vector3f pos = Vector3f(rightPose.Position);
-		pos = gHeadOrientation.Inverted().Transform(pos - gHeadPos);
-		Vector3f ovr_rightP = view.Inverted().Transform(pos);
-
 		glm::quat rightQ = _glmFromOvrQuat(rightPose.Orientation);
-		
-		
-		
-		Vector3f trans_rightP = MarkerTranslateToPointer(ovr_rightP, rightQ);
+
+		Vector3f pos = Vector3f(rightPose.Position);
+		Vector3f new_pos = MarkerTranslateToPointer(pos, rightQ);
+		new_pos = gHeadOrientation.Inverted().Transform(new_pos - gHeadPos);
+		Vector3f trans_rightP = view.Inverted().Transform(new_pos);
+
+
 		for (auto const &m : tempModels) {
 			auto model = m.first;
 			model->Pos = trans_rightP;
