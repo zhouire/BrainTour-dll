@@ -7,8 +7,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include <vector>;
-#include <map>;
+#include <vector>
+#include <map>
 
 
 using namespace OVR;
@@ -581,7 +581,10 @@ struct Model
 
 
 
-
+struct Scenes
+{
+	std::vector<Vector3f> Core;
+};
 
 
 
@@ -870,8 +873,6 @@ struct Scene
 	*/
 
 	float DistPointToLineSeg(Vector3f point, std::vector<Vector3f> lineSeg) {
-		float dist;
-
 		//vector from start of line seg to point
 		Vector3f v = point - lineSeg[0];
 		float lineSegLen = ((lineSeg[1] - lineSeg[0]).Length());

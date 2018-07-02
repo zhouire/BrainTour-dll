@@ -5,6 +5,7 @@
 
 #include "VRUserDll.hpp"
 #include "SceneManager.h"
+
 #include <algorithm>
 #include <vector>
 
@@ -60,7 +61,9 @@ static void drawCube(float size)
 //static std::vector<OVR::Vector3f> worldMarkers;
 //static std::vector<OVR::Vector3f> volumeMarkers;
 
-static Scene * roomScene = new Scene(false);
+
+
+static Scene * roomScene = new Scene();
 
 
 namespace VRUserProxy {
