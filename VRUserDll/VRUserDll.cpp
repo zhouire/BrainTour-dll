@@ -63,7 +63,7 @@ static void drawCube(float size)
 
 
 
-static Scene * roomScene = new Scene();
+static Scene * roomScene = nullptr;
 
 
 namespace VRUserProxy {
@@ -73,6 +73,7 @@ namespace VRUserProxy {
 		OVR::GLEContext::SetCurrentContext(context);
 		//worldMarkers.clear();
 		//volumeMarkers.clear();
+		roomScene = new Scene();
 
 		return 0;
 	}
