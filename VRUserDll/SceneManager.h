@@ -605,7 +605,7 @@ struct Scene
 
 	//volume rendering maps
 	std::map<Model*, int> volumeModels;
-	std::map<Model*, int> tempVolumeModels;
+	//std::map<Model*, int> tempVolumeModels;
 	std::map<Model*, int> tempVolumeLines;
 
 	float MARKER_SIZE = 0.02f;
@@ -618,6 +618,8 @@ struct Scene
 	std::string targetModelType;
 	//targetMode is true if world, false if volume
 	bool targetMode;
+
+	bool worldMode = true;
 
 	//for line drawing functionality
 	std::vector<Vector3f> lineCore;
@@ -644,10 +646,11 @@ struct Scene
 		}
 	}
 
-	void AddTemp(Model * n, bool worldMode)
+	void AddTemp(Model * n)
 	{
 		RemoveModel(n);
 		//removableMarkers.erase(n);
+		/*
 		if (worldMode) {
 			tempModels.insert(std::pair<Model*, int>(n, 1));
 		}
@@ -655,9 +658,11 @@ struct Scene
 		else {
 			tempVolumeModels.insert(std::pair<Model*, int>(n, 1));
 		}
+		*/
+		tempModels.insert(std::pair<Model*, int>(n, 1));
 	}
 
-	void AddTempLine(Model * n, bool worldMode)
+	void AddTempLine(Model * n)
 	{
 		if (worldMode) {
 			tempLines.insert(std::pair<Model *, int>(n, 1));
@@ -740,10 +745,11 @@ struct Scene
 		for (auto const m : volumeModels) {
 			m.first->Render(view, proj, rot);
 		}
-
+		/*
 		for (auto const m : tempVolumeModels) {
 			m.first->Render(view, proj, rot);
 		}
+		*/
 
 		for (auto const m : tempVolumeLines) {
 			m.first->Render(view, proj, rot);
@@ -927,25 +933,46 @@ struct Scene
 		}
 	}
 
-	Model * ColorRemovableModel(Vector3f rightHandPos, bool worldMode)
+	Model * ColorRemovableModel(Vector3f rightHandPos, Vector3f otherModePos)
 	{
+		Vector3f worldP;
+		Vector3f volumeP;
+		Vector3f rightP = volumeP;
+
+		if (worldMode) {
+			worldP = rightHandPos;
+			volumeP = otherModePos;
+		}
+
+		else {
+			worldP = otherModePos;
+			volumeP = rightHandPos;
+		}
+
+		//for world mode objects, calc dist using worldP
 		//make sure there is currently no targetModel when ColorRemovableModel is called
 		if (!targetModel) {
 			for (auto const m : removableMarkers) {
 				Model *model = m.first;
 				Vector3f modelPos = (*model).Pos;
-				//Vector3f modelPos(0, 0, 0);
-				if (rightHandPos.Distance(modelPos) <= TARGET_SIZE) {
+				//true if world, false if volume
+				if (volumeModels.count(model) == 0) {
+					rightP = worldP;
+				}
+
+				if (rightP.Distance(modelPos) <= TARGET_SIZE) {
+					//true if world, false if volume; needed to make a new red marker
+					targetMode = (volumeModels.count(model) == 0);
+
 					//dark red: 	0xFF800000
-					Model *newMarker = CreateMarker(MARKER_SIZE, 0xFF811111, modelPos, worldMode);
+					Model *newMarker = CreateMarker(MARKER_SIZE, 0xFF811111, modelPos, targetMode);
 					//removing the old green model; replaced by new red one
 					RemoveModel(model);
 					//removableMarkers.erase(model);
 
 					targetModel = newMarker;
 					targetModelType = "marker";
-					//true if world, false if volume
-					targetMode = (volumeModels.count(model) == 0);
+					
 					
 					return newMarker;
 				}
@@ -953,19 +980,25 @@ struct Scene
 
 			for (auto const m : removableStraightLines) {
 				Model *model = m.first;
-				float dist = DistPointToLineSeg(rightHandPos, (m.second).Core);
+				//true if world, false if volume
+				if (volumeModels.count(model) == 0) {
+					rightP = worldP;
+				}
+
+				float dist = DistPointToLineSeg(rightP, (m.second).Core);
 				if (dist <= TARGET_SIZE) {
+					//true if world, false if volume; needed to make a new red marker
+					targetMode = (volumeModels.count(model) == 0);
+
 					//dark red: 	0xFF800000
 					Model *newStraightLine = CreateStraightLine((m.second).Core[0], (m.second).Core[1],
 						(m.second).Q[0], LINE_THICKNESS, 0xFF800000);
 					//adding the new model to appropriate maps
-					AddRemovableStraightLine(newStraightLine, (m.second).Core[0], (m.second).Core[1], (m.second).Q[0], worldMode);
+					AddRemovableStraightLine(newStraightLine, (m.second).Core[0], (m.second).Core[1], (m.second).Q[0], targetMode);
 					//removing the old model from all maps
 					RemoveModel(model);
 					targetModel = newStraightLine;
 					targetModelType = "straight line";
-					//true if world, false if volume
-					targetMode = (volumeModels.count(model) == 0);
 
 					return newStraightLine;
 				}
@@ -975,19 +1008,27 @@ struct Scene
 				Model *model = m.first;
 				//collision detection with line segments
 				std::vector<Vector3f> core = (m.second).Core;
+
+				//true if world, false if volume; change rightP depending on model mode
+				if (volumeModels.count(model) == 0) {
+					rightP = worldP;
+				}
+
 				for (int i = 0; i < (core.size()-1); i++) {
 					std::vector<Vector3f> v_seg{ core[i],core[i + 1] };
-					if (DistPointToLineSeg(rightHandPos, v_seg) <= TARGET_SIZE) {
+					if (DistPointToLineSeg(rightP, v_seg) <= TARGET_SIZE) {
+						//true if world, false if volume; needed to make a new red marker
+						targetMode = (volumeModels.count(model) == 0);
+
 						//dark red: 	0xFF800000
 						Model *newCurvedLine = CreateCurvedLine((m.second).Core, (m.second).Q, LINE_THICKNESS, 0xFF800000);
 						//adding the new model to appropriate maps
-						AddRemovableCurvedLine(newCurvedLine, (m.second).Core, (m.second).Q, worldMode);
+						AddRemovableCurvedLine(newCurvedLine, (m.second).Core, (m.second).Q, targetMode);
 						//removing the old model from all maps
 						RemoveModel(model);
+
 						targetModel = newCurvedLine;
 						targetModelType = "curved line";
-						//true if world, false if volume
-						targetMode = (volumeModels.count(model) == 0);
 
 						return newCurvedLine;
 					}
@@ -997,6 +1038,7 @@ struct Scene
 		}
 		return nullptr;
 	}
+
 
 	void ResetTargetModel()
 	{
@@ -1028,20 +1070,39 @@ struct Scene
 
 
 	//checks to see if the targetmodel can be cleared so a new model is allowed to be the targetmodel
-	void CheckTargetModel(Vector3f rightHandPos)
+	void CheckTargetModel(Vector3f rightHandPos, Vector3f otherModePos)
 	{
+		Vector3f worldP;
+		Vector3f volumeP;
+		Vector3f rightP = volumeP;
+
+		if (worldMode) {
+			worldP = rightHandPos;
+			volumeP = otherModePos;
+		}
+
+		else {
+			worldP = otherModePos;
+			volumeP = rightHandPos;
+		}
+
+		//true if world, false if volume; change rightP depending on model mode
+		if (targetMode) {
+			rightP = worldP;
+		}
+
 		//make sure targetModel is not nullptr
 		if (targetModel) {
 			if (targetModelType == "marker") {
 				Vector3f targetPos = targetModel->Pos;
-				if (rightHandPos.Distance(targetPos) > TARGET_SIZE) {
+				if (rightP.Distance(targetPos) > TARGET_SIZE) {
 					ResetTargetModel();
 				}
 			}
 
 			else if (targetModelType == "straight line") {
 				std::vector<Vector3f> core = (removableStraightLines.find(targetModel)->second).Core;
-				float dist = DistPointToLineSeg(rightHandPos, core);
+				float dist = DistPointToLineSeg(rightP, core);
 				if (dist > TARGET_SIZE) {
 					ResetTargetModel();
 				}
@@ -1052,7 +1113,7 @@ struct Scene
 				std::vector<Vector3f> core = (removableCurvedLines.find(targetModel)->second).Core;
 				for (int i = 0; i < (core.size() - 1); i++) {
 					std::vector<Vector3f> v_seg{ core[i],core[i + 1] };
-					if (DistPointToLineSeg(rightHandPos, v_seg) <= TARGET_SIZE) {
+					if (DistPointToLineSeg(rightP, v_seg) <= TARGET_SIZE) {
 						dist_far = false;
 					}
 				}
@@ -1074,16 +1135,23 @@ struct Scene
 	void ControllerActions(ovrPosef leftPose, ovrPosef rightPose, Quatf &gPose, Vector3f &gHeadPos, 
 		ovrInputState &inputState, Matrix4f &gHeadOrientation, OVR::Matrix4f& view)
 	{
-		static bool worldMode = true; 
+		//oculus has tendency to detect multiple presses on one press; prevent this
+		static bool switchMode = true;
 
 		//switch modes if pressing Y
 		if (inputState.Buttons & ovrButton_Y) {
-			if (!(inputState.Buttons & ovrButton_A)) {
+			if (!(inputState.Buttons & ovrButton_A) && switchMode) {
 				worldMode = !worldMode;
+				switchMode = false;
 			}
+		}
+		else {
+			switchMode = true;
 		}
 
 		Vector3f trans_rightP;
+		Vector3f other_rightP;
+
 		glm::quat rightQ;
 
 		//pose and orientation variables for world mode
@@ -1095,10 +1163,14 @@ struct Scene
 		//ovr_rightP = view.Inverted().Transform(pos);
 		trans_rightP = view.Inverted().Transform(new_pos);
 
-		//pose for volume mode
+		OVR::Matrix4f rot(gPose);
+		other_rightP = rot.Inverted().Transform(trans_rightP);
+
+		//poses for volume mode; simple swap
 		if (!worldMode) {
-			OVR::Matrix4f rot(gPose);
-			trans_rightP = rot.Inverted().Transform(trans_rightP);
+			Vector3f temp = trans_rightP;
+			trans_rightP = other_rightP;
+			other_rightP = temp;
 		}
 		
 
@@ -1124,7 +1196,7 @@ struct Scene
 				}
 				//dynamic lines must be regenerated at each timestamp
 				else {
-					AddTempLine(newStraightLine, worldMode);
+					AddTempLine(newStraightLine);
 				}				
 			}
 			
@@ -1152,7 +1224,7 @@ struct Scene
 
 				//dynamic lines must be regenerated at every timestamp
 				else {
-					AddTempLine(newCurvedLine, worldMode);
+					AddTempLine(newCurvedLine);
 				}
 			}
 			
@@ -1201,12 +1273,12 @@ struct Scene
 				//purple: 0xFFA535F0
 				Model *newMarker = CreateMarker(MARKER_SIZE, 0xFFA535F0, trans_rightP, worldMode);
 				
-				AddTemp(newMarker, worldMode);
+				AddTemp(newMarker);
 				//we only want the temp marker to be in the tempModels map
 				//RemoveModel(newMarker);
 				//try to find a targetModel if there is not one currently
 				if (!targetModel) {
-					ColorRemovableModel(trans_rightP, worldMode);
+					ColorRemovableModel(trans_rightP, other_rightP);
 				}
 
 				else {
@@ -1219,7 +1291,7 @@ struct Scene
 					}
 					//try to clear targetModel if there is one currently
 					else {
-						CheckTargetModel(trans_rightP);
+						CheckTargetModel(trans_rightP, other_rightP);
 					}
 				}
 			}
@@ -1266,7 +1338,7 @@ struct Scene
 			auto model = m.first;
 			model->Pos = trans_rightP;
 		}
-
+		/*
 		OVR::Matrix4f rot(gPose);
 		Vector3f volume_rightP = rot.Inverted().Transform(trans_rightP);
 
@@ -1274,6 +1346,7 @@ struct Scene
 			auto model = m.first;
 			model->Pos = volume_rightP;
 		}
+		*/
 
 		removeTempLines();
 	}
@@ -1305,12 +1378,14 @@ struct Scene
 			RemoveModel(model);
 		}
 
+		/*
 		for (auto const &m : tempVolumeModels) {
 			auto model = m.first;
 			tempVolumeModels.erase(model);
 			//possibly redundant
 			RemoveModel(model);
 		}
+		*/
 	}
 
 	int numModels = Models.size();
