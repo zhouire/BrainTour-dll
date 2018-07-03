@@ -540,9 +540,10 @@ struct Model
 
 
 
-	void Render(Matrix4f view, Matrix4f proj)
+	void Render(Matrix4f view, Matrix4f proj, Matrix4f rot)
 	{
-		Matrix4f combined = proj * view * GetMatrix();
+		Matrix4f modelview = view * rot;
+		Matrix4f combined = proj * modelview * GetMatrix();
 
 		glUseProgram(Fill->program);
 		glUniform1i(glGetUniformLocation(Fill->program, "Texture0"), 0);
@@ -691,7 +692,7 @@ struct Scene
 
 
 
-	void Render(Matrix4f view, Matrix4f proj)
+	void Render(Matrix4f view, Matrix4f proj, Matrix4f rot)
 	{
 		/*
 		for (int i = 0; i < Models.size(); ++i)
@@ -701,17 +702,17 @@ struct Scene
 		//render removableModels as well
 		for (auto const m : removableModels) {
 			//auto model = *m.first;
-			m.first->Render(view, proj);
+			m.first->Render(view, proj, rot);
 		}
 
 		//render tempModels as well
 		for (auto const m : tempModels) {
-			m.first->Render(view, proj);
+			m.first->Render(view, proj, rot);
 		}
 
 		//render tempLines as well
 		for (auto const m : tempLines) {
-			m.first->Render(view, proj);
+			m.first->Render(view, proj, rot);
 		}
 
 	}

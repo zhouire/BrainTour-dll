@@ -121,6 +121,8 @@ namespace VRUserProxy {
 			RoiMode = 1;
 		}
 
+		//roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view, false);
+
 		// Left Stick is for Volume Clip
 		if (ClipMode) {
 			if (inputState.Buttons & ovrButton_LThumb) {
@@ -211,7 +213,7 @@ namespace VRUserProxy {
 
 
 		//Controller actions influencing the scene (A,B,X,Y)
-		roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view, true);
+		roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view, false);
 
 		//R Thumb Pressed
 
@@ -386,7 +388,7 @@ namespace VRUserProxy {
 		*/
 
 		//render all models in scene (markers, lines, etc.)
-		roomScene->Render(view, proj);
+		//roomScene->Render(view, proj);
 
 
 		OVR::Matrix4f rot(gPose);
@@ -403,7 +405,7 @@ namespace VRUserProxy {
 			}
 		}
 
-		//roomScene->Render(view, proj);
+		roomScene->Render(view, proj, rot);
 
 		/*
 		glColor3f(1.0f, 0.0f, 1.0f);
