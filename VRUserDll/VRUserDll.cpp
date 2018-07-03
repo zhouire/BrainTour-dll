@@ -403,6 +403,8 @@ namespace VRUserProxy {
 			}
 		}
 
+		//roomScene->Render(view, proj);
+
 		/*
 		glColor3f(1.0f, 0.0f, 1.0f);
 		for (it = volumeMarkers.begin(); it != volumeMarkers.end(); it++)

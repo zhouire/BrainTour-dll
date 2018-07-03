@@ -1050,14 +1050,15 @@ struct Scene
 
 		//pose and orientation variables for volume mode
 		else {
-			Vector3f pos = Vector3f(rightPose.Position);
-			pos = gHeadOrientation.Inverted().Transform(pos - gHeadPos);
-			OVR::Matrix4f rot(gPose);
-			//ovr_rightP = rot.Inverted().Transform(view.Inverted().Transform(pos));
-			trans_rightP = rot.Inverted().Transform(view.Inverted().Transform(pos));
-
 			//not sure if this is correct; might have to do some transforms with the volume rot
 			rightQ = _glmFromOvrQuat(rightPose.Orientation);
+			
+			Vector3f pos = Vector3f(rightPose.Position);
+			Vector3f new_pos = MarkerTranslateToPointer(pos, rightQ);
+			new_pos = gHeadOrientation.Inverted().Transform(new_pos - gHeadPos);
+			OVR::Matrix4f rot(gPose);
+			//ovr_rightP = rot.Inverted().Transform(view.Inverted().Transform(pos));
+			trans_rightP = rot.Inverted().Transform(view.Inverted().Transform(new_pos));
 		}
 
 		//Vector3f trans_rightP = MarkerTranslateToPointer(ovr_rightP, rightQ);
