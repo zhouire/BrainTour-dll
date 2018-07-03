@@ -1145,12 +1145,14 @@ struct Scene
 			}
 			//create a new marker if the user is pressing X and the user is allowed to
 			if (inputState.Buttons & ovrButton_X && canCreateMarker) {
-				//pure green: 	0xff008000
-				//yellow (for testing): 0xFFF6FF00
-				//Vector3f * temp;
-				//*temp = ovr_rightP;
-				CreateMarker(MARKER_SIZE, 0xff008000, trans_rightP);
-				canCreateMarker = false;
+				if (inputState.Buttons & ovrButton_A) {
+					//pure green: 	0xff008000
+					//yellow (for testing): 0xFFF6FF00
+					//Vector3f * temp;
+					//*temp = ovr_rightP;
+					CreateMarker(MARKER_SIZE, 0xff008000, trans_rightP);
+					canCreateMarker = false;
+				}
 			}
 			//if user is pressing A
 			else if (inputState.Buttons & ovrButton_A) {

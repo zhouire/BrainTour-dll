@@ -165,8 +165,10 @@ namespace VRUserProxy {
 		
 		if (OnDown(lastButtons, inputState.Buttons, ovrButton_X))
 		{
-			// Handle A button down
-			ClipMode = (ClipMode + 1) % 4;
+			if (!(inputState.Buttons & ovrButton_A)) {
+				// Handle A button down
+				ClipMode = (ClipMode + 1) % 4;
+			}
 		}
 		
 		/*

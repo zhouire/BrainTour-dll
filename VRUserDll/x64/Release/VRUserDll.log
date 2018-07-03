@@ -1,5 +1,5 @@
 ﻿  VRUserDll.cpp
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1250): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1252): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1095): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
      Creating library C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.lib and object C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.exp
   Generating code
