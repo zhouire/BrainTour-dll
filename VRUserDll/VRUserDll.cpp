@@ -171,6 +171,7 @@ namespace VRUserProxy {
 			}
 		}
 		
+
 		/*
 		// Foward/Back
 		if (inputState.IndexTrigger[ovrHand_Right] > 0.1f) {
