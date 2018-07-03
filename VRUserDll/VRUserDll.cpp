@@ -113,7 +113,7 @@ namespace VRUserProxy {
 		v.M[3][2] = 0.f;
 
 		//move all temp markers and remove all temp lines before any actions
-		roomScene->moveTempModels(handPoses[ovrHand_Right], gHeadPos, gHeadOrientation, view);
+		roomScene->moveTempModels(handPoses[ovrHand_Right], gPose, gHeadPos, gHeadOrientation, view);
 
 
 		// left trigger
@@ -213,7 +213,7 @@ namespace VRUserProxy {
 
 
 		//Controller actions influencing the scene (A,B,X,Y)
-		roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view, false);
+		roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view);
 
 		//R Thumb Pressed
 

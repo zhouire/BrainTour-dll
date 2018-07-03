@@ -581,14 +581,6 @@ struct Model
 };
 
 
-
-struct Scenes
-{
-	std::vector<Vector3f> Core;
-};
-
-
-
 //------------------------------------------------------------------------- 
 struct Scene
 {
@@ -611,6 +603,11 @@ struct Scene
 	std::map<Model*, int> tempModels;
 	std::map<Model*, int> tempLines;
 
+	//volume rendering maps
+	std::map<Model*, int> volumeModels;
+	std::map<Model*, int> tempVolumeModels;
+	std::map<Model*, int> tempVolumeLines;
+
 	float MARKER_SIZE = 0.02f;
 	float TARGET_SIZE = 0.01f;
 	float LINE_THICKNESS = 0.01f;
@@ -619,6 +616,8 @@ struct Scene
 	//model highlighted for potential removal
 	Model *targetModel;
 	std::string targetModelType;
+	//targetMode is true if world, false if volume
+	bool targetMode;
 
 	//for line drawing functionality
 	std::vector<Vector3f> lineCore;
@@ -633,31 +632,49 @@ struct Scene
 		Models.push_back(n);
 	}
 
-	void AddRemovable(Model * n)
+	void AddRemovable(Model * n, bool worldMode)
 	{
 		//don't actually care about the values
-		removableModels.insert(std::pair<Model*, int>(n, 1));
+		if (worldMode) {
+			removableModels.insert(std::pair<Model*, int>(n, 1));
+		}
+		
+		else {
+			volumeModels.insert(std::pair<Model*, int>(n, 1));
+		}
 	}
 
-	void AddTemp(Model * n)
+	void AddTemp(Model * n, bool worldMode)
 	{
 		RemoveModel(n);
 		//removableMarkers.erase(n);
-		tempModels.insert(std::pair<Model*, int>(n, 1));
+		if (worldMode) {
+			tempModels.insert(std::pair<Model*, int>(n, 1));
+		}
+
+		else {
+			tempVolumeModels.insert(std::pair<Model*, int>(n, 1));
+		}
 	}
 
-	void AddTempLine(Model * n)
+	void AddTempLine(Model * n, bool worldMode)
 	{
-		tempLines.insert(std::pair<Model *, int>(n, 1));
+		if (worldMode) {
+			tempLines.insert(std::pair<Model *, int>(n, 1));
+		}
+
+		else {
+			tempVolumeLines.insert(std::pair<Model *, int>(n, 1));
+		}
 	}
 
-	void AddRemovableMarker(Model * n)
+	void AddRemovableMarker(Model * n, bool worldMode)
 	{
 		removableMarkers.insert(std::pair<Model*, int>(n, 1));
-		AddRemovable(n);
+		AddRemovable(n, worldMode);
 	}
 
-	void AddRemovableStraightLine(Model * n, Vector3f start, Vector3f end, glm::quat handQ)
+	void AddRemovableStraightLine(Model * n, Vector3f start, Vector3f end, glm::quat handQ, bool worldMode)
 	{
 		std::vector<Vector3f> core{ start,end };
 		LineComponents line;
@@ -666,17 +683,17 @@ struct Scene
 		line.Q = quat;
 		removableStraightLines.insert(std::pair<Model*, LineComponents>(n, line));
 
-		AddRemovable(n);
+		AddRemovable(n, worldMode);
 	}
 	
-	void AddRemovableCurvedLine(Model * n, std::vector<Vector3f> lineCore, std::vector<glm::quat> allHandQ)
+	void AddRemovableCurvedLine(Model * n, std::vector<Vector3f> lineCore, std::vector<glm::quat> allHandQ, bool worldMode)
 	{
 		LineComponents line;
 		line.Core = lineCore;
 		line.Q = allHandQ;
 		removableCurvedLines.insert(std::pair<Model*, LineComponents>(n, line));
 
-		AddRemovable(n);
+		AddRemovable(n, worldMode);
 	}
 
 
@@ -687,6 +704,7 @@ struct Scene
 		removableMarkers.erase(n);
 		removableStraightLines.erase(n);
 		removableCurvedLines.erase(n);
+		volumeModels.erase(n);
 	}
 
 
@@ -743,7 +761,7 @@ struct Scene
 	}
 
 
-	Model * CreateMarker(float size, DWORD color, Vector3f pos)
+	Model * CreateMarker(float size, DWORD color, Vector3f pos, bool worldMode)
 	{
 		//ShaderFill * grid_material = CreateTextures();
 
@@ -751,7 +769,7 @@ struct Scene
 		marker->AddSolidColorBox(-0.5f*size, -0.5f*size, -0.5f*size, 0.5f*size, 0.5f*size, 0.5f*size, color);
 		marker->AllocateBuffers();
 		marker->Pos = pos;
-		AddRemovableMarker(marker);
+		AddRemovableMarker(marker, worldMode);
 
 		return marker;
 	}
@@ -892,7 +910,7 @@ struct Scene
 		}
 	}
 
-	Model * ColorRemovableModel(Vector3f rightHandPos)
+	Model * ColorRemovableModel(Vector3f rightHandPos, bool worldMode)
 	{
 		//make sure there is currently no targetModel when ColorRemovableModel is called
 		if (!targetModel) {
@@ -902,14 +920,16 @@ struct Scene
 				//Vector3f modelPos(0, 0, 0);
 				if (rightHandPos.Distance(modelPos) <= TARGET_SIZE) {
 					//dark red: 	0xFF800000
-					Model *newMarker = CreateMarker(MARKER_SIZE, 0xFF811111, modelPos);
+					Model *newMarker = CreateMarker(MARKER_SIZE, 0xFF811111, modelPos, worldMode);
 					//removing the old green model; replaced by new red one
 					RemoveModel(model);
 					//removableMarkers.erase(model);
 
 					targetModel = newMarker;
 					targetModelType = "marker";
-
+					//true if world, false if volume
+					targetMode = (volumeModels.count(model) == 0);
+					
 					return newMarker;
 				}
 			}
@@ -922,11 +942,13 @@ struct Scene
 					Model *newStraightLine = CreateStraightLine((m.second).Core[0], (m.second).Core[1],
 						(m.second).Q[0], LINE_THICKNESS, 0xFF800000);
 					//adding the new model to appropriate maps
-					AddRemovableStraightLine(newStraightLine, (m.second).Core[0], (m.second).Core[1], (m.second).Q[0]);
+					AddRemovableStraightLine(newStraightLine, (m.second).Core[0], (m.second).Core[1], (m.second).Q[0], worldMode);
 					//removing the old model from all maps
 					RemoveModel(model);
 					targetModel = newStraightLine;
 					targetModelType = "straight line";
+					//true if world, false if volume
+					targetMode = (volumeModels.count(model) == 0);
 
 					return newStraightLine;
 				}
@@ -942,11 +964,13 @@ struct Scene
 						//dark red: 	0xFF800000
 						Model *newCurvedLine = CreateCurvedLine((m.second).Core, (m.second).Q, LINE_THICKNESS, 0xFF800000);
 						//adding the new model to appropriate maps
-						AddRemovableCurvedLine(newCurvedLine, (m.second).Core, (m.second).Q);
+						AddRemovableCurvedLine(newCurvedLine, (m.second).Core, (m.second).Q, worldMode);
 						//removing the old model from all maps
 						RemoveModel(model);
 						targetModel = newCurvedLine;
 						targetModelType = "curved line";
+						//true if world, false if volume
+						targetMode = (volumeModels.count(model) == 0);
 
 						return newCurvedLine;
 					}
@@ -962,21 +986,21 @@ struct Scene
 		//pure green: 0xff008000
 		if (targetModelType == "marker") {
 			Vector3f targetPos = targetModel->Pos;
-			Model *newMarker = CreateMarker(MARKER_SIZE, 0xff008000, targetPos);
+			Model *newMarker = CreateMarker(MARKER_SIZE, 0xff008000, targetPos, targetMode);
 		}
 
 		else if (targetModelType == "straight line") {
 			std::vector<Vector3f> core = (removableStraightLines.find(targetModel)->second).Core;
 			std::vector<glm::quat> handQ = (removableStraightLines.find(targetModel)->second).Q;
 			Model *newStraightLine = CreateStraightLine(core[0], core[1], handQ[0], LINE_THICKNESS, 0xff008000);
-			AddRemovableStraightLine(newStraightLine, core[0], core[1], handQ[0]);
+			AddRemovableStraightLine(newStraightLine, core[0], core[1], handQ[0], targetMode);
 		}
 
 		else if (targetModelType == "curved line") {
 			std::vector<Vector3f> core = (removableCurvedLines.find(targetModel)->second).Core;
 			std::vector<glm::quat> handQ = (removableCurvedLines.find(targetModel)->second).Q;
 			Model *newCurvedLine = CreateCurvedLine(core, handQ, LINE_THICKNESS, 0xff008000);
-			AddRemovableCurvedLine(newCurvedLine, core, handQ);
+			AddRemovableCurvedLine(newCurvedLine, core, handQ, targetMode);
 		}
 		
 		//removing the red target model from all maps; has been replaced already with a green model
@@ -1031,36 +1055,28 @@ struct Scene
 
 	
 	void ControllerActions(ovrPosef leftPose, ovrPosef rightPose, Quatf &gPose, Vector3f &gHeadPos, 
-		ovrInputState &inputState, Matrix4f &gHeadOrientation, OVR::Matrix4f& view, bool worldMode)
+		ovrInputState &inputState, Matrix4f &gHeadOrientation, OVR::Matrix4f& view)
 	{
+		static bool worldMode = true; 
+
 		Vector3f trans_rightP;
 		glm::quat rightQ;
 
 		//pose and orientation variables for world mode
-		if (worldMode) {
-			rightQ = _glmFromOvrQuat(rightPose.Orientation);
+		rightQ = _glmFromOvrQuat(rightPose.Orientation);
 			
-			Vector3f pos = Vector3f(rightPose.Position);
-			Vector3f new_pos = MarkerTranslateToPointer(pos, rightQ);
-			new_pos = gHeadOrientation.Inverted().Transform(new_pos - gHeadPos);
-			//ovr_rightP = view.Inverted().Transform(pos);
-			trans_rightP = view.Inverted().Transform(new_pos);
+		Vector3f pos = Vector3f(rightPose.Position);
+		Vector3f new_pos = MarkerTranslateToPointer(pos, rightQ);
+		new_pos = gHeadOrientation.Inverted().Transform(new_pos - gHeadPos);
+		//ovr_rightP = view.Inverted().Transform(pos);
+		trans_rightP = view.Inverted().Transform(new_pos);
 
-			
-		}
-
-		//pose and orientation variables for volume mode
-		else {
-			//not sure if this is correct; might have to do some transforms with the volume rot
-			rightQ = _glmFromOvrQuat(rightPose.Orientation);
-			
-			Vector3f pos = Vector3f(rightPose.Position);
-			Vector3f new_pos = MarkerTranslateToPointer(pos, rightQ);
-			new_pos = gHeadOrientation.Inverted().Transform(new_pos - gHeadPos);
+		//pose for volume mode
+		if (!worldMode) {
 			OVR::Matrix4f rot(gPose);
-			//ovr_rightP = rot.Inverted().Transform(view.Inverted().Transform(pos));
-			trans_rightP = rot.Inverted().Transform(view.Inverted().Transform(new_pos));
+			trans_rightP = rot.Inverted().Transform(trans_rightP);
 		}
+		
 
 		//Vector3f trans_rightP = MarkerTranslateToPointer(ovr_rightP, rightQ);
 
@@ -1078,13 +1094,13 @@ struct Scene
 				Model *newStraightLine = CreateStraightLine(lineCore[0], trans_rightP, rightQ, LINE_THICKNESS, 0xff008000);
 				//if B let go (ending the line), just create the line and reset drawingStraightLine and lineCore
 				if (!(inputState.Buttons & ovrButton_B)) {
-					AddRemovableStraightLine(newStraightLine, lineCore[0], trans_rightP, rightQ);
+					AddRemovableStraightLine(newStraightLine, lineCore[0], trans_rightP, rightQ, worldMode);
 					drawingStraightLine = false;
 					lineCore.clear();
 				}
 				//dynamic lines must be regenerated at each timestamp
 				else {
-					AddTempLine(newStraightLine);
+					AddTempLine(newStraightLine, worldMode);
 				}				
 			}
 			
@@ -1104,7 +1120,7 @@ struct Scene
 				if (inputState.IndexTrigger[ovrHand_Right] < 0.2f || numVerticesNext >= 20000) {
 					drawingCurvedLine = false;
 
-					AddRemovableCurvedLine(newCurvedLine, lineCore, allHandQ);
+					AddRemovableCurvedLine(newCurvedLine, lineCore, allHandQ, worldMode);
 
 					lineCore.clear();
 					allHandQ.clear();
@@ -1112,7 +1128,7 @@ struct Scene
 
 				//dynamic lines must be regenerated at every timestamp
 				else {
-					AddTempLine(newCurvedLine);
+					AddTempLine(newCurvedLine, worldMode);
 				}
 			}
 			
@@ -1152,21 +1168,21 @@ struct Scene
 					//yellow (for testing): 0xFFF6FF00
 					//Vector3f * temp;
 					//*temp = ovr_rightP;
-					CreateMarker(MARKER_SIZE, 0xff008000, trans_rightP);
+					CreateMarker(MARKER_SIZE, 0xff008000, trans_rightP, worldMode);
 					canCreateMarker = false;
 				}
 			}
 			//if user is pressing A
 			else if (inputState.Buttons & ovrButton_A) {
 				//purple: 0xFFA535F0
-				Model *newMarker = CreateMarker(MARKER_SIZE, 0xFFA535F0, trans_rightP);
+				Model *newMarker = CreateMarker(MARKER_SIZE, 0xFFA535F0, trans_rightP, worldMode);
 				
-				AddTemp(newMarker);
+				AddTemp(newMarker, worldMode);
 				//we only want the temp marker to be in the tempModels map
 				//RemoveModel(newMarker);
 				//try to find a targetModel if there is not one currently
 				if (!targetModel) {
-					ColorRemovableModel(trans_rightP);
+					ColorRemovableModel(trans_rightP, worldMode);
 				}
 
 				else {
@@ -1182,6 +1198,11 @@ struct Scene
 						CheckTargetModel(trans_rightP);
 					}
 				}
+			}
+			
+			//switch modes if pressing Y
+			else if (inputState.Buttons & ovrButton_Y) {
+				worldMode = !worldMode;
 			}
 		}
 
@@ -1212,7 +1233,7 @@ struct Scene
 
 	//move all temp markers to the current hand position, all temp lines removed
 	//always in world mode
-	void moveTempModels(ovrPosef rightPose, Vector3f &gHeadPos, Matrix4f &gHeadOrientation, Matrix4f& view)
+	void moveTempModels(ovrPosef rightPose, OVR::Quatf& gPose, Vector3f &gHeadPos, Matrix4f &gHeadOrientation, Matrix4f& view)
 	{
 		glm::quat rightQ = _glmFromOvrQuat(rightPose.Orientation);
 
@@ -1227,8 +1248,18 @@ struct Scene
 			model->Pos = trans_rightP;
 		}
 
+		OVR::Matrix4f rot(gPose);
+		Vector3f volume_rightP = rot.Inverted().Transform(trans_rightP);
+
+		for (auto const &m : tempVolumeModels) {
+			auto model = m.first;
+			model->Pos = volume_rightP;
+		}
+
 		removeTempLines();
 	}
+
+	
 
 	//remove tempLines; this is necessary at each timestep to update dynamic lines
 	//called in moveTempModels
@@ -1238,6 +1269,11 @@ struct Scene
 			auto model = m.first;
 			tempLines.erase(model);
 		}
+
+		for (auto const &m : tempVolumeLines) {
+			auto model = m.first;
+			tempVolumeLines.erase(model);
+		}
 	}
 	
 	//clear map of temp models
@@ -1246,6 +1282,13 @@ struct Scene
 		for (auto const &m : tempModels) {
 			auto model = m.first;
 			tempModels.erase(model);
+			//possibly redundant
+			RemoveModel(model);
+		}
+
+		for (auto const &m : tempVolumeModels) {
+			auto model = m.first;
+			tempVolumeModels.erase(model);
 			//possibly redundant
 			RemoveModel(model);
 		}
