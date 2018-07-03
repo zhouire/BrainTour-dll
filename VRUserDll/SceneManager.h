@@ -717,21 +717,38 @@ struct Scene
 			Models[i]->Render(view, proj);
 		*/
 
-		//render removableModels as well
+		//Render all worldMode models with a rotation matrix of Identity
+		//render removableModels
+		Matrix4f identity = Matrix4f();
+
 		for (auto const m : removableModels) {
 			//auto model = *m.first;
-			m.first->Render(view, proj, rot);
+			m.first->Render(view, proj, identity);
 		}
 
 		//render tempModels as well
 		for (auto const m : tempModels) {
-			m.first->Render(view, proj, rot);
+			m.first->Render(view, proj, identity);
 		}
 
 		//render tempLines as well
 		for (auto const m : tempLines) {
+			m.first->Render(view, proj, identity);
+		}
+
+		//Render all volumeMode models with the real rotation matrix
+		for (auto const m : volumeModels) {
 			m.first->Render(view, proj, rot);
 		}
+
+		for (auto const m : tempVolumeModels) {
+			m.first->Render(view, proj, rot);
+		}
+
+		for (auto const m : tempVolumeLines) {
+			m.first->Render(view, proj, rot);
+		}
+
 
 	}
 
@@ -1059,6 +1076,13 @@ struct Scene
 	{
 		static bool worldMode = true; 
 
+		//switch modes if pressing Y
+		if (inputState.Buttons & ovrButton_Y) {
+			if (!(inputState.Buttons & ovrButton_A)) {
+				worldMode = !worldMode;
+			}
+		}
+
 		Vector3f trans_rightP;
 		glm::quat rightQ;
 
@@ -1198,11 +1222,6 @@ struct Scene
 						CheckTargetModel(trans_rightP);
 					}
 				}
-			}
-			
-			//switch modes if pressing Y
-			else if (inputState.Buttons & ovrButton_Y) {
-				worldMode = !worldMode;
 			}
 		}
 
