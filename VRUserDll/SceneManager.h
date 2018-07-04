@@ -605,7 +605,7 @@ struct Scene
 
 	//volume rendering maps
 	std::map<Model*, int> volumeModels;
-	//std::map<Model*, int> tempVolumeModels;
+	std::map<Model*, int> tempVolumeModels;
 	std::map<Model*, int> tempVolumeLines;
 
 	float MARKER_SIZE = 0.02f;
@@ -745,11 +745,10 @@ struct Scene
 		for (auto const m : volumeModels) {
 			m.first->Render(view, proj, rot);
 		}
-		/*
+		
 		for (auto const m : tempVolumeModels) {
 			m.first->Render(view, proj, rot);
 		}
-		*/
 
 		for (auto const m : tempVolumeLines) {
 			m.first->Render(view, proj, rot);
@@ -937,7 +936,7 @@ struct Scene
 	{
 		Vector3f worldP;
 		Vector3f volumeP;
-		Vector3f rightP = volumeP;
+		
 
 		if (worldMode) {
 			worldP = rightHandPos;
@@ -948,6 +947,8 @@ struct Scene
 			worldP = otherModePos;
 			volumeP = rightHandPos;
 		}
+
+		Vector3f rightP = volumeP;
 
 		//for world mode objects, calc dist using worldP
 		//make sure there is currently no targetModel when ColorRemovableModel is called
@@ -1074,7 +1075,7 @@ struct Scene
 	{
 		Vector3f worldP;
 		Vector3f volumeP;
-		Vector3f rightP = volumeP;
+		
 
 		if (worldMode) {
 			worldP = rightHandPos;
@@ -1085,6 +1086,8 @@ struct Scene
 			worldP = otherModePos;
 			volumeP = rightHandPos;
 		}
+
+		Vector3f rightP = volumeP;
 
 		//true if world, false if volume; change rightP depending on model mode
 		if (targetMode) {
@@ -1271,7 +1274,14 @@ struct Scene
 			//if user is pressing A
 			else if (inputState.Buttons & ovrButton_A) {
 				//purple: 0xFFA535F0
-				Model *newMarker = CreateMarker(MARKER_SIZE, 0xFFA535F0, trans_rightP, worldMode);
+				//Model *newMarker = CreateMarker(MARKER_SIZE, 0xFFA535F0, trans_rightP, worldMode);
+
+				Vector3f pos = trans_rightP;
+				if (!worldMode){
+					pos = other_rightP;
+				}
+
+				Model *newMarker = CreateMarker(MARKER_SIZE, 0xFFA535F0, pos, true);
 				
 				AddTemp(newMarker);
 				//we only want the temp marker to be in the tempModels map
@@ -1332,21 +1342,32 @@ struct Scene
 		Vector3f new_pos = MarkerTranslateToPointer(pos, rightQ);
 		new_pos = gHeadOrientation.Inverted().Transform(new_pos - gHeadPos);
 		Vector3f trans_rightP = view.Inverted().Transform(new_pos);
+		
+		/*
+		if (worldMode) {
+			for (auto const &m : tempModels) {
+				auto model = m.first;
+				model->Pos = trans_rightP;
+			}
+		}
 
+		else {
+			OVR::Matrix4f rot(gPose);
+			trans_rightP = rot.Inverted().Transform(trans_rightP);
+
+			for (auto const &m : tempModels) {
+				auto model = m.first;
+				model->Pos = trans_rightP;
+			}
+		}
+		*/
 
 		for (auto const &m : tempModels) {
 			auto model = m.first;
 			model->Pos = trans_rightP;
 		}
-		/*
-		OVR::Matrix4f rot(gPose);
-		Vector3f volume_rightP = rot.Inverted().Transform(trans_rightP);
 
-		for (auto const &m : tempVolumeModels) {
-			auto model = m.first;
-			model->Pos = volume_rightP;
-		}
-		*/
+		
 
 		removeTempLines();
 	}
@@ -1378,14 +1399,14 @@ struct Scene
 			RemoveModel(model);
 		}
 
-		/*
+		
 		for (auto const &m : tempVolumeModels) {
 			auto model = m.first;
 			tempVolumeModels.erase(model);
 			//possibly redundant
 			RemoveModel(model);
 		}
-		*/
+		
 	}
 
 	int numModels = Models.size();
