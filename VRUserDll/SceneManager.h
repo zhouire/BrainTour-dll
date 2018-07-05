@@ -709,12 +709,10 @@ struct Scene
 			m.first->Render(view, proj, identity);
 		}
 
-		//render temp Markers as well
 		for (auto const m : tempWorldMarkers) {
 			m.first->Render(view, proj, identity);
 		}
 
-		//render tempWorldLines as well
 		for (auto const m : tempWorldLines) {
 			m.first->Render(view, proj, identity);
 		}
@@ -731,20 +729,7 @@ struct Scene
 
 	}
 
-	/*
-	//transforms the controller position to be right on top of the user's controller (not far in front)
-	Vector3f VirtualPosFromReal(Vector3f pos)
-	{
-		Vector3f newPos;
-		newPos.x = -1 * pos.x;
-		newPos.y = pos.y;
-		newPos.z = -1 * pos.z - 5.0f;
-
-		return newPos;
-	}
-	*/
-
-	//rotates the marker pos to accomodate for controller orientation and place it in front of controller
+	//rotates the marker pos to accomodate for controller orientation and place it in front of pointer finger
 	Vector3f MarkerTranslateToPointer(Vector3f handPos, glm::quat handQuat)
 	{
 		Vector3f newMarkerPos;
@@ -924,7 +909,6 @@ struct Scene
 					//true if world, false if volume; needed to make a new red marker
 					targetMode = (volumeModels.count(model) == 0);
 
-					//dark red: 	0xFF800000
 					Model *newMarker = CreateMarker(MARKER_SIZE, TARGET_COLOR, modelPos, targetMode);
 					//removing the old green model; replaced by new red one
 					RemoveModel(model);
@@ -952,7 +936,6 @@ struct Scene
 					//true if world, false if volume; needed to make a new red marker
 					targetMode = (volumeModels.count(model) == 0);
 
-					//dark red: 	0xFF800000
 					Model *newStraightLine = CreateStraightLine((m.second).Core[0], (m.second).Core[1],
 						(m.second).Q[0], LINE_THICKNESS, TARGET_COLOR);
 					//adding the new model to appropriate maps
@@ -986,7 +969,6 @@ struct Scene
 						//true if world, false if volume; needed to make a new red marker
 						targetMode = (volumeModels.count(model) == 0);
 
-						//dark red: 	0xFF800000
 						Model *newCurvedLine = CreateCurvedLine((m.second).Core, (m.second).Q, LINE_THICKNESS, TARGET_COLOR);
 						//adding the new model to appropriate maps
 						AddRemovableCurvedLine(newCurvedLine, (m.second).Core, (m.second).Q, targetMode);
@@ -1016,7 +998,7 @@ struct Scene
 			color = VOLUMEMODE_COLOR;
 		}
 
-		//pure green: 0xff008000
+
 		if (targetModelType == "marker") {
 			Vector3f targetPos = targetModel->Pos;
 			Model *newMarker = CreateMarker(MARKER_SIZE, color, targetPos, targetMode);
@@ -1113,19 +1095,6 @@ struct Scene
 		//oculus has tendency to detect multiple presses on one press; prevent this
 		static bool switchMode = true;
 
-		/*
-		//switch modes if pressing Y
-		if (inputState.Buttons & ovrButton_Y) {
-			if (switchMode && !(inputState.Buttons & ovrButton_A)) {
-				worldMode = !worldMode;
-				switchMode = false;
-			}
-		}
-		else {
-			switchMode = true;
-		}
-		*/
-
 		Vector3f trans_rightP;
 		Vector3f other_rightP;
 
@@ -1168,7 +1137,6 @@ struct Scene
 		if (lineCore.size() > 0) {
 			//if we are drawing a straight line, create a new phantom line
 			if (drawingStraightLine) {
-				//pure green: 0xff008000
 				Model *newStraightLine = CreateStraightLine(lineCore[0], trans_rightP, rightQ, LINE_THICKNESS, color);
 				//if B let go (ending the line), just create the line and reset drawingStraightLine and lineCore
 				if (!(inputState.Buttons & ovrButton_B)) {
@@ -1185,12 +1153,13 @@ struct Scene
 			//if we are drawing a curved line
 			else if (drawingCurvedLine) {
 
-				lineCore.push_back(trans_rightP);
-				allHandQ.push_back(rightQ);
+				if (trans_rightP.Distance(lineCore[lineCore.size() - 1]) >= 0.01) {
+					lineCore.push_back(trans_rightP);
+					allHandQ.push_back(rightQ);
+				}
 
 				int numVerticesNext = 8 + (16 * (lineCore.size() + 1));
 
-				//pure green: 	0xff008000
 				Model *newCurvedLine = CreateCurvedLine(lineCore, allHandQ, LINE_THICKNESS, color);
 				
 				//if we stop drawing the curved line (PRESSING index), put the line in worldModels and reset
@@ -1225,13 +1194,11 @@ struct Scene
 				lineCore.push_back(trans_rightP);
 			}
 
-			//replaced all ovrAvatarButtonTwo with touchMask -> ovrAvatarTouch_Index
 			//stop showing the phantom marker if not pressing A
 			if (!(inputState.Buttons & ovrButton_A)) {
 				removeTempMarkers();
 			}
-			//allow user to create a new marker if they have stopped pressing A
-			//Switched A to X; A+X = create marker
+			//allow user to create a new marker if they have stopped pressing X
 			if (!(inputState.Buttons & ovrButton_X) && !canCreateMarker) {
 				canCreateMarker = true;
 			}
@@ -1239,17 +1206,15 @@ struct Scene
 			if (!(inputState.Buttons & ovrButton_A) && targetModel) {
 				ResetTargetModel();
 			}
-			//create a new marker if the user is pressing X and the user is allowed to
+			//create a new marker if the user is pressing A+X and the user is allowed to
 			if (inputState.Buttons & ovrButton_X && canCreateMarker) {
 				if (inputState.Buttons & ovrButton_A) {
-					//pure green: 	0xff008000
 					CreateMarker(MARKER_SIZE, color, trans_rightP, worldMode);
 					canCreateMarker = false;
 				}
 			}
-			//if user is pressing A
+			//if user is pressing A, create phantom marker
 			else if (inputState.Buttons & ovrButton_A) {
-				//purple: 0xFFA535F0
 				Vector3f pos = trans_rightP;
 				if (!worldMode){
 					pos = other_rightP;
@@ -1342,17 +1307,9 @@ struct Scene
 		
 	}
 
+	//initialization; when scene created, create textures as well
 	Scene()
 	{
 		CreateTextures();
-	}
-
-	void Release()
-	{
-	}
-
-	~Scene()
-	{
-		Release();
 	}
 }; 
