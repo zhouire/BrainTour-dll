@@ -1153,7 +1153,7 @@ struct Scene
 			//if we are drawing a curved line
 			else if (drawingCurvedLine) {
 
-				if (trans_rightP.Distance(lineCore[lineCore.size() - 1]) >= 0.01) {
+				if ((lineCore.size() == 1) || (trans_rightP.Distance(lineCore[lineCore.size() - 1]) >= 0.01)) {
 					lineCore.push_back(trans_rightP);
 					allHandQ.push_back(rightQ);
 				}
