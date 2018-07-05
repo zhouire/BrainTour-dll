@@ -904,6 +904,9 @@ struct Scene
 				Vector3f modelPos = (*model).Pos;
 				//true if world, false if volume
 				bool mode = (volumeModels.count(model) == 0);
+				//resetting rightP value
+				rightP = volumeP;
+
 				if (volumeModels.count(model) == 0) {
 					rightP = worldP;
 				}
@@ -927,6 +930,9 @@ struct Scene
 
 			for (auto const m : removableStraightLines) {
 				Model *model = m.first;
+				//resetting rightP value
+				rightP = volumeP;
+
 				//true if world, false if volume
 				if (volumeModels.count(model) == 0) {
 					rightP = worldP;
@@ -955,6 +961,9 @@ struct Scene
 				Model *model = m.first;
 				//collision detection with line segments
 				std::vector<Vector3f> core = (m.second).Core;
+
+				//resetting rightP value
+				rightP = volumeP;
 
 				//true if world, false if volume; change rightP depending on model mode
 				bool mode = (volumeModels.count(model) == 0);
