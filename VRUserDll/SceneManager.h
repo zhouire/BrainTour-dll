@@ -604,10 +604,16 @@ struct Scene
 	float MARKER_SIZE = 0.02f;
 	float TARGET_SIZE = 0.01f;
 	float LINE_THICKNESS = 0.01f;
+	//world = green, volume = cyan, target = red, phantom = purple
+	DWORD WORLDMODE_COLOR = 0xff008000;
+	DWORD VOLUMEMODE_COLOR = 0xFF00FFFF;
+	DWORD TARGET_COLOR = 0xFF800000;
+	DWORD PHANTOM_COLOR = 0xFFA535F0;
 
 	ShaderFill * gridMaterial;
 	//model highlighted for potential removal
 	Model *targetModel;
+	//targetModelType can be "marker", "straight line" or "curved line"
 	std::string targetModelType;
 	//targetMode is true if world, false if volume
 	bool targetMode;
@@ -725,6 +731,7 @@ struct Scene
 
 	}
 
+	/*
 	//transforms the controller position to be right on top of the user's controller (not far in front)
 	Vector3f VirtualPosFromReal(Vector3f pos)
 	{
@@ -735,6 +742,7 @@ struct Scene
 
 		return newPos;
 	}
+	*/
 
 	//rotates the marker pos to accomodate for controller orientation and place it in front of controller
 	Vector3f MarkerTranslateToPointer(Vector3f handPos, glm::quat handQuat)
@@ -878,6 +886,7 @@ struct Scene
 		}
 	}
 
+
 	Model * ColorRemovableModel(Vector3f rightHandPos, Vector3f otherModePos)
 	{
 		Vector3f worldP;
@@ -916,7 +925,7 @@ struct Scene
 					targetMode = (volumeModels.count(model) == 0);
 
 					//dark red: 	0xFF800000
-					Model *newMarker = CreateMarker(MARKER_SIZE, 0xFF811111, modelPos, targetMode);
+					Model *newMarker = CreateMarker(MARKER_SIZE, TARGET_COLOR, modelPos, targetMode);
 					//removing the old green model; replaced by new red one
 					RemoveModel(model);
 
@@ -945,7 +954,7 @@ struct Scene
 
 					//dark red: 	0xFF800000
 					Model *newStraightLine = CreateStraightLine((m.second).Core[0], (m.second).Core[1],
-						(m.second).Q[0], LINE_THICKNESS, 0xFF800000);
+						(m.second).Q[0], LINE_THICKNESS, TARGET_COLOR);
 					//adding the new model to appropriate maps
 					AddRemovableStraightLine(newStraightLine, (m.second).Core[0], (m.second).Core[1], (m.second).Q[0], targetMode);
 					//removing the old model from all maps
@@ -978,7 +987,7 @@ struct Scene
 						targetMode = (volumeModels.count(model) == 0);
 
 						//dark red: 	0xFF800000
-						Model *newCurvedLine = CreateCurvedLine((m.second).Core, (m.second).Q, LINE_THICKNESS, 0xFF800000);
+						Model *newCurvedLine = CreateCurvedLine((m.second).Core, (m.second).Q, LINE_THICKNESS, TARGET_COLOR);
 						//adding the new model to appropriate maps
 						AddRemovableCurvedLine(newCurvedLine, (m.second).Core, (m.second).Q, targetMode);
 						//removing the old model from all maps
@@ -999,23 +1008,31 @@ struct Scene
 
 	void ResetTargetModel()
 	{
+		DWORD color;
+		if (targetMode) {
+			color = WORLDMODE_COLOR;
+		}
+		else {
+			color = VOLUMEMODE_COLOR;
+		}
+
 		//pure green: 0xff008000
 		if (targetModelType == "marker") {
 			Vector3f targetPos = targetModel->Pos;
-			Model *newMarker = CreateMarker(MARKER_SIZE, 0xff008000, targetPos, targetMode);
+			Model *newMarker = CreateMarker(MARKER_SIZE, color, targetPos, targetMode);
 		}
 
 		else if (targetModelType == "straight line") {
 			std::vector<Vector3f> core = (removableStraightLines.find(targetModel)->second).Core;
 			std::vector<glm::quat> handQ = (removableStraightLines.find(targetModel)->second).Q;
-			Model *newStraightLine = CreateStraightLine(core[0], core[1], handQ[0], LINE_THICKNESS, 0xff008000);
+			Model *newStraightLine = CreateStraightLine(core[0], core[1], handQ[0], LINE_THICKNESS, color);
 			AddRemovableStraightLine(newStraightLine, core[0], core[1], handQ[0], targetMode);
 		}
 
 		else if (targetModelType == "curved line") {
 			std::vector<Vector3f> core = (removableCurvedLines.find(targetModel)->second).Core;
 			std::vector<glm::quat> handQ = (removableCurvedLines.find(targetModel)->second).Q;
-			Model *newCurvedLine = CreateCurvedLine(core, handQ, LINE_THICKNESS, 0xff008000);
+			Model *newCurvedLine = CreateCurvedLine(core, handQ, LINE_THICKNESS, color);
 			AddRemovableCurvedLine(newCurvedLine, core, handQ, targetMode);
 		}
 		
@@ -1131,6 +1148,14 @@ struct Scene
 			trans_rightP = other_rightP;
 			other_rightP = temp;
 		}
+
+		DWORD color;
+		if (worldMode) {
+			color = WORLDMODE_COLOR;
+		}
+		else {
+			color = VOLUMEMODE_COLOR;
+		}
 		
 
 		//should not be allowed to simply hold button A and continuously make a stream of models; let go and press again
@@ -1144,7 +1169,7 @@ struct Scene
 			//if we are drawing a straight line, create a new phantom line
 			if (drawingStraightLine) {
 				//pure green: 0xff008000
-				Model *newStraightLine = CreateStraightLine(lineCore[0], trans_rightP, rightQ, LINE_THICKNESS, 0xff008000);
+				Model *newStraightLine = CreateStraightLine(lineCore[0], trans_rightP, rightQ, LINE_THICKNESS, color);
 				//if B let go (ending the line), just create the line and reset drawingStraightLine and lineCore
 				if (!(inputState.Buttons & ovrButton_B)) {
 					AddRemovableStraightLine(newStraightLine, lineCore[0], trans_rightP, rightQ, worldMode);
@@ -1166,7 +1191,7 @@ struct Scene
 				int numVerticesNext = 8 + (16 * (lineCore.size() + 1));
 
 				//pure green: 	0xff008000
-				Model *newCurvedLine = CreateCurvedLine(lineCore, allHandQ, LINE_THICKNESS, 0xff008000);
+				Model *newCurvedLine = CreateCurvedLine(lineCore, allHandQ, LINE_THICKNESS, color);
 				
 				//if we stop drawing the curved line (PRESSING index), put the line in worldModels and reset
 				//if the next lineCore addition will exceed the vertex limit (currently 20000), auto-stop drawing
@@ -1218,10 +1243,7 @@ struct Scene
 			if (inputState.Buttons & ovrButton_X && canCreateMarker) {
 				if (inputState.Buttons & ovrButton_A) {
 					//pure green: 	0xff008000
-					//yellow (for testing): 0xFFF6FF00
-					//Vector3f * temp;
-					//*temp = ovr_rightP;
-					CreateMarker(MARKER_SIZE, 0xff008000, trans_rightP, worldMode);
+					CreateMarker(MARKER_SIZE, color, trans_rightP, worldMode);
 					canCreateMarker = false;
 				}
 			}
@@ -1233,7 +1255,7 @@ struct Scene
 					pos = other_rightP;
 				}
 
-				Model *newMarker = CreateMarker(MARKER_SIZE, 0xFFA535F0, pos, true);
+				Model *newMarker = CreateMarker(MARKER_SIZE, PHANTOM_COLOR, pos, true);
 				
 				AddTemp(newMarker);
 
