@@ -216,7 +216,6 @@ namespace VRUserProxy {
 		roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view);
 
 		//R Thumb Pressed
-
 		if (inputState.Buttons & ovrButton_RThumb) {
 			// Zoom
 			DPrintf(" StickZoom\n");
@@ -404,6 +403,7 @@ namespace VRUserProxy {
 				glPopMatrix();
 			}
 		}
+
 
 		roomScene->Render(view, proj, rot);
 

@@ -1,12 +1,15 @@
 #pragma once
 
 #define GLM_ENABLE_EXPERIMENTAL
+#define STB_IMAGE_IMPLEMENTATION
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
+#include <stb_image.h>
 
 #include <vector>
 #include <map>
+#include <array>
 
 
 using namespace OVR;
@@ -290,6 +293,7 @@ struct Model
 		delete indexBuffer; indexBuffer = nullptr;
 	}
 
+
 	void AddSolidColorBox(float x1, float y1, float z1, float x2, float y2, float z2, DWORD c)
 	{
 		Vector3f Vert[][2] =
@@ -340,6 +344,56 @@ struct Model
 			AddVertex(vvv);
 		}
 	}
+
+
+	void AddSolidColorRect(std::vector<Vector3f> vertices, DWORD c) {
+		//vertices are in clockwise order starting at bottom left
+		Vector3f Vert[][2] =
+		{
+			//may have to change around the texture coordinates
+			vertices[0], Vector3f(0,1), vertices[1], Vector3f(1,1),
+			vertices[2], Vector3f(1,0), vertices[3], Vector3f(0,0),
+		};
+
+		GLushort RectIndices[] =
+		{
+			0, 3, 1, 1, 3, 2
+		};
+
+		for (int i = 0; i < sizeof(RectIndices) / sizeof(RectIndices[0]); ++i)
+			AddIndex(RectIndices[i] + GLushort(numVertices));
+
+		// Generate a quad of vertices
+		genQuadVertices(Vert, 1, c);
+	}
+
+
+	void AddTransparentRect(std::vector<Vector3f> vertices) {
+		//vertices are in clockwise order starting at bottom left
+		Vector3f Vert[][2] =
+		{
+			//may have to change around the texture coordinates
+			vertices[0], Vector3f(0,1), vertices[1], Vector3f(1,1),
+			vertices[2], Vector3f(1,0), vertices[3], Vector3f(0,0),
+		};
+
+		GLushort RectIndices[] =
+		{
+			0, 3, 1, 1, 3, 2
+		};
+
+		for (int i = 0; i < sizeof(RectIndices) / sizeof(RectIndices[0]); ++i)
+			AddIndex(RectIndices[i] + GLushort(numVertices));
+
+		// Generate a quad of transparent-color vertices
+		for (int v = 0; v < 4; v++)
+		{
+			Vertex vvv; vvv.Pos = Vert[v][0]; vvv.U = Vert[v][1].x; vvv.V = Vert[v][1].y;
+			vvv.C = 0x00000000;
+			AddVertex(vvv);
+		}
+	}
+
 
 	//returns the vectors added to a center point representing the vertices on the edges
 	std::vector<Vector3f> AddedVectors(Vector3f prev, Vector3f next, glm::quat handQ) {
@@ -585,6 +639,7 @@ struct Scene
 		std::vector<glm::quat> Q;
 	};
 
+
 	//use map for built-in find function
 	std::map<Model*, int> worldModels;
 	//markers have meaningless int values
@@ -610,7 +665,8 @@ struct Scene
 	DWORD TARGET_COLOR = 0xFF800000;
 	DWORD PHANTOM_COLOR = 0xFFA535F0;
 
-	ShaderFill * gridMaterial;
+	//ShaderFill * gridMaterial;
+	std::vector <ShaderFill*> grid_material;
 	//model highlighted for potential removal
 	Model *targetModel;
 	//targetModelType can be "marker", "straight line" or "curved line"
@@ -623,6 +679,11 @@ struct Scene
 	//for line drawing functionality
 	std::vector<Vector3f> lineCore;
 	std::vector<glm::quat> allHandQ;
+
+	//for creating the HUD
+	std::map <char*, std::array<int, 3>> image_files;
+	std::vector<std::vector<Model*>> HUDcomponents;
+	bool visibleHUD = true;
 
 
 	/************************************
@@ -726,6 +787,14 @@ struct Scene
 			m.first->Render(view, proj, rot);
 		}
 
+		//Render HUD in world mode
+		for (int i = 0; i < HUDcomponents.size(); i++) {
+			std::vector<Model*> box = HUDcomponents[i];
+			for (int j = 0; j < (box).size(); j++) {
+				box[j]->Render(view, proj, identity);
+			}
+		}
+
 
 	}
 
@@ -746,7 +815,7 @@ struct Scene
 
 	Model * CreateMarker(float size, DWORD color, Vector3f pos, bool worldMode)
 	{
-		Model * marker = new Model(Vector3f(0, 0, 0), (gridMaterial));
+		Model * marker = new Model(Vector3f(0, 0, 0), (grid_material[0]));
 		marker->AddSolidColorBox(-0.5f*size, -0.5f*size, -0.5f*size, 0.5f*size, 0.5f*size, 0.5f*size, color);
 		marker->AllocateBuffers();
 		marker->Pos = pos;
@@ -759,7 +828,7 @@ struct Scene
 	Model * CreateStraightLine(Vector3f start, Vector3f end, glm::quat handQ, float thickness, DWORD color) {
 		//should be okay to put Pos at origin because the line construction is based on the origin
 		//However, Pos will NOT reflect the actual location of the line!
-		Model * straightLine = new Model(Vector3f(0, 0, 0), (gridMaterial));
+		Model * straightLine = new Model(Vector3f(0, 0, 0), (grid_material[0]));
 		straightLine->AddStraightLine(start, end, handQ, thickness, color);
 		straightLine->AllocateBuffers();
 
@@ -770,13 +839,50 @@ struct Scene
 	Model * CreateCurvedLine(std::vector<Vector3f> lineCore, std::vector<glm::quat> allHandQ, float thickness, DWORD color) {
 		//should be okay to put Pos at origin because the line construction is based on the origin
 		//However, Pos will NOT reflect the actual location of the line!
-		Model * curvedLine = new Model(Vector3f(0, 0, 0), (gridMaterial));
+		Model * curvedLine = new Model(Vector3f(0, 0, 0), (grid_material[0]));
 		curvedLine->AddCurvedLine(lineCore, allHandQ, thickness, color);
 		curvedLine->AllocateBuffers();
 
 		return curvedLine;
 	}
 
+	std::vector<Model*> CreateTextBox(std::vector<Vector3f> defaultVertices, ShaderFill * text, Vector3f hmdP, glm::quat hmdQ, DWORD background_c) {
+		std::vector<Vector3f> anchoredVertices = AnchorVerticesToHead(defaultVertices, hmdP, hmdQ);
+
+		//creates a semitransparent background for our textbox
+		Model * textBackground = new Model(Vector3f(0, 0, 0), grid_material[1]);
+		textBackground->AddSolidColorRect(anchoredVertices, background_c);
+		textBackground->AllocateBuffers();
+		
+		//creates 
+		Model * textForeground = new Model(Vector3f(0, 0, 0), text);
+		textForeground->AddTransparentRect(anchoredVertices);
+		textForeground->AllocateBuffers();
+
+		std::vector<Model*> textBox{ textBackground, textForeground };
+		return textBox;
+	}
+
+
+	std::vector<Vector3f> AnchorVerticesToHead(std::vector<Vector3f> vertices, Vector3f hmdP, glm::quat hmdQ) {
+		//given a set of vertices relative to the origin and default orientation, 
+		//returns a set of vertices transformed based on the position and orientation of the head
+		std::vector<Vector3f> anchored;
+
+		for (int i = 0; i < vertices.size(); i++) {
+			Vector3f new_v;
+			glm::vec4 v(vertices[i].x, vertices[i].y, vertices[i].z, 1.0f);
+			glm::vec4 translate = hmdQ * v;
+
+			new_v.x = hmdP.x + translate.x;
+			new_v.y = hmdP.y + translate.y;
+			new_v.z = hmdP.z + translate.z;
+
+			anchored.push_back(new_v);
+		}
+
+		return anchored;
+	}
 
 
 	GLuint CreateShader(GLenum type, const GLchar* src)
@@ -804,6 +910,13 @@ struct Scene
 	
 	void CreateTextures()
 	{
+		//std::map <char*, std::array<int, 3>> image_files;
+
+		//legend image; image properties {width, height, numChannels}
+		std::array<int, 3> image_properties = { 3740, 2528, 32 };
+		char* image_name = "ControllerLegend.png";
+		image_files[image_name] = image_properties;
+
 		static const GLchar* VertexShaderSrc =
 			"#version 150\n"
 			"uniform mat4 matWVP;\n"
@@ -836,15 +949,29 @@ struct Scene
 
 		// Make textures
 		static DWORD tex_pixels[256 * 256];
+		static DWORD tex_pixels_semitransparent[256 * 256];
 		for (int j = 0; j < 256; ++j)
 		{
 			for (int i = 0; i < 256; ++i)
 			{
 				tex_pixels[j * 256 + i] = 0xffffffff;// blank
+				tex_pixels_semitransparent[j * 256 + i] = 0x66ffffff; //semitransparent white
 			}
 		}
+
 		TextureBuffer * generated_texture = new TextureBuffer(false, Sizei(256, 256), 4, (unsigned char *)tex_pixels);
-		gridMaterial = new ShaderFill(vshader, fshader, generated_texture);
+		TextureBuffer * generated_texture_st = new TextureBuffer(false, Sizei(256, 256), 4, (unsigned char *)tex_pixels_semitransparent);
+		//gridMaterial = new ShaderFill(vshader, fshader, generated_texture);
+		grid_material[0] = new ShaderFill(vshader, fshader, generated_texture);
+		grid_material[1] = new ShaderFill(vshader, fshader, generated_texture_st);
+
+		for (auto i : image_files) {
+			char* name = i.first;
+			unsigned char *data = stbi_load(name, &(i.second[0]), &(i.second[1]), &(i.second[2]), 0);
+			TextureBuffer * generated_texture = new TextureBuffer(false, Sizei(i.second[0], i.second[1]), 4, data);
+			ShaderFill * generated_shader = new ShaderFill(vshader, fshader, generated_texture);
+			grid_material.push_back(generated_shader);
+		}
 		
 
 		glDeleteShader(vshader);
@@ -1132,6 +1259,8 @@ struct Scene
 		static bool drawingStraightLine = false;
 		static bool drawingCurvedLine = false;
 
+		static bool canSwitchHUD = true;
+
 
 		//if we are actively drawing a line
 		if (lineCore.size() > 0) {
@@ -1256,6 +1385,24 @@ struct Scene
 			switchMode = true;
 		}
 
+		//menu button, switch HUD on and off
+		if (inputState.Buttons & ovrButton_Enter) {
+			if (canSwitchHUD == true) {
+				canSwitchHUD = false;
+				visibleHUD = !visibleHUD;
+			}
+		}
+
+		else {
+			canSwitchHUD = true;
+		}
+
+		//generate the HUD if visibleHUD is true; we are doing it here because this is the only place 
+		//we have the proper variables
+		if (visibleHUD) {
+			GenerateHUD(gHeadPos, gPose);
+		}
+
 	}
 	
 
@@ -1276,6 +1423,7 @@ struct Scene
 		}
 
 		removeTempLines();
+		clearHUD();
 	}
 
 	
@@ -1307,9 +1455,34 @@ struct Scene
 		
 	}
 
+	//clears the vector of HUD elements; clear and reset at every timeslot
+	void clearHUD()
+	{
+		HUDcomponents.clear();
+	}
+
+	//generates and stores essential HUD components
+	void GenerateHUD(Vector3f hmdP, Quatf hmdQuat) {
+
+		glm::quat hmdQ = _glmFromOvrQuat(hmdQuat);
+
+		//creates the controller action legend
+		float default_x = (image_files["ControllerLegend.png"][0])/200;
+		float default_y = (image_files["ControllerLegend.png"][1])/200;
+		float depth = 30;
+
+		std::vector<Vector3f> defaultVertices{ Vector3f{-default_x, -default_y, depth},
+												Vector3f{-default_x, default_y, depth},
+												Vector3f{default_x, default_y, depth},
+												Vector3f{default_x, -default_y, depth} };
+		std::vector<Model*> controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0x66000000);
+		HUDcomponents.push_back(controllerLegend);
+	}
+
 	//initialization; when scene created, create textures as well
 	Scene()
 	{
 		CreateTextures();
+		
 	}
 }; 

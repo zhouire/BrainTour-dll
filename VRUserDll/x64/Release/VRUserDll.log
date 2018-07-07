@@ -1,10 +1,10 @@
 ﻿  VRUserDll.cpp
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1161): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-     Creating library C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.lib and object C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.exp
+e:\classes\2018 summer\urop\braintour-dll\vruserdll\SceneManager.h(1290): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\classes\2018 summer\urop\braintour-dll\vruserdll\SceneManager.h(1470): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+e:\classes\2018 summer\urop\braintour-dll\vruserdll\SceneManager.h(1471): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+     Creating library E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.lib and object E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.exp
   Generating code
-  26 of 724 functions ( 3.6%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    6 functions had inline decision re-evaluated but remain unchanged
+  All 1241 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
-  VRUserDll.vcxproj -> C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.dll
-  VRUserDll.vcxproj -> C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.pdb (Full PDB)
+  VRUserDll.vcxproj -> E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.dll
+  VRUserDll.vcxproj -> E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.pdb (Full PDB)
