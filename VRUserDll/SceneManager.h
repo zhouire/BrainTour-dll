@@ -857,23 +857,29 @@ struct Scene
 		Model * textBackground = new Model(Vector3f(0, 0, 0), grid_material[1]);
 		textBackground->AddSolidColorRect(anchoredVertices, background_c);
 		textBackground->AllocateBuffers();
+		*/
 
 		//creates the text
 		Model * textForeground = new Model(Vector3f(0, 0, 0), text);
-		textForeground->AddTransparentRect(anchoredVertices);
+		//textForeground->AddTransparentRect(anchoredVertices);
+		textForeground->AddSolidColorRect(anchoredVertices, 0xffffffff);
 		textForeground->AllocateBuffers();
 
-		std::vector<Model*> textBox{ textBackground, textForeground };
+		//std::vector<Model*> textBox{ textBackground, textForeground };
+		std::vector<Model*> textBox{ textForeground, textForeground };
 
 		return textBox;
-		*/
+		
 
+		/*
+		//debug; creates a big yellow rect
 		Model * samplerect = new Model(Vector3f(0, 0, 0), grid_material[0]);
 		samplerect->AddSolidColorRect(anchoredVertices, background_c);
 		samplerect->AllocateBuffers();
 
 		std::vector<Model*> rect{ samplerect, samplerect };
 		return rect;
+		*/
 	}
 
 
@@ -1420,6 +1426,8 @@ struct Scene
 		//we have the proper variables
 		if (visibleHUD) {
 			Vector3f hmdP = hmdPose.Position;
+			hmdP = gHeadOrientation.Inverted().Transform(hmdP - gHeadPos);
+			hmdP = view.Inverted().Transform(hmdP);
 			Quatf hmdQ = hmdPose.Orientation;
 			GenerateHUD(hmdP, hmdQ);
 		}
@@ -1488,14 +1496,16 @@ struct Scene
 		glm::quat hmdQ = _glmFromOvrQuat(hmdQuat);
 
 		//creates the controller action legend
+		
+		float default_x = (image_files["ControllerLegend.png"][0]) / 1000;
+		float default_y = (image_files["ControllerLegend.png"][1]) / 1000;
+		float depth = -6;
+		
 		/*
-		float default_x = (image_files["ControllerLegend.png"][0]) / 200;
-		float default_y = (image_files["ControllerLegend.png"][1]) / 200;
-		float depth = 30;
+		float default_x = 4;
+		float default_y = 2;
+		float depth = -6;
 		*/
-		float default_x = 20;
-		float default_y = 40;
-		float depth = -30;
 
 		std::vector<Vector3f> defaultVertices{ Vector3f{ -default_x, -default_y, depth },
 			Vector3f{ -default_x, default_y, depth },
@@ -1503,7 +1513,8 @@ struct Scene
 			Vector3f{ default_x, -default_y, depth } };
 		//transparent black: 0x66000000
 		//opaque yellow: 0xFFFFFF00
-		std::vector<Model*> controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0xFFFFFF00);
+		//std::vector<Model*> controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0xFFFFFF00);
+		std::vector<Model*> controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0x66000000);
 		HUDcomponents.push_back(controllerLegend);
 	}
 
