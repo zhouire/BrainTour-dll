@@ -1,10 +1,11 @@
 #pragma once
 
 #define GLM_ENABLE_EXPERIMENTAL
-#define STB_IMAGE_IMPLEMENTATION
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
+
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 #include <vector>
@@ -293,7 +294,6 @@ struct Model
 		delete indexBuffer; indexBuffer = nullptr;
 	}
 
-
 	void AddSolidColorBox(float x1, float y1, float z1, float x2, float y2, float z2, DWORD c)
 	{
 		Vector3f Vert[][2] =
@@ -393,6 +393,8 @@ struct Model
 			AddVertex(vvv);
 		}
 	}
+
+
 
 
 	//returns the vectors added to a center point representing the vertices on the edges
@@ -639,7 +641,6 @@ struct Scene
 		std::vector<glm::quat> Q;
 	};
 
-
 	//use map for built-in find function
 	std::map<Model*, int> worldModels;
 	//markers have meaningless int values
@@ -679,6 +680,7 @@ struct Scene
 	//for line drawing functionality
 	std::vector<Vector3f> lineCore;
 	std::vector<glm::quat> allHandQ;
+
 
 	//for creating the HUD
 	std::map <char*, std::array<int, 3>> image_files;
@@ -787,7 +789,7 @@ struct Scene
 			m.first->Render(view, proj, rot);
 		}
 
-		//Render HUD in world mode
+		//render HUD in world mode
 		for (int i = 0; i < HUDcomponents.size(); i++) {
 			std::vector<Model*> box = HUDcomponents[i];
 			for (int j = 0; j < (box).size(); j++) {
@@ -846,6 +848,7 @@ struct Scene
 		return curvedLine;
 	}
 
+
 	std::vector<Model*> CreateTextBox(std::vector<Vector3f> defaultVertices, ShaderFill * text, Vector3f hmdP, glm::quat hmdQ, DWORD background_c) {
 		std::vector<Vector3f> anchoredVertices = AnchorVerticesToHead(defaultVertices, hmdP, hmdQ);
 
@@ -853,7 +856,7 @@ struct Scene
 		Model * textBackground = new Model(Vector3f(0, 0, 0), grid_material[1]);
 		textBackground->AddSolidColorRect(anchoredVertices, background_c);
 		textBackground->AllocateBuffers();
-		
+
 		//creates 
 		Model * textForeground = new Model(Vector3f(0, 0, 0), text);
 		textForeground->AddTransparentRect(anchoredVertices);
@@ -885,6 +888,7 @@ struct Scene
 	}
 
 
+
 	GLuint CreateShader(GLenum type, const GLchar* src)
 	{
 		GLuint shader = glCreateShader(type);
@@ -910,12 +914,13 @@ struct Scene
 	
 	void CreateTextures()
 	{
-		//std::map <char*, std::array<int, 3>> image_files;
-
 		//legend image; image properties {width, height, numChannels}
+		
 		std::array<int, 3> image_properties = { 3740, 2528, 32 };
 		char* image_name = "ControllerLegend.png";
 		image_files[image_name] = image_properties;
+		
+
 
 		static const GLchar* VertexShaderSrc =
 			"#version 150\n"
@@ -950,6 +955,7 @@ struct Scene
 		// Make textures
 		static DWORD tex_pixels[256 * 256];
 		static DWORD tex_pixels_semitransparent[256 * 256];
+
 		for (int j = 0; j < 256; ++j)
 		{
 			for (int i = 0; i < 256; ++i)
@@ -958,12 +964,15 @@ struct Scene
 				tex_pixels_semitransparent[j * 256 + i] = 0x66ffffff; //semitransparent white
 			}
 		}
-
 		TextureBuffer * generated_texture = new TextureBuffer(false, Sizei(256, 256), 4, (unsigned char *)tex_pixels);
 		TextureBuffer * generated_texture_st = new TextureBuffer(false, Sizei(256, 256), 4, (unsigned char *)tex_pixels_semitransparent);
-		//gridMaterial = new ShaderFill(vshader, fshader, generated_texture);
-		grid_material[0] = new ShaderFill(vshader, fshader, generated_texture);
-		grid_material[1] = new ShaderFill(vshader, fshader, generated_texture_st);
+
+		ShaderFill * generated_shaderfill = new ShaderFill(vshader, fshader, generated_texture);
+		ShaderFill * generated_shaderfill_st = new ShaderFill(vshader, fshader, generated_texture_st);
+
+		grid_material.push_back(generated_shaderfill);
+		grid_material.push_back(generated_shaderfill_st);
+		
 
 		for (auto i : image_files) {
 			char* name = i.first;
@@ -972,7 +981,7 @@ struct Scene
 			ShaderFill * generated_shader = new ShaderFill(vshader, fshader, generated_texture);
 			grid_material.push_back(generated_shader);
 		}
-		
+
 
 		glDeleteShader(vshader);
 		glDeleteShader(fshader);
@@ -1467,14 +1476,14 @@ struct Scene
 		glm::quat hmdQ = _glmFromOvrQuat(hmdQuat);
 
 		//creates the controller action legend
-		float default_x = (image_files["ControllerLegend.png"][0])/200;
-		float default_y = (image_files["ControllerLegend.png"][1])/200;
+		float default_x = (image_files["ControllerLegend.png"][0]) / 200;
+		float default_y = (image_files["ControllerLegend.png"][1]) / 200;
 		float depth = 30;
 
-		std::vector<Vector3f> defaultVertices{ Vector3f{-default_x, -default_y, depth},
-												Vector3f{-default_x, default_y, depth},
-												Vector3f{default_x, default_y, depth},
-												Vector3f{default_x, -default_y, depth} };
+		std::vector<Vector3f> defaultVertices{ Vector3f{ -default_x, -default_y, depth },
+			Vector3f{ -default_x, default_y, depth },
+			Vector3f{ default_x, default_y, depth },
+			Vector3f{ default_x, -default_y, depth } };
 		std::vector<Model*> controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0x66000000);
 		HUDcomponents.push_back(controllerLegend);
 	}
@@ -1483,6 +1492,5 @@ struct Scene
 	Scene()
 	{
 		CreateTextures();
-		
 	}
 }; 

@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll;C:\Program Files\glm;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll;C:\Program Files\glm;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
