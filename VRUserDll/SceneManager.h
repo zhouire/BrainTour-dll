@@ -1235,7 +1235,7 @@ struct Scene
 	}
 
 	
-	void ControllerActions(ovrPosef leftPose, ovrPosef rightPose, Quatf &gPose, Vector3f &gHeadPos, 
+	void ControllerActions(ovrPosef hmdPose, ovrPosef leftPose, ovrPosef rightPose, Quatf &gPose, Vector3f &gHeadPos,
 		ovrInputState &inputState, Matrix4f &gHeadOrientation, OVR::Matrix4f& view)
 	{
 		//oculus has tendency to detect multiple presses on one press; prevent this
@@ -1419,7 +1419,9 @@ struct Scene
 		//generate the HUD if visibleHUD is true; we are doing it here because this is the only place 
 		//we have the proper variables
 		if (visibleHUD) {
-			GenerateHUD(gHeadPos, gPose);
+			Vector3f hmdP = hmdPose.Position;
+			Quatf hmdQ = hmdPose.Orientation;
+			GenerateHUD(hmdP, hmdQ);
 		}
 
 	}

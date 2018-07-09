@@ -101,6 +101,9 @@ namespace VRUserProxy {
 		handPoses[ovrHand_Left] = trackState.HandPoses[ovrHand_Left].ThePose;
 		handPoses[ovrHand_Right] = trackState.HandPoses[ovrHand_Right].ThePose;
 
+		//new experimental hmd pose
+		ovrPosef hmdPose = trackState.HeadPose.ThePose;
+
 		DPrintf("VRUserProxy::GetInputState OK\n");
 		int RoiMode = 0;
 		Matrix4f v = view;
@@ -213,7 +216,7 @@ namespace VRUserProxy {
 
 
 		//Controller actions influencing the scene (A,B,X,Y)
-		roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view);
+		roomScene->ControllerActions(hmdPose, handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view);
 
 		//R Thumb Pressed
 		if (inputState.Buttons & ovrButton_RThumb) {
