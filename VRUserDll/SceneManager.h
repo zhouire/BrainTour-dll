@@ -852,18 +852,28 @@ struct Scene
 	std::vector<Model*> CreateTextBox(std::vector<Vector3f> defaultVertices, ShaderFill * text, Vector3f hmdP, glm::quat hmdQ, DWORD background_c) {
 		std::vector<Vector3f> anchoredVertices = AnchorVerticesToHead(defaultVertices, hmdP, hmdQ);
 
+		/*
 		//creates a semitransparent background for our textbox
 		Model * textBackground = new Model(Vector3f(0, 0, 0), grid_material[1]);
 		textBackground->AddSolidColorRect(anchoredVertices, background_c);
 		textBackground->AllocateBuffers();
 
-		//creates 
+		//creates the text
 		Model * textForeground = new Model(Vector3f(0, 0, 0), text);
 		textForeground->AddTransparentRect(anchoredVertices);
 		textForeground->AllocateBuffers();
 
 		std::vector<Model*> textBox{ textBackground, textForeground };
+
 		return textBox;
+		*/
+
+		Model * samplerect = new Model(Vector3f(0, 0, 0), grid_material[0]);
+		samplerect->AddSolidColorRect(anchoredVertices, background_c);
+		samplerect->AllocateBuffers();
+
+		std::vector<Model*> rect{ samplerect, samplerect };
+		return rect;
 	}
 
 
@@ -1476,8 +1486,13 @@ struct Scene
 		glm::quat hmdQ = _glmFromOvrQuat(hmdQuat);
 
 		//creates the controller action legend
+		/*
 		float default_x = (image_files["ControllerLegend.png"][0]) / 200;
 		float default_y = (image_files["ControllerLegend.png"][1]) / 200;
+		float depth = 30;
+		*/
+		float default_x = 100;
+		float default_y = 200;
 		float depth = 30;
 
 		std::vector<Vector3f> defaultVertices{ Vector3f{ -default_x, -default_y, depth },
