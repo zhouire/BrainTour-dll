@@ -1493,13 +1493,15 @@ struct Scene
 		*/
 		float default_x = 100;
 		float default_y = 200;
-		float depth = 30;
+		float depth = -30;
 
 		std::vector<Vector3f> defaultVertices{ Vector3f{ -default_x, -default_y, depth },
 			Vector3f{ -default_x, default_y, depth },
 			Vector3f{ default_x, default_y, depth },
 			Vector3f{ default_x, -default_y, depth } };
-		std::vector<Model*> controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0x66000000);
+		//transparent black: 0x66000000
+		//opaque yellow: 0xFFFFFF00
+		std::vector<Model*> controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0xFFFFFF00);
 		HUDcomponents.push_back(controllerLegend);
 	}
 

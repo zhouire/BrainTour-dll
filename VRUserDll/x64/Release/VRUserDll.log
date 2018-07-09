@@ -1,12 +1,10 @@
 ﻿  VRUserDll.cpp
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1299): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1479): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1480): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1309): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
      Creating library C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.lib and object C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.exp
   Generating code
-  158 of 1241 functions (12.7%) were compiled, the rest were copied from previous compilation.
-    65 functions were new in current compilation
-    58 functions had inline decision re-evaluated but remain unchanged
+  33 of 1240 functions ( 2.7%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    8 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   VRUserDll.vcxproj -> C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.dll
   VRUserDll.vcxproj -> C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.pdb (Full PDB)
