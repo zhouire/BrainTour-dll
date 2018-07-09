@@ -1491,8 +1491,8 @@ struct Scene
 		float default_y = (image_files["ControllerLegend.png"][1]) / 200;
 		float depth = 30;
 		*/
-		float default_x = 100;
-		float default_y = 200;
+		float default_x = 20;
+		float default_y = 40;
 		float depth = -30;
 
 		std::vector<Vector3f> defaultVertices{ Vector3f{ -default_x, -default_y, depth },
