@@ -351,8 +351,8 @@ struct Model
 		Vector3f Vert[][2] =
 		{
 			//may have to change around the texture coordinates
-			vertices[0], Vector3f(0,1), vertices[1], Vector3f(1,1),
-			vertices[2], Vector3f(1,0), vertices[3], Vector3f(0,0),
+			vertices[0], Vector3f(0,1), vertices[1], Vector3f(0,0),
+			vertices[2], Vector3f(1,0), vertices[3], Vector3f(1,1),
 		};
 
 		GLushort RectIndices[] =
@@ -933,7 +933,7 @@ struct Scene
 		//legend image; image properties {width, height, numChannels}
 		
 		std::array<int, 3> image_properties = { 3740, 2528, 32 };
-		char* image_name = "ControllerLegend.png";
+		char* image_name = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\ControllerLegend.png";
 		image_files[image_name] = image_properties;
 		
 
@@ -992,7 +992,8 @@ struct Scene
 
 		for (auto i : image_files) {
 			char* name = i.first;
-			unsigned char *data = stbi_load(name, &(i.second[0]), &(i.second[1]), &(i.second[2]), 0);
+			//unsigned char *data = stbi_load(name, &(i.second[0]), &(i.second[1]), &(i.second[2]), 0);
+			unsigned char *data = stbi_load(name, &(i.second[0]), &(i.second[1]), &(i.second[2]), STBI_rgb_alpha);
 			TextureBuffer * generated_texture = new TextureBuffer(false, Sizei(i.second[0], i.second[1]), 4, data);
 			ShaderFill * generated_shader = new ShaderFill(vshader, fshader, generated_texture);
 			grid_material.push_back(generated_shader);
@@ -1497,8 +1498,8 @@ struct Scene
 
 		//creates the controller action legend
 		
-		float default_x = (image_files["ControllerLegend.png"][0]) / 1000;
-		float default_y = (image_files["ControllerLegend.png"][1]) / 1000;
+		float default_x = (image_files["C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\ControllerLegend.png"][0]) / 1000;
+		float default_y = (image_files["C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\ControllerLegend.png"][1]) / 1000;
 		float depth = -6;
 		
 		/*
