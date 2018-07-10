@@ -687,7 +687,8 @@ struct Scene
 	std::vector<std::vector<Model*>> HUDcomponents;
 	bool visibleHUD = true;
 
-	std::string imagePath = "E:\\Classes\\2018 Summer\\UROP\\BrainTour-dll\\TestSolution0\\Images\\";
+	//std::string imagePath = "E:\\Classes\\2018 Summer\\UROP\\BrainTour-dll\\TestSolution0\\Images\\";
+	std::string imagePath = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\TestSolution0\\Images\\";
 
 
 	/************************************
@@ -1500,7 +1501,7 @@ struct Scene
 		const char* legend = (imagePath + "ControllerLegend.png").c_str();
 		float default_x = (image_files[legend][0]) / 1000;
 		float default_y = (image_files[legend][1]) / 1000;
-		float depth = 6;
+		float depth = -6;
 		
 		/*
 		float default_x = 4;
@@ -1508,10 +1509,10 @@ struct Scene
 		float depth = -6;
 		*/
 
-		std::vector<Vector3f> defaultVertices{ Vector3f{ -default_x, -default_y, -depth },
-			Vector3f{ -default_x, default_y, -depth },
-			Vector3f{ default_x, default_y, -depth },
-			Vector3f{ default_x, -default_y, -depth } };
+		std::vector<Vector3f> defaultVertices{ Vector3f{ -default_x, -default_y, depth },
+			Vector3f{ -default_x, default_y, depth },
+			Vector3f{ default_x, default_y, depth },
+			Vector3f{ default_x, -default_y, depth } };
 		//transparent black: 0x66000000
 		//opaque yellow: 0xFFFFFF00
 		//std::vector<Model*> controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0xFFFFFF00);
