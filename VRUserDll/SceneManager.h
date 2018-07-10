@@ -683,12 +683,13 @@ struct Scene
 
 
 	//for creating the HUD
-	std::map <const char*, std::array<int, 3>> image_files;
+	std::map <char*, std::array<int, 3>> image_files;
 	std::vector<std::vector<Model*>> HUDcomponents;
 	bool visibleHUD = true;
 
 	//std::string imagePath = "E:\\Classes\\2018 Summer\\UROP\\BrainTour-dll\\TestSolution0\\Images\\";
 	std::string imagePath = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\TestSolution0\\Images\\";
+	//std::string imagePath = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\";
 
 
 	/************************************
@@ -872,6 +873,17 @@ struct Scene
 		std::vector<Model*> textBox{ textForeground, textForeground };
 
 		return textBox;
+		
+
+		/*
+		//debug; creates a big yellow rect
+		Model * samplerect = new Model(Vector3f(0, 0, 0), grid_material[0]);
+		samplerect->AddSolidColorRect(anchoredVertices, background_c);
+		samplerect->AllocateBuffers();
+
+		std::vector<Model*> rect{ samplerect, samplerect };
+		return rect;
+		*/
 	}
 
 
@@ -924,16 +936,18 @@ struct Scene
 	{
 		//legend image; image properties {width, height, numChannels}
 		std::array<int, 3> image_properties = { 3740, 2528, 32 };
-		const char* image_name = (imagePath + "ControllerLegend.png").c_str();
-		image_files[image_name] = image_properties;
+		//char* legend = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\ControllerLegend.png";
+		//char* image_name = (char*)(imagePath + "ControllerLegend.png").c_str();
+		image_files["ControllerLegend.png"] = image_properties;
+
 		//WorldMode label
-		image_properties = { 718, 212, 8 };
-		image_name = (imagePath + "WorldMode.png").c_str();
-		image_files[image_name] = image_properties;
+		std::array<int, 3> image_properties_1 = { 718, 212, 32 };
+		//image_name = (char*)(imagePath + "WorldMode.png").c_str();
+		image_files["WorldMode.png"] = image_properties_1;
 		//VolumeMode label
-		image_properties = { 766,212,8 };
-		image_name = (imagePath + "VolumeMode.png").c_str();
-		image_files[image_name] = image_properties;
+		std::array<int, 3> image_properties_2 = { 766, 212, 32 };
+		//image_name = (char*)(imagePath + "VolumeMode.png").c_str();
+		image_files["VolumeMode.png"] = image_properties_2;
 		
 
 
@@ -990,7 +1004,8 @@ struct Scene
 		
 
 		for (auto i : image_files) {
-			const char* name = i.first;
+			//char* name = i.first;
+			char* name = (char*)(imagePath + i.first).c_str();
 			//unsigned char *data = stbi_load(name, &(i.second[0]), &(i.second[1]), &(i.second[2]), 0);
 			unsigned char *data = stbi_load(name, &(i.second[0]), &(i.second[1]), &(i.second[2]), STBI_rgb_alpha);
 			TextureBuffer * generated_texture = new TextureBuffer(false, Sizei(i.second[0], i.second[1]), 4, data);
@@ -1490,18 +1505,25 @@ struct Scene
 		HUDcomponents.clear();
 	}
 
-
 	//generates and stores essential HUD components
 	void GenerateHUD(Vector3f hmdP, Quatf hmdQuat) {
 
 		glm::quat hmdQ = _glmFromOvrQuat(hmdQuat);
 
 		//creates the controller action legend
-		
-		const char* legend = (imagePath + "ControllerLegend.png").c_str();
-		float default_x = (image_files[legend][0]) / 1000;
-		float default_y = (image_files[legend][1]) / 1000;
+		/*
+		float default_x = (image_files["C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\ControllerLegend.png"][0]) / 1000;
+		float default_y = (image_files["C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\ControllerLegend.png"][1]) / 1000;
 		float depth = -6;
+		*/
+
+		//creates the controller action legend
+
+		//std::string pathCopy = imagePath;
+		float default_x = (image_files["ControllerLegend.png"][0]) / 1000;
+		float default_y = (image_files["ControllerLegend.png"][1]) / 1000;
+		float depth = -6;
+
 		
 		/*
 		float default_x = 4;
@@ -1519,16 +1541,26 @@ struct Scene
 		std::vector<Model*> controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0x66000000);
 		HUDcomponents.push_back(controllerLegend);
 
-		if (worldMode) {
-			const char* mode = (imagePath + "WorldMode.png").c_str();
-			float mode_default_x = (image_files[mode][0]) / 1000;
-			float mode_default_y = (image_files[mode][1]) / 1000;
-			depth = 6;
 
-			std::vector<Vector3f> defaultVertices{ Vector3f{ -mode_default_x, (-2*mode_default_y - default_y), -depth },
-				Vector3f{ -mode_default_x, (-default_y), -depth },
-				Vector3f{ mode_default_x, (-default_y), -depth },
-				Vector3f{ mode_default_x, (-2*mode_default_y - default_y), -depth } };
+		//world/volume mode labels
+		if (worldMode) {
+			//const char* mode = (imagePath + "WorldMode.png").c_str();
+			float mode_default_x = (image_files["WorldMode.png"][0]) / 200;
+			float mode_default_y = (image_files["WorldMode.png"][1]) / 200;
+			depth = -6;
+
+			
+			std::vector<Vector3f> defaultVertices{ Vector3f{ -mode_default_x, (-2 * mode_default_y - default_y), depth },
+				Vector3f{ -mode_default_x, (-default_y), depth },
+				Vector3f{ mode_default_x, (-default_y), depth },
+				Vector3f{ mode_default_x, (-2 * mode_default_y - default_y), depth } };
+				
+			/*
+			std::vector<Vector3f> defaultVertices{ Vector3f{ -mode_default_x, -mode_default_y, depth },
+				Vector3f{ -mode_default_x, mode_default_y, depth },
+				Vector3f{ mode_default_x, mode_default_y, depth },
+				Vector3f{ mode_default_x, -mode_default_y, depth } };
+				*/
 
 			//grid_material[3] -> world mode label
 			std::vector<Model*> worldLabel = CreateTextBox(defaultVertices, grid_material[3], hmdP, hmdQ, 0x66000000);
@@ -1536,15 +1568,22 @@ struct Scene
 		}
 
 		else {
-			const char* mode = (imagePath + "VolumeMode.png").c_str();
-			float mode_default_x = (image_files[mode][0]) / 1000;
-			float mode_default_y = (image_files[mode][1]) / 1000;
-			depth = 6;
-
-			std::vector<Vector3f> defaultVertices{ Vector3f{ -mode_default_x, (-2*mode_default_y - default_y), -depth },
-				Vector3f{ -mode_default_x, (-default_y), -depth },
-				Vector3f{ mode_default_x, (-default_y), -depth },
-				Vector3f{ mode_default_x, (-2*mode_default_y - default_y), -depth } };
+			//const char* mode = (imagePath + "VolumeMode.png").c_str();
+			float mode_default_x = (image_files["VolumeMode.png"][0]) / 200;
+			float mode_default_y = (image_files["VolumeMode.png"][1]) / 200;
+			depth = -6;
+			
+			std::vector<Vector3f> defaultVertices{ Vector3f{ -mode_default_x, (-2 * mode_default_y - default_y), depth },
+				Vector3f{ -mode_default_x, (-default_y), depth },
+				Vector3f{ mode_default_x, (-default_y), depth },
+				Vector3f{ mode_default_x, (-2 * mode_default_y - default_y), depth } };
+				
+			/*
+			std::vector<Vector3f> defaultVertices{ Vector3f{ -mode_default_x, -mode_default_y, depth },
+				Vector3f{ -mode_default_x, mode_default_y, depth },
+				Vector3f{ mode_default_x, mode_default_y, depth },
+				Vector3f{ mode_default_x, -mode_default_y, depth } };
+				*/
 
 			//grid_material[4] -> volume mode label
 			std::vector<Model*> volumeLabel = CreateTextBox(defaultVertices, grid_material[4], hmdP, hmdQ, 0x66000000);
