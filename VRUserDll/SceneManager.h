@@ -692,6 +692,7 @@ struct Scene
 	std::string imagePath = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\TestSolution0\\Images\\";
 	//std::string imagePath = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\";
 
+	
 
 	/************************************
 	Add functions
@@ -765,17 +766,16 @@ struct Scene
 		volumeModels.erase(n);
 	}
 
-
-
+	
 
 	void Render(Matrix4f view, Matrix4f proj, Matrix4f rot)
 	{
 		//Render all worldMode models with a rotation matrix of Identity
 		Matrix4f identity = Matrix4f();
 
-		//render HUD in world mode
+		//render HUD in camera view with no rotation
 		for (auto const m : HUDcomponents) {
-			m->Render(view, proj, identity);
+			m->Render(identity, proj, identity);
 		}
 
 
@@ -799,16 +799,6 @@ struct Scene
 		for (auto const m : tempVolumeLines) {
 			m.first->Render(view, proj, rot);
 		}
-
-		/*
-		//render HUD in world mode
-		for (int i = 0; i < HUDcomponents.size(); i++) {
-			std::vector<Model*> box = HUDcomponents[i];
-			for (int j = 0; j < (box).size(); j++) {
-				box[j]->Render(view, proj, identity);
-			}
-		}
-		*/
 	}
 
 	//rotates the marker pos to accomodate for controller orientation and place it in front of pointer finger
@@ -860,50 +850,17 @@ struct Scene
 	}
 
 
-	Model * CreateTextBox(std::vector<Vector3f> defaultVertices, ShaderFill * text, Vector3f hmdP, glm::quat hmdQ, DWORD background_c) {
-		/*
-		std::vector<Vector3f> defaultVertices_back;
-		for (int i = 0; i < defaultVertices.size(); i++) {
-			defaultVertices_back.push_back(defaultVertices[i]);
-			defaultVertices_back[i].z -= 0.1;
-		}
-		*/
-
-		std::vector<Vector3f> anchoredVertices = AnchorVerticesToHead(defaultVertices, hmdP, hmdQ);
-		//std::vector<Vector3f> anchoredVertices_back = AnchorVerticesToHead(defaultVertices_back, hmdP, hmdQ);
-
-		/*
-		//creates a semitransparent background for our textbox
-		Model * textBackground = new Model(Vector3f(0, 0, 0), grid_material[1]);
-		textBackground->AddSolidColorRect(anchoredVertices_back, background_c);
-		textBackground->AllocateBuffers();
-		*/
-
+	Model * CreateTextBox(std::vector<Vector3f> defaultVertices, ShaderFill * text) {
 		//creates the text
 		Model * textForeground = new Model(Vector3f(0, 0, 0), text);
 		//textForeground->AddTransparentRect(anchoredVertices);
-		textForeground->AddSolidColorRect(anchoredVertices, 0xFFFFFFFF);
+		textForeground->AddSolidColorRect(defaultVertices, 0xFFFFFFFF);
 		textForeground->AllocateBuffers();
-
-		//std::vector<Model*> textBox{ textBackground, textForeground };
-		//std::vector<Model*> textBox{ textForeground, textForeground };
-		//Model * textBox
-
-		return textForeground;
 		
-
-		/*
-		//debug; creates a big yellow rect
-		Model * samplerect = new Model(Vector3f(0, 0, 0), grid_material[0]);
-		samplerect->AddSolidColorRect(anchoredVertices, background_c);
-		samplerect->AllocateBuffers();
-
-		std::vector<Model*> rect{ samplerect, samplerect };
-		return rect;
-		*/
+		return textForeground;
 	}
 
-
+	/*
 	std::vector<Vector3f> AnchorVerticesToHead(std::vector<Vector3f> vertices, Vector3f hmdP, glm::quat hmdQ) {
 		//given a set of vertices relative to the origin and default orientation, 
 		//returns a set of vertices transformed based on the position and orientation of the head
@@ -923,7 +880,7 @@ struct Scene
 
 		return anchored;
 	}
-
+	*/
 
 
 	GLuint CreateShader(GLenum type, const GLchar* src)
@@ -1434,8 +1391,13 @@ struct Scene
 		//switch modes if pressing Y
 		if (inputState.Buttons & ovrButton_Y) {
 			if (switchMode && !(inputState.Buttons & ovrButton_A)) {
+				//need to regenerate the HUD after switching modes
+				ClearHUD();
+
 				worldMode = !worldMode;
 				switchMode = false;
+
+				GenerateHUD();
 			}
 		}
 		else {
@@ -1457,11 +1419,10 @@ struct Scene
 		//generate the HUD if visibleHUD is true; we are doing it here because this is the only place 
 		//we have the proper variables
 		if (visibleHUD) {
-			Vector3f hmdP = hmdPose.Position;
-			hmdP = gHeadOrientation.Inverted().Transform(hmdP - gHeadPos);
-			hmdP = view.Inverted().Transform(hmdP);
-			Quatf hmdQ = hmdPose.Orientation;
-			GenerateHUD(hmdP, hmdQ);
+			GenerateHUD();
+		}
+		else {
+			ClearHUD();
 		}
 
 	}
@@ -1484,7 +1445,6 @@ struct Scene
 		}
 
 		removeTempLines();
-		clearHUD();
 	}
 
 	
@@ -1517,15 +1477,13 @@ struct Scene
 	}
 
 	//clears the vector of HUD elements; clear and reset at every timeslot
-	void clearHUD()
+	void ClearHUD()
 	{
 		HUDcomponents.clear();
 	}
 
 	//generates and stores essential HUD components
-	void GenerateHUD(Vector3f hmdP, Quatf hmdQuat) {
-
-		glm::quat hmdQ = _glmFromOvrQuat(hmdQuat);
+	void GenerateHUD() {
 
 		//creates the controller action legend
 
@@ -1533,14 +1491,15 @@ struct Scene
 		float default_y = (image_files["ControllerLegend.png"][1]) / 500;
 		float depth = -15;
 
-
+		
 		std::vector<Vector3f> defaultVertices{ Vector3f{ -default_x, -default_y, depth },
 			Vector3f{ -default_x, default_y, depth },
 			Vector3f{ default_x, default_y, depth },
 			Vector3f{ default_x, -default_y, depth } };
 		//transparent black: 0x66000000
 		//opaque yellow: 0xFFFFFF00
-		Model* controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0xDDFFFFFF);
+		
+		Model* controllerLegend = CreateTextBox(defaultVertices, grid_material[2]);
 		HUDcomponents.push_back(controllerLegend);
 
 
@@ -1557,7 +1516,7 @@ struct Scene
 				Vector3f{ mode_default_x, (-2 * mode_default_y - default_y), depth } };
 
 			//grid_material[3] -> world mode label
-			Model* worldLabel = CreateTextBox(defaultVertices, grid_material[3], hmdP, hmdQ, 0xDDFFFFFF);
+			Model* worldLabel = CreateTextBox(defaultVertices, grid_material[3]);
 			HUDcomponents.push_back(worldLabel);
 		}
 
@@ -1572,8 +1531,9 @@ struct Scene
 				Vector3f{ mode_default_x, (-2 * mode_default_y - default_y), depth } };
 
 			//grid_material[4] -> volume mode label
-			Model* volumeLabel = CreateTextBox(defaultVertices, grid_material[4], hmdP, hmdQ, 0xDDFFFFFF);
+			Model* volumeLabel = CreateTextBox(defaultVertices, grid_material[4]);
 			HUDcomponents.push_back(volumeLabel);
+			
 		}
 	}
 
