@@ -684,7 +684,8 @@ struct Scene
 
 	//for creating the HUD
 	std::map <char*, std::array<int, 3>> image_files;
-	std::vector<std::vector<Model*>> HUDcomponents;
+	//std::vector<std::vector<Model*>> HUDcomponents;
+	std::vector<Model*> HUDcomponents;
 	bool visibleHUD = true;
 
 	//std::string imagePath = "E:\\Classes\\2018 Summer\\UROP\\BrainTour-dll\\TestSolution0\\Images\\";
@@ -793,12 +794,19 @@ struct Scene
 			m.first->Render(view, proj, rot);
 		}
 
+		/*
 		//render HUD in world mode
 		for (int i = 0; i < HUDcomponents.size(); i++) {
 			std::vector<Model*> box = HUDcomponents[i];
 			for (int j = 0; j < (box).size(); j++) {
 				box[j]->Render(view, proj, identity);
 			}
+		}
+		*/
+
+		//render HUD in world mode
+		for (auto const m : HUDcomponents) {
+			m->Render(view, proj, identity);
 		}
 
 
@@ -853,26 +861,36 @@ struct Scene
 	}
 
 
-	std::vector<Model*> CreateTextBox(std::vector<Vector3f> defaultVertices, ShaderFill * text, Vector3f hmdP, glm::quat hmdQ, DWORD background_c) {
+	Model * CreateTextBox(std::vector<Vector3f> defaultVertices, ShaderFill * text, Vector3f hmdP, glm::quat hmdQ, DWORD background_c) {
+		/*
+		std::vector<Vector3f> defaultVertices_back;
+		for (int i = 0; i < defaultVertices.size(); i++) {
+			defaultVertices_back.push_back(defaultVertices[i]);
+			defaultVertices_back[i].z -= 0.1;
+		}
+		*/
+
 		std::vector<Vector3f> anchoredVertices = AnchorVerticesToHead(defaultVertices, hmdP, hmdQ);
+		//std::vector<Vector3f> anchoredVertices_back = AnchorVerticesToHead(defaultVertices_back, hmdP, hmdQ);
 
 		/*
 		//creates a semitransparent background for our textbox
 		Model * textBackground = new Model(Vector3f(0, 0, 0), grid_material[1]);
-		textBackground->AddSolidColorRect(anchoredVertices, background_c);
+		textBackground->AddSolidColorRect(anchoredVertices_back, background_c);
 		textBackground->AllocateBuffers();
 		*/
 
 		//creates the text
 		Model * textForeground = new Model(Vector3f(0, 0, 0), text);
 		//textForeground->AddTransparentRect(anchoredVertices);
-		textForeground->AddSolidColorRect(anchoredVertices, 0xffffffff);
+		textForeground->AddSolidColorRect(anchoredVertices, 0xFFFFFFFF);
 		textForeground->AllocateBuffers();
 
 		//std::vector<Model*> textBox{ textBackground, textForeground };
-		std::vector<Model*> textBox{ textForeground, textForeground };
+		//std::vector<Model*> textBox{ textForeground, textForeground };
+		//Model * textBox
 
-		return textBox;
+		return textForeground;
 		
 
 		/*
@@ -1511,25 +1529,11 @@ struct Scene
 		glm::quat hmdQ = _glmFromOvrQuat(hmdQuat);
 
 		//creates the controller action legend
-		/*
-		float default_x = (image_files["C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\ControllerLegend.png"][0]) / 1000;
-		float default_y = (image_files["C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\ControllerLegend.png"][1]) / 1000;
-		float depth = -6;
-		*/
 
-		//creates the controller action legend
-
-		//std::string pathCopy = imagePath;
 		float default_x = (image_files["ControllerLegend.png"][0]) / 1000;
 		float default_y = (image_files["ControllerLegend.png"][1]) / 1000;
 		float depth = -6;
 
-		
-		/*
-		float default_x = 4;
-		float default_y = 2;
-		float depth = -6;
-		*/
 
 		std::vector<Vector3f> defaultVertices{ Vector3f{ -default_x, -default_y, depth },
 			Vector3f{ -default_x, default_y, depth },
@@ -1537,14 +1541,12 @@ struct Scene
 			Vector3f{ default_x, -default_y, depth } };
 		//transparent black: 0x66000000
 		//opaque yellow: 0xFFFFFF00
-		//std::vector<Model*> controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0xFFFFFF00);
-		std::vector<Model*> controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0x66000000);
+		Model* controllerLegend = CreateTextBox(defaultVertices, grid_material[2], hmdP, hmdQ, 0xDDFFFFFF);
 		HUDcomponents.push_back(controllerLegend);
 
 
 		//world/volume mode labels
 		if (worldMode) {
-			//const char* mode = (imagePath + "WorldMode.png").c_str();
 			float mode_default_x = (image_files["WorldMode.png"][0]) / 200;
 			float mode_default_y = (image_files["WorldMode.png"][1]) / 200;
 			depth = -6;
@@ -1554,21 +1556,13 @@ struct Scene
 				Vector3f{ -mode_default_x, (-default_y), depth },
 				Vector3f{ mode_default_x, (-default_y), depth },
 				Vector3f{ mode_default_x, (-2 * mode_default_y - default_y), depth } };
-				
-			/*
-			std::vector<Vector3f> defaultVertices{ Vector3f{ -mode_default_x, -mode_default_y, depth },
-				Vector3f{ -mode_default_x, mode_default_y, depth },
-				Vector3f{ mode_default_x, mode_default_y, depth },
-				Vector3f{ mode_default_x, -mode_default_y, depth } };
-				*/
 
 			//grid_material[3] -> world mode label
-			std::vector<Model*> worldLabel = CreateTextBox(defaultVertices, grid_material[3], hmdP, hmdQ, 0x66000000);
+			Model* worldLabel = CreateTextBox(defaultVertices, grid_material[3], hmdP, hmdQ, 0xDDFFFFFF);
 			HUDcomponents.push_back(worldLabel);
 		}
 
 		else {
-			//const char* mode = (imagePath + "VolumeMode.png").c_str();
 			float mode_default_x = (image_files["VolumeMode.png"][0]) / 200;
 			float mode_default_y = (image_files["VolumeMode.png"][1]) / 200;
 			depth = -6;
@@ -1577,16 +1571,9 @@ struct Scene
 				Vector3f{ -mode_default_x, (-default_y), depth },
 				Vector3f{ mode_default_x, (-default_y), depth },
 				Vector3f{ mode_default_x, (-2 * mode_default_y - default_y), depth } };
-				
-			/*
-			std::vector<Vector3f> defaultVertices{ Vector3f{ -mode_default_x, -mode_default_y, depth },
-				Vector3f{ -mode_default_x, mode_default_y, depth },
-				Vector3f{ mode_default_x, mode_default_y, depth },
-				Vector3f{ mode_default_x, -mode_default_y, depth } };
-				*/
 
 			//grid_material[4] -> volume mode label
-			std::vector<Model*> volumeLabel = CreateTextBox(defaultVertices, grid_material[4], hmdP, hmdQ, 0x66000000);
+			Model* volumeLabel = CreateTextBox(defaultVertices, grid_material[4], hmdP, hmdQ, 0xDDFFFFFF);
 			HUDcomponents.push_back(volumeLabel);
 		}
 	}

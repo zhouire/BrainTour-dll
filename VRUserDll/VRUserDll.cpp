@@ -407,7 +407,9 @@ namespace VRUserProxy {
 			}
 		}
 
-
+		//glEnable(GL_BLEND);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
 		roomScene->Render(view, proj, rot);
 
 		/*
