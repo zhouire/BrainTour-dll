@@ -1224,7 +1224,7 @@ struct Scene
 	}
 
 	
-	void ControllerActions(ovrPosef hmdPose, ovrPosef leftPose, ovrPosef rightPose, Quatf &gPose, Vector3f &gHeadPos,
+	void ControllerActions(ovrPosef leftPose, ovrPosef rightPose, Quatf &gPose, Vector3f &gHeadPos,
 		ovrInputState &inputState, Matrix4f &gHeadOrientation, OVR::Matrix4f& view)
 	{
 		//oculus has tendency to detect multiple presses on one press; prevent this

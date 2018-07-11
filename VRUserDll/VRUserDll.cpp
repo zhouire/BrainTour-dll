@@ -101,6 +101,9 @@ namespace VRUserProxy {
 		handPoses[ovrHand_Left] = trackState.HandPoses[ovrHand_Left].ThePose;
 		handPoses[ovrHand_Right] = trackState.HandPoses[ovrHand_Right].ThePose;
 
+		//head pose; currently unused
+		ovrPosef hmdPose = trackState.HeadPose.ThePose;
+
 		DPrintf("VRUserProxy::GetInputState OK\n");
 		int RoiMode = 0;
 		Matrix4f v = view;
