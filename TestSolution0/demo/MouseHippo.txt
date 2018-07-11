@@ -15,3 +15,6 @@ VolumeD=768
 PreZScale=3210000
 ControllerType=3
 AvatarShaderPath=C:\Users\zhoui\Documents\8keXm\BrainTour-dll\TestSolution0\Shaders\
+VoxelSizeX=50
+VoxelSizeY=50
+VoxelSizeZ=100

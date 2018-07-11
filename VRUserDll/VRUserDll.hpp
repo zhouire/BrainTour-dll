@@ -26,6 +26,9 @@ namespace VRUserProxy {
 		OVR::Vector3f& (*GetGlobalHeadPosition)(void *obj);
 		OVR::Matrix4f& (*GetGlobalHeadPose)(void *obj);
 		void (*SetRoI)(int index, float value);
+		float ObjectScale;
+		int VolumeSize[3];
+		float VoxelSize[3];
 	};
 	// export to App
 	VRUSERDLL_API int OnInit(APIBundle *p, OVR::GLEContext *context);
