@@ -58,11 +58,6 @@ static void drawCube(float size)
 
 
 
-//static std::vector<OVR::Vector3f> worldMarkers;
-//static std::vector<OVR::Vector3f> volumeMarkers;
-
-
-
 static Scene * roomScene = nullptr;
 
 
@@ -71,8 +66,6 @@ namespace VRUserProxy {
 	VRUSERDLL_API int OnInit(APIBundle *p, OVR::GLEContext *context) {
 		proxy = p;
 		OVR::GLEContext::SetCurrentContext(context);
-		//worldMarkers.clear();
-		//volumeMarkers.clear();
 		roomScene = new Scene();
 
 		return 0;
@@ -124,8 +117,6 @@ namespace VRUserProxy {
 			RoiMode = 1;
 		}
 
-		//roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view, false);
-
 		// Left Stick is for Volume Clip
 		if (ClipMode) {
 			if (inputState.Buttons & ovrButton_LThumb) {
@@ -175,44 +166,6 @@ namespace VRUserProxy {
 				ClipMode = (ClipMode + 1) % 4;
 			}
 		}
-		
-
-		/*
-		// Foward/Back
-		if (inputState.IndexTrigger[ovrHand_Right] > 0.1f) {
-			DPrintf(" FW\n");
-			// forward
-			float speed = -0.8f;
-			float forward = inputState.IndexTrigger[ovrHand_Right] * speed;
-			Vector3f movement = v.Inverted().Transform(Vector3f(0.0f, 0.0f, forward));
-			Position[0] += movement.x;
-			Position[1] += movement.y;
-			Position[2] += movement.z;
-		}
-		if (inputState.Buttons & ovrButton_A) {
-			DPrintf(" BW\n");
-			// back
-			float speed = 0.8f;
-			Vector3f movement = v.Inverted().Transform(Vector3f(0.0f, 0.0f, speed));
-			Position[0] += movement.x;
-			Position[1] += movement.y;
-			Position[2] += movement.z;
-		}
-
-		if (inputState.Buttons & ovrButton_B) {
-			DPrintf(" World Marker\n");
-			Vector3f pos = Vector3f(handPoses[ovrHand_Right].Position);
-			pos = gHeadOrientation.Inverted().Transform(pos - gHeadPos);
-			worldMarkers.push_back(view.Inverted().Transform(pos));
-		}
-		if (inputState.Buttons & ovrButton_Y) {
-			DPrintf(" Volume Marker L\n");
-			Vector3f pos = Vector3f(handPoses[ovrHand_Left].Position);
-			pos = gHeadOrientation.Inverted().Transform(pos - gHeadPos);
-			OVR::Matrix4f rot(gPose);
-			volumeMarkers.push_back(rot.Inverted().Transform(view.Inverted().Transform(pos)));
-		}
-		*/
 
 
 		//Controller actions influencing the scene (A,B,X,Y)
@@ -243,37 +196,6 @@ namespace VRUserProxy {
 			Position[1] += movement.y;
 			Position[2] += movement.z;
 		}
-
-		/*
-		// R Thumb
-		if (inputState.Buttons & ovrButton_RThumb) {
-			DPrintf(" RThumb\n");
-			// Translation
-			float speed = 0.1f;
-			float mx = inputState.Thumbstick[ovrHand_Right].x*speed;
-			float my = inputState.Thumbstick[ovrHand_Right].y*speed;
-			Vector3f movement = v.Inverted().Transform(Vector3f(mx, my, 0.f));
-			Position[0] += movement.x;
-			Position[1] += movement.y;
-			Position[2] += movement.z;
-		}
-		else {
-			DPrintf(" Rot\n");
-			// Rotation
-			float aspeed = 0.1f;
-			float pitch = inputState.Thumbstick[ovrHand_Right].x*aspeed;
-			float yaw = inputState.Thumbstick[ovrHand_Right].y*aspeed;
-			Matrix4f Pose0 = Pose;
-			Matrix4f newPoseO = Pose0 * gHeadOrientation * Matrix4f(Quatf(0.f, sinf(pitch), 0.f, -cosf(pitch)) * Quatf(sinf(yaw), 0.f, 0.f, cosf(yaw)));
-			Pose = newPoseO * gHeadOrientation.Inverted();
-
-			// head pos conpensate
-			Vector3f p = -(Pose.Transform(gHeadPos) - Pose0.Transform(gHeadPos));
-			Position[0] += p.x;
-			Position[1] += p.y;
-			Position[2] += p.z;
-		}
-		*/
 
 
 

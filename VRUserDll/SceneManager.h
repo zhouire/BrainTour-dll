@@ -367,7 +367,7 @@ struct Model
 		genQuadVertices(Vert, 1, c);
 	}
 
-
+	/*
 	void AddTransparentRect(std::vector<Vector3f> vertices) {
 		//vertices are in clockwise order starting at bottom left
 		Vector3f Vert[][2] =
@@ -393,6 +393,7 @@ struct Model
 			AddVertex(vvv);
 		}
 	}
+	*/
 
 
 
@@ -684,13 +685,11 @@ struct Scene
 
 	//for creating the HUD
 	std::map <char*, std::array<int, 3>> image_files;
-	//std::vector<std::vector<Model*>> HUDcomponents;
 	std::vector<Model*> HUDcomponents;
 	bool visibleHUD = true;
 
 	//std::string imagePath = "E:\\Classes\\2018 Summer\\UROP\\BrainTour-dll\\TestSolution0\\Images\\";
 	std::string imagePath = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\TestSolution0\\Images\\";
-	//std::string imagePath = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\";
 
 	
 
@@ -853,7 +852,6 @@ struct Scene
 	Model * CreateTextBox(std::vector<Vector3f> defaultVertices, ShaderFill * text) {
 		//creates the text
 		Model * textForeground = new Model(Vector3f(0, 0, 0), text);
-		//textForeground->AddTransparentRect(anchoredVertices);
 		textForeground->AddSolidColorRect(defaultVertices, 0xFFFFFFFF);
 		textForeground->AllocateBuffers();
 		
@@ -910,17 +908,13 @@ struct Scene
 	{
 		//legend image; image properties {width, height, numChannels}
 		std::array<int, 3> image_properties = { 3740, 2528, 32 };
-		//char* legend = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\VRUserDll\\ControllerLegend.png";
-		//char* image_name = (char*)(imagePath + "ControllerLegend.png").c_str();
 		image_files["ControllerLegend.png"] = image_properties;
 
 		//WorldMode label
 		std::array<int, 3> image_properties_1 = { 672, 147, 32 };
-		//image_name = (char*)(imagePath + "WorldMode.png").c_str();
 		image_files["WorldMode.png"] = image_properties_1;
 		//VolumeMode label
 		std::array<int, 3> image_properties_2 = { 699, 137, 32 };
-		//image_name = (char*)(imagePath + "VolumeMode.png").c_str();
 		image_files["VolumeMode.png"] = image_properties_2;
 		
 
@@ -1404,7 +1398,7 @@ struct Scene
 			switchMode = true;
 		}
 
-		//menu button, switch HUD on and off
+		//menu button, switch on and off
 		if (inputState.Buttons & ovrButton_Enter) {
 			if (canSwitchHUD == true) {
 				canSwitchHUD = false;
