@@ -773,6 +773,12 @@ struct Scene
 		//Render all worldMode models with a rotation matrix of Identity
 		Matrix4f identity = Matrix4f();
 
+		//render HUD in world mode
+		for (auto const m : HUDcomponents) {
+			m->Render(view, proj, identity);
+		}
+
+
 		for (auto const m : worldModels) {
 			m.first->Render(view, proj, identity);
 		}
@@ -803,13 +809,6 @@ struct Scene
 			}
 		}
 		*/
-
-		//render HUD in world mode
-		for (auto const m : HUDcomponents) {
-			m->Render(view, proj, identity);
-		}
-
-
 	}
 
 	//rotates the marker pos to accomodate for controller orientation and place it in front of pointer finger
@@ -959,11 +958,11 @@ struct Scene
 		image_files["ControllerLegend.png"] = image_properties;
 
 		//WorldMode label
-		std::array<int, 3> image_properties_1 = { 718, 212, 32 };
+		std::array<int, 3> image_properties_1 = { 672, 147, 32 };
 		//image_name = (char*)(imagePath + "WorldMode.png").c_str();
 		image_files["WorldMode.png"] = image_properties_1;
 		//VolumeMode label
-		std::array<int, 3> image_properties_2 = { 766, 212, 32 };
+		std::array<int, 3> image_properties_2 = { 699, 137, 32 };
 		//image_name = (char*)(imagePath + "VolumeMode.png").c_str();
 		image_files["VolumeMode.png"] = image_properties_2;
 		
@@ -1024,9 +1023,9 @@ struct Scene
 		for (auto i : image_files) {
 			//char* name = i.first;
 			char* name = (char*)(imagePath + i.first).c_str();
-			//unsigned char *data = stbi_load(name, &(i.second[0]), &(i.second[1]), &(i.second[2]), 0);
-			unsigned char *data = stbi_load(name, &(i.second[0]), &(i.second[1]), &(i.second[2]), STBI_rgb_alpha);
-			TextureBuffer * generated_texture = new TextureBuffer(false, Sizei(i.second[0], i.second[1]), 4, data);
+			unsigned char *data = stbi_load(name, &(i.second[0]), &(i.second[1]), &(i.second[2]), 0);
+			//unsigned char *data = stbi_load(name, &(i.second[0]), &(i.second[1]), &(i.second[2]), STBI_rgb_alpha);
+			TextureBuffer * generated_texture = new TextureBuffer(true, Sizei(i.second[0], i.second[1]), 4, data);
 			ShaderFill * generated_shader = new ShaderFill(vshader, fshader, generated_texture);
 			grid_material.push_back(generated_shader);
 		}
@@ -1530,9 +1529,9 @@ struct Scene
 
 		//creates the controller action legend
 
-		float default_x = (image_files["ControllerLegend.png"][0]) / 1000;
-		float default_y = (image_files["ControllerLegend.png"][1]) / 1000;
-		float depth = -6;
+		float default_x = (image_files["ControllerLegend.png"][0]) / 500;
+		float default_y = (image_files["ControllerLegend.png"][1]) / 500;
+		float depth = -15;
 
 
 		std::vector<Vector3f> defaultVertices{ Vector3f{ -default_x, -default_y, depth },
@@ -1547,9 +1546,9 @@ struct Scene
 
 		//world/volume mode labels
 		if (worldMode) {
-			float mode_default_x = (image_files["WorldMode.png"][0]) / 200;
-			float mode_default_y = (image_files["WorldMode.png"][1]) / 200;
-			depth = -6;
+			float mode_default_x = (image_files["WorldMode.png"][0]) / 137;
+			float mode_default_y = (image_files["WorldMode.png"][1]) / 137;
+			depth = -15;
 
 			
 			std::vector<Vector3f> defaultVertices{ Vector3f{ -mode_default_x, (-2 * mode_default_y - default_y), depth },
@@ -1563,9 +1562,9 @@ struct Scene
 		}
 
 		else {
-			float mode_default_x = (image_files["VolumeMode.png"][0]) / 200;
-			float mode_default_y = (image_files["VolumeMode.png"][1]) / 200;
-			depth = -6;
+			float mode_default_x = (image_files["VolumeMode.png"][0]) / 137;
+			float mode_default_y = (image_files["VolumeMode.png"][1]) / 137;
+			depth = -15;
 			
 			std::vector<Vector3f> defaultVertices{ Vector3f{ -mode_default_x, (-2 * mode_default_y - default_y), depth },
 				Vector3f{ -mode_default_x, (-default_y), depth },

@@ -345,11 +345,14 @@ namespace VRUserProxy {
 		}
 		glEnd();
 
+
 		glPopMatrix();
 
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 	}
+
+
 
 	VRUSERDLL_API void DrawPostVolumeRendering(OVR::Matrix4f& view, OVR::Matrix4f& proj, OVR::Quatf& gPose)
 	{
@@ -365,6 +368,9 @@ namespace VRUserProxy {
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_LIGHTING);
+
+		
+
 		glColor3f(1.0f, 0.0f, 0.0f);
 		int i, j;
 		for (i = 0; i < 10; i++)
@@ -377,20 +383,7 @@ namespace VRUserProxy {
 				glPopMatrix();
 			}
 		}
-		/*
-		glColor3f(0.0f, 0.0f, 1.0f);
-		std::vector<OVR::Vector3f>::iterator it;
-		for (it = worldMarkers.begin(); it != worldMarkers.end(); it++)
-		{
-			glPushMatrix();
-			glTranslatef(it->x, it->y, it->z);
-			drawCube(0.1f);
-			glPopMatrix();
-		}
-		*/
 
-		//render all models in scene (markers, lines, etc.)
-		//roomScene->Render(view, proj);
 
 
 		OVR::Matrix4f rot(gPose);
@@ -407,21 +400,10 @@ namespace VRUserProxy {
 			}
 		}
 
-		//glEnable(GL_BLEND);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		//glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
+		
 		roomScene->Render(view, proj, rot);
 
-		/*
-		glColor3f(1.0f, 0.0f, 1.0f);
-		for (it = volumeMarkers.begin(); it != volumeMarkers.end(); it++)
-		{
-			glPushMatrix();
-			glTranslatef(it->x, it->y, it->z);
-			drawCube(0.1f);
-			glPopMatrix();
-		}
-		*/
+
 
 		glPopMatrix();
 
