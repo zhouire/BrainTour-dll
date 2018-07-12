@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 #include <array>
+#include <string>
 
 
 using namespace OVR;
@@ -346,13 +347,18 @@ struct Model
 	}
 
 
-	void AddSolidColorRect(std::vector<Vector3f> vertices, DWORD c) {
+
+	void AddSolidColorRect(std::vector<Vector3f> vertices, std::vector<Vector3f> texCoord, DWORD c) {
 		//vertices are in clockwise order starting at bottom left
 		Vector3f Vert[][2] =
 		{
 			//may have to change around the texture coordinates
+			/*
 			vertices[0], Vector3f(0,1), vertices[1], Vector3f(0,0),
 			vertices[2], Vector3f(1,0), vertices[3], Vector3f(1,1),
+			*/
+			vertices[0], texCoord[0], vertices[1], texCoord[1],
+			vertices[2], texCoord[2], vertices[3], texCoord[3],
 		};
 
 		GLushort RectIndices[] =
@@ -849,10 +855,10 @@ struct Scene
 	}
 
 
-	Model * CreateTextBox(std::vector<Vector3f> defaultVertices, ShaderFill * text) {
+	Model * CreateTextBox(std::vector<Vector3f> defaultVertices, std::vector<Vector3f> texCoord, ShaderFill * text) {
 		//creates the text
 		Model * textForeground = new Model(Vector3f(0, 0, 0), text);
-		textForeground->AddSolidColorRect(defaultVertices, 0xFFFFFFFF);
+		textForeground->AddSolidColorRect(defaultVertices, texCoord, 0xFFFFFFFF);
 		textForeground->AllocateBuffers();
 		
 		return textForeground;
@@ -911,11 +917,16 @@ struct Scene
 		image_files["ControllerLegend.png"] = image_properties;
 
 		//WorldMode label
-		std::array<int, 3> image_properties_1 = { 672, 147, 32 };
-		image_files["WorldMode.png"] = image_properties_1;
+		image_properties = { 672, 147, 32 };
+		image_files["WorldMode.png"] = image_properties;
+
 		//VolumeMode label
-		std::array<int, 3> image_properties_2 = { 699, 137, 32 };
-		image_files["VolumeMode.png"] = image_properties_2;
+		image_properties = { 699, 137, 32 };
+		image_files["VolumeMode.png"] = image_properties;
+
+		//Consolas character map
+		image_properties = { 882, 716, 32 };
+		image_files["ConsolasTable.png"] = image_properties;
 		
 
 
@@ -986,6 +997,142 @@ struct Scene
 		glDeleteShader(fshader);
 	}
 
+
+	/***********************************
+	dynamic text functions
+	************************************/
+	std::map<char, std::vector<Vector3f>> GenerateCharTexCoordMap() {
+		//assumes that the texture map is in ASCII order, 6*16
+		float char_height = 1 / 6;
+		float char_width = 1 / 16;
+		//std::map<std::string, std::vector<Vector3f>> texCoordMap;
+		std::map<char, std::vector<Vector3f>> texCoordMap;
+
+		for (int h = 0x0; h < 0x6; h++) {
+			for (int w = 0x0; w < 0x10; w++) {
+				int asciiChar = (h + 0x2) * 0x10 + w;
+				char c;
+				/*
+				std::string s;
+
+				if (asciiChar != 0x7f) {
+					s.push_back((char)asciiChar);
+				}
+				else {
+					s = "?";
+				}
+				*/
+
+				if (asciiChar != 0x7f) {
+					c = (char)asciiChar;
+				}
+				else {
+					c = '?';
+				}
+
+				std::vector<Vector3f> v;
+				v.push_back(Vector3f(w*char_width, (h + 1)*char_height));
+				v.push_back(Vector3f(h*char_height, w*char_width));
+				v.push_back(Vector3f((w + 1)*char_width, h*char_height));
+				v.push_back(Vector3f((w + 1)*char_width, (h + 1)*char_height));
+
+				//texCoordMap[s] = v;
+				texCoordMap[c] = v;
+			}
+		}
+
+		return texCoordMap;
+	}
+
+	std::string LengthToString(float length) {
+		//this assumes the length is in nanometers
+		int digits = log10(length);
+		std::string s;
+		if (digits < 3) {
+			//nanometers
+			s = std::to_string(length);
+			//3 digits to the right of the decimal point
+			s = s.substr(0, (digits + 5));
+			s.push_back(' ');
+			s.push_back('n');
+			s.push_back('m');
+		}
+		else if (digits < 6) {
+			//micrometers
+			float l = length / 1000;
+			s = std::to_string(l);
+			s = s.substr(0, (digits + 5));
+			s.push_back(' ');
+			s.push_back('?');
+			s.push_back('m');
+		}
+		else if (digits < 9) {
+			//millimeters
+			float l = length / 1000000;
+			s = std::to_string(l);
+			s = s.substr(0, (digits + 5));
+			s.push_back(' ');
+			s.push_back('m');
+			s.push_back('m');
+		}
+		else {
+			//meters
+			float l = length / 1000000000;
+			s = std::to_string(l);
+			s = s.substr(0, (digits + 5));
+			s.push_back(' ');
+			s.push_back('m');
+		}
+
+		return s;
+	}
+
+
+	std::vector<std::vector<Vector3f>> GenerateTextVertices (Vector3f startCoord, float width, float height){
+		//startCoord is the bottom left vertex of the rightmost character
+		//generates text vertices from right to left
+		std::vector<std::vector<Vector3f>> textVertices;
+		
+		//we technically only need a max of 10 spaces
+		for (int i = 0; i < 11; i++) {
+			std::vector<Vector3f> charVertices;
+
+			charVertices.push_back(Vector3f((startCoord.x - (i*width)), startCoord.y + height, startCoord.z));
+			charVertices.push_back(Vector3f((startCoord.x - (i*width)), startCoord.y, startCoord.z));
+			charVertices.push_back(Vector3f((startCoord.x - ((i - 1)*width)), startCoord.y, startCoord.z));
+			charVertices.push_back(Vector3f((startCoord.x - ((i-1)*width)), startCoord.y + height, startCoord.z));
+		
+			textVertices.push_back(charVertices);
+		}
+
+		return textVertices;
+	}
+
+
+	Model * CreateLengthText(float length) {
+		Vector3f startCoord{ 6, -6, -6 };
+		float width = 1.0f;
+		float height = 2.17f;
+
+		std::map<char, std::vector<Vector3f>> texCoordMap = GenerateCharTexCoordMap();
+		std::vector<std::vector<Vector3f>> textVertices = GenerateTextVertices(startCoord, width, height);
+		std::string s = LengthToString(length);
+
+		Model * m = new Model(Vector3f(0, 0, 0), grid_material[5]);
+
+		for (int i = (s.length()-1); i >= 0; i--) { 
+			char c = s.at(i);
+			std::vector<Vector3f> texCoord = texCoordMap[c];
+			std::vector<Vector3f> vertices = textVertices[textVertices.size() - 1 - i];
+			
+			m->AddSolidColorRect(vertices, texCoord, 0xFFFFFFFF);
+		}
+
+		m->AllocateBuffers();
+	}
+
+	/*************************************************
+	*************************************************/
 
 	float DistPointToLineSeg(Vector3f point, std::vector<Vector3f> lineSeg) {
 		//vector from start of line seg to point
@@ -1492,8 +1639,11 @@ struct Scene
 			Vector3f{ default_x, -default_y, depth } };
 		//transparent black: 0x66000000
 		//opaque yellow: 0xFFFFFF00
+
+		std::vector<Vector3f> texCoord{ Vector3f(0,1), Vector3f(0,0),
+			Vector3f(1,0), Vector3f(1,1) };
 		
-		Model* controllerLegend = CreateTextBox(defaultVertices, grid_material[2]);
+		Model* controllerLegend = CreateTextBox(defaultVertices, texCoord, grid_material[2]);
 		HUDcomponents.push_back(controllerLegend);
 
 
@@ -1510,7 +1660,7 @@ struct Scene
 				Vector3f{ mode_default_x, (-2 * mode_default_y - default_y), depth } };
 
 			//grid_material[3] -> world mode label
-			Model* worldLabel = CreateTextBox(defaultVertices, grid_material[3]);
+			Model* worldLabel = CreateTextBox(defaultVertices, texCoord, grid_material[3]);
 			HUDcomponents.push_back(worldLabel);
 		}
 
@@ -1525,7 +1675,7 @@ struct Scene
 				Vector3f{ mode_default_x, (-2 * mode_default_y - default_y), depth } };
 
 			//grid_material[4] -> volume mode label
-			Model* volumeLabel = CreateTextBox(defaultVertices, grid_material[4]);
+			Model* volumeLabel = CreateTextBox(defaultVertices, texCoord, grid_material[4]);
 			HUDcomponents.push_back(volumeLabel);
 			
 		}
