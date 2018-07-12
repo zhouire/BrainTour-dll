@@ -697,6 +697,8 @@ struct Scene
 	std::vector<Model*> HUDcomponents;
 	bool visibleHUD = true;
 
+	Model * lengthDisplay;
+
 	//std::string imagePath = "E:\\Classes\\2018 Summer\\UROP\\BrainTour-dll\\TestSolution0\\Images\\";
 	std::string imagePath = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\TestSolution0\\Images\\";
 
@@ -797,12 +799,16 @@ struct Scene
 		//Render all worldMode models with a rotation matrix of Identity
 		Matrix4f identity = Matrix4f();
 
-		//render HUD in camera view with no rotation
+		//render HUD and length display in camera view with no rotation
 		for (auto const m : HUDcomponents) {
 			m->Render(identity, proj, identity);
 		}
 
+		if (lengthDisplay) {
+			lengthDisplay->Render(identity, proj, identity);
+		}
 
+		//Render world models in world view with no rotation
 		for (auto const m : worldModels) {
 			m.first->Render(view, proj, identity);
 		}
@@ -1243,7 +1249,6 @@ struct Scene
 					targetModel = newMarker;
 					targetModelType = "marker";
 					
-					
 					return newMarker;
 				}
 			}
@@ -1566,8 +1571,9 @@ struct Scene
 						//clear targetModel because the model in question has been removed
 						targetModel = nullptr;
 					}
-					//try to clear targetModel if there is one currently
+					//try to clear targetModel by seeing if the user has moved away if there is one currently
 					else {
+						
 						CheckTargetModel(trans_rightP, other_rightP);
 					}
 				}
@@ -1611,6 +1617,25 @@ struct Scene
 			ClearHUD();
 		}
 
+		//creates or destroys the length display depending on the presence of a target model
+		//or a length display
+		if (targetModel && !lengthDisplay) {
+			if (targetModelType == "straight line") {
+				std::vector<Vector3f> core = removableStraightLines[targetModel].Core;
+				float len = CalculateLength(core, rot, targetMode);
+				lengthDisplay = CreateLengthText(len);
+			}
+
+			else if (targetModelType == "curved line") {
+				std::vector<Vector3f> core = removableCurvedLines[targetModel].Core;
+				float len = CalculateLength(core, rot, targetMode);
+				lengthDisplay = CreateLengthText(len);
+			}	
+		}
+
+		else if (!targetModel && lengthDisplay) {
+			lengthDisplay = nullptr;
+		}
 	}
 	
 
