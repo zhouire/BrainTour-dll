@@ -668,8 +668,8 @@ struct Scene
 	float TARGET_SIZE = 0.01f;
 	float LINE_THICKNESS = 0.01f;
 	//for calculating size/length
-	float WORLDTOVOXELSCALE;
-	Vector3f VOXELSIZE;
+	float WORLDTOVOXELSCALE = 100;
+	Vector3f VOXELSIZE{50,50,100};
 	//world = green, volume = cyan, target = red, phantom = purple
 	DWORD WORLDMODE_COLOR = 0xff008000;
 	DWORD VOLUMEMODE_COLOR = 0xFF00FFFF;
@@ -1028,25 +1028,17 @@ struct Scene
 	************************************/
 	std::map<char, std::vector<Vector3f>> GenerateCharTexCoordMap() {
 		//assumes that the texture map is in ASCII order, 6*16
-		float char_height = 1 / 6;
-		float char_width = 1 / 16;
+		float char_height = 0.1666f;
+		float char_width = 0.0625f;
 		//std::map<std::string, std::vector<Vector3f>> texCoordMap;
+		
 		std::map<char, std::vector<Vector3f>> texCoordMap;
-
+		
 		for (int h = 0x0; h < 0x6; h++) {
 			for (int w = 0x0; w < 0x10; w++) {
 				int asciiChar = (h + 0x2) * 0x10 + w;
 				char c;
-				/*
-				std::string s;
-
-				if (asciiChar != 0x7f) {
-					s.push_back((char)asciiChar);
-				}
-				else {
-					s = "?";
-				}
-				*/
+				
 
 				if (asciiChar != 0x7f) {
 					c = (char)asciiChar;
@@ -1056,16 +1048,38 @@ struct Scene
 				}
 
 				std::vector<Vector3f> v;
+				/*
 				v.push_back(Vector3f(w*char_width, (h + 1)*char_height));
 				v.push_back(Vector3f(h*char_height, w*char_width));
 				v.push_back(Vector3f((w + 1)*char_width, h*char_height));
 				v.push_back(Vector3f((w + 1)*char_width, (h + 1)*char_height));
+				*/
+				v.push_back(Vector3f(w*char_width, h*char_height));
+				v.push_back(Vector3f(w*char_width, (h + 1)*char_height));
+				v.push_back(Vector3f((w + 1)*char_width, (h + 1)*char_height));
+				v.push_back(Vector3f((w + 1)*char_width, h*char_height));
 
 				//texCoordMap[s] = v;
 				texCoordMap[c] = v;
 			}
 		}
+		
+		/*
+		std::vector<Vector3f> hi;
+		hi.push_back(Vector3f(0.9375f,0.833f));
+		hi.push_back(Vector3f(0.9375f, 1));
+		hi.push_back(Vector3f(1,1));
+		hi.push_back(Vector3f(1, 0.833f));
+		*/
+		/*
+		std::vector<Vector3f> hi;
+		hi.push_back(Vector3f(0, 0));
+		hi.push_back(Vector3f(0, 1));
+		hi.push_back(Vector3f(1, 1));
+		hi.push_back(Vector3f(1, 0));
+		*/
 
+		//texCoordMap['a'] = hi;
 		return texCoordMap;
 	}
 
@@ -1135,9 +1149,11 @@ struct Scene
 
 
 	Model * CreateLengthText(float length) {
-		Vector3f startCoord{ 6, -6, -6 };
+		Vector3f startCoord{ 6, -3, -16 };
 		float width = 1.0f;
 		float height = 2.17f;
+		//float width = 0.1f;
+		//float height = 0.217f;
 
 		std::map<char, std::vector<Vector3f>> texCoordMap = GenerateCharTexCoordMap();
 		std::vector<std::vector<Vector3f>> textVertices = GenerateTextVertices(startCoord, width, height);
@@ -1148,12 +1164,16 @@ struct Scene
 		for (int i = (s.length()-1); i >= 0; i--) { 
 			char c = s.at(i);
 			std::vector<Vector3f> texCoord = texCoordMap[c];
+			//std::vector<Vector3f> texCoord = texCoordMap['a'];
 			std::vector<Vector3f> vertices = textVertices[textVertices.size() - 1 - i];
+			//std::vector<Vector3f> vertices = textVertices[i];
 			
 			m->AddSolidColorRect(vertices, texCoord, 0xFFFFFFFF);
 		}
 
 		m->AllocateBuffers();
+
+		return m;
 	}
 
 

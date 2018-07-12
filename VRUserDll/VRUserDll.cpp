@@ -70,13 +70,13 @@ namespace VRUserProxy {
 		roomScene = new Scene();
 
 		//setter functions
-		int maxLen = proxy->VolumeSize[0];
-		if (maxLen < proxy->VolumeSize[1]) maxLen = proxy->VolumeSize[1];
-		if (maxLen < proxy->VolumeSize[2]) maxLen = proxy->VolumeSize[2];
-		float scale = proxy->ObjectScale / maxLen;
+		//int maxLen = proxy->VolumeSize[0];
+		//if (maxLen < proxy->VolumeSize[1]) maxLen = proxy->VolumeSize[1];
+		//if (maxLen < proxy->VolumeSize[2]) maxLen = proxy->VolumeSize[2];
+		//float scale = proxy->ObjectScale / maxLen;
 
-		roomScene->SetWorldToVoxelScale(scale);
-		roomScene->SetVoxelSize(proxy->VoxelSize[0], proxy->VoxelSize[1], proxy->VoxelSize[2]);
+		//roomScene->SetWorldToVoxelScale(scale);
+		//roomScene->SetVoxelSize(proxy->VoxelSize[0], proxy->VoxelSize[1], proxy->VoxelSize[2]);
 
 		return 0;
 	}
