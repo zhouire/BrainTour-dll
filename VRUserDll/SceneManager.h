@@ -667,6 +667,9 @@ struct Scene
 	float MARKER_SIZE = 0.02f;
 	float TARGET_SIZE = 0.01f;
 	float LINE_THICKNESS = 0.01f;
+	//for calculating size/length
+	float WORLDTOVOXELSCALE;
+	Vector3f VOXELSIZE;
 	//world = green, volume = cyan, target = red, phantom = purple
 	DWORD WORLDMODE_COLOR = 0xff008000;
 	DWORD VOLUMEMODE_COLOR = 0xFF00FFFF;
@@ -698,6 +701,22 @@ struct Scene
 	std::string imagePath = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\TestSolution0\\Images\\";
 
 	
+
+	/************************************
+	Set/get functions
+	************************************/
+	//these are called from the dll
+	void SetWorldToVoxelScale(float scale) {
+		WORLDTOVOXELSCALE = scale;
+	}
+
+	void SetVoxelSize(float x, float y, float z) {
+		Vector3f size;
+		size.x = x;
+		size.y = y;
+		size.z = z;
+		VOXELSIZE = size;
+	}
 
 	/************************************
 	Add functions
@@ -1129,6 +1148,32 @@ struct Scene
 		}
 
 		m->AllocateBuffers();
+	}
+
+
+	float CalculateSegmentLength(Vector3f start, Vector3f end, Matrix4f rot, bool worldMode) {
+		Vector3f s = start;
+		Vector3f e = end;
+		if (worldMode) {
+			s = rot.Inverted().Transform(s);
+			e = rot.Inverted().Transform(s);
+		}
+		
+		Vector3f diff = s - e;
+		diff.x = diff.x / WORLDTOVOXELSCALE * VOXELSIZE.x;
+		diff.y = diff.y / WORLDTOVOXELSCALE * VOXELSIZE.y;
+		diff.z = diff.z / WORLDTOVOXELSCALE * VOXELSIZE.z;
+
+		return diff.Length();
+	}
+
+
+	float CalculateLength(std::vector<Vector3f> lineCore, Matrix4f rot,  bool worldMode) {
+		float length = 0;
+		for (int i = 0; i < (lineCore.size() - 1); i++) {
+			length += CalculateSegmentLength(lineCore[i], lineCore[i + 1], rot, worldMode);
+		}
+		return length;
 	}
 
 	/*************************************************
