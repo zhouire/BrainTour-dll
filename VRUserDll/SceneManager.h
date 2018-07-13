@@ -1156,7 +1156,7 @@ struct Scene
 
 
 	Model * CreateLengthText(float length) {
-		Vector3f startCoord{ 6, -3, -16 };
+		Vector3f startCoord{ -0.5f, 0.5f, -2.5f };
 		//float width = 1.0f;
 		//float height = 2.17f;
 		float width = 0.05f;
