@@ -107,6 +107,19 @@ namespace VRUserProxy {
 		//head pose; currently unused
 		ovrPosef hmdPose = trackState.HeadPose.ThePose;
 
+
+		int maxLen = proxy->VolumeSize[0];
+		if (maxLen < proxy->VolumeSize[1]) maxLen = proxy->VolumeSize[1];
+		if (maxLen < proxy->VolumeSize[2]) maxLen = proxy->VolumeSize[2];
+		float scale = proxy->ObjectScale / maxLen;
+		//roomScene -> SetWorldToVoxelScale(scale);
+		//roomScene->SetVoxelSize(proxy->VoxelSize[0], proxy->VoxelSize[1], proxy->VoxelSize[2]);
+
+		Vector3f voxelSize;
+		voxelSize.x = proxy->VoxelSize[0];
+		voxelSize.y = proxy->VoxelSize[1];
+		voxelSize.z = proxy->VoxelSize[2];
+
 		DPrintf("VRUserProxy::GetInputState OK\n");
 		int RoiMode = 0;
 		Matrix4f v = view;
@@ -120,7 +133,6 @@ namespace VRUserProxy {
 
 		//move all temp markers and remove all temp lines before any actions
 		roomScene->moveTempModels(handPoses[ovrHand_Right], gPose, gHeadPos, gHeadOrientation, view);
-
 
 		// left trigger
 		if (inputState.IndexTrigger[ovrHand_Left] > 0.5f) {
@@ -180,7 +192,7 @@ namespace VRUserProxy {
 
 
 		//Controller actions influencing the scene (A,B,X,Y)
-		roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view);
+		roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view, scale, voxelSize);
 
 		//R Thumb Pressed
 

@@ -668,8 +668,9 @@ struct Scene
 	float TARGET_SIZE = 0.01f;
 	float LINE_THICKNESS = 0.01f;
 	//for calculating size/length
-	float WORLDTOVOXELSCALE = 100;
-	Vector3f VOXELSIZE{50,50,100};
+	//float WORLDTOVOXELSCALE = 100;
+	//Vector3f VOXELSIZE{50,50,100};
+
 	//world = green, volume = cyan, target = red, phantom = purple
 	DWORD WORLDMODE_COLOR = 0xff008000;
 	DWORD VOLUMEMODE_COLOR = 0xFF00FFFF;
@@ -708,6 +709,7 @@ struct Scene
 	Set/get functions
 	************************************/
 	//these are called from the dll
+	/*
 	void SetWorldToVoxelScale(float scale) {
 		WORLDTOVOXELSCALE = scale;
 	}
@@ -719,6 +721,7 @@ struct Scene
 		size.z = z;
 		VOXELSIZE = size;
 	}
+	*/
 
 	/************************************
 	Add functions
@@ -1177,27 +1180,27 @@ struct Scene
 	}
 
 
-	float CalculateSegmentLength(Vector3f start, Vector3f end, Matrix4f rot, bool worldMode) {
+	float CalculateSegmentLength(Vector3f start, Vector3f end, Matrix4f rot, bool worldMode, float scale, Vector3f voxelSize) {
 		Vector3f s = start;
 		Vector3f e = end;
 		if (worldMode) {
 			s = rot.Inverted().Transform(s);
-			e = rot.Inverted().Transform(s);
+			e = rot.Inverted().Transform(e);
 		}
 		
 		Vector3f diff = s - e;
-		diff.x = diff.x / WORLDTOVOXELSCALE * VOXELSIZE.x;
-		diff.y = diff.y / WORLDTOVOXELSCALE * VOXELSIZE.y;
-		diff.z = diff.z / WORLDTOVOXELSCALE * VOXELSIZE.z;
+		diff.x = diff.x / scale * voxelSize.x;
+		diff.y = diff.y / scale * voxelSize.y;
+		diff.z = diff.z / scale * voxelSize.z;
 
 		return diff.Length();
 	}
 
 
-	float CalculateLength(std::vector<Vector3f> lineCore, Matrix4f rot,  bool worldMode) {
+	float CalculateLength(std::vector<Vector3f> lineCore, Matrix4f rot,  bool worldMode, float scale, Vector3f voxelSize) {
 		float length = 0;
 		for (int i = 0; i < (lineCore.size() - 1); i++) {
-			length += CalculateSegmentLength(lineCore[i], lineCore[i + 1], rot, worldMode);
+			length += CalculateSegmentLength(lineCore[i], lineCore[i + 1], rot, worldMode, scale, voxelSize);
 		}
 		return length;
 	}
@@ -1442,7 +1445,7 @@ struct Scene
 
 	
 	void ControllerActions(ovrPosef leftPose, ovrPosef rightPose, Quatf &gPose, Vector3f &gHeadPos,
-		ovrInputState &inputState, Matrix4f &gHeadOrientation, OVR::Matrix4f& view)
+		ovrInputState &inputState, Matrix4f &gHeadOrientation, OVR::Matrix4f& view, float scale, Vector3f voxelSize)
 	{
 		//oculus has tendency to detect multiple presses on one press; prevent this
 		static bool switchMode = true;
@@ -1642,13 +1645,13 @@ struct Scene
 		if (targetModel && !lengthDisplay) {
 			if (targetModelType == "straight line") {
 				std::vector<Vector3f> core = removableStraightLines[targetModel].Core;
-				float len = CalculateLength(core, rot, targetMode);
+				float len = CalculateLength(core, rot, targetMode, scale, voxelSize);
 				lengthDisplay = CreateLengthText(len);
 			}
 
 			else if (targetModelType == "curved line") {
 				std::vector<Vector3f> core = removableCurvedLines[targetModel].Core;
-				float len = CalculateLength(core, rot, targetMode);
+				float len = CalculateLength(core, rot, targetMode, scale, voxelSize);
 				lengthDisplay = CreateLengthText(len);
 			}	
 		}
