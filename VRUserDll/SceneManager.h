@@ -1089,6 +1089,10 @@ struct Scene
 	std::string LengthToString(float length) {
 		//this assumes the length is in nanometers
 		int digits = log10(length);
+		if (digits < 0) {
+			digits = 0;
+		}
+
 		std::string s;
 		if (digits < 3) {
 			//nanometers
@@ -1103,7 +1107,7 @@ struct Scene
 			//micrometers
 			float l = length / 1000;
 			s = std::to_string(l);
-			s = s.substr(0, (digits + 5));
+			s = s.substr(0, (digits + 2));
 			s.push_back(' ');
 			s.push_back('?');
 			s.push_back('m');
@@ -1112,7 +1116,7 @@ struct Scene
 			//millimeters
 			float l = length / 1000000;
 			s = std::to_string(l);
-			s = s.substr(0, (digits + 5));
+			s = s.substr(0, (digits - 1));
 			s.push_back(' ');
 			s.push_back('m');
 			s.push_back('m');
@@ -1121,7 +1125,7 @@ struct Scene
 			//meters
 			float l = length / 1000000000;
 			s = std::to_string(l);
-			s = s.substr(0, (digits + 5));
+			s = s.substr(0, (digits - 4));
 			s.push_back(' ');
 			s.push_back('m');
 		}
@@ -1139,10 +1143,10 @@ struct Scene
 		for (int i = 0; i < 11; i++) {
 			std::vector<Vector3f> charVertices;
 
-			charVertices.push_back(Vector3f((startCoord.x - (i*width)), startCoord.y + height, startCoord.z));
-			charVertices.push_back(Vector3f((startCoord.x - (i*width)), startCoord.y, startCoord.z));
-			charVertices.push_back(Vector3f((startCoord.x - ((i - 1)*width)), startCoord.y, startCoord.z));
-			charVertices.push_back(Vector3f((startCoord.x - ((i-1)*width)), startCoord.y + height, startCoord.z));
+			charVertices.push_back(Vector3f((startCoord.x + (i*width)), startCoord.y + height, startCoord.z));
+			charVertices.push_back(Vector3f((startCoord.x + (i*width)), startCoord.y, startCoord.z));
+			charVertices.push_back(Vector3f((startCoord.x + ((i + 1)*width)), startCoord.y, startCoord.z));
+			charVertices.push_back(Vector3f((startCoord.x + ((i + 1)*width)), startCoord.y + height, startCoord.z));
 		
 			textVertices.push_back(charVertices);
 		}
@@ -1153,10 +1157,10 @@ struct Scene
 
 	Model * CreateLengthText(float length) {
 		Vector3f startCoord{ 6, -3, -16 };
-		float width = 1.0f;
-		float height = 2.17f;
-		//float width = 0.1f;
-		//float height = 0.217f;
+		//float width = 1.0f;
+		//float height = 2.17f;
+		float width = 0.05f;
+		float height = 0.1085f;
 
 		std::map<char, std::vector<Vector3f>> texCoordMap = GenerateCharTexCoordMap();
 		std::vector<std::vector<Vector3f>> textVertices = GenerateTextVertices(startCoord, width, height);
@@ -1164,12 +1168,13 @@ struct Scene
 
 		Model * m = new Model(Vector3f(0, 0, 0), grid_material[5]);
 
-		for (int i = (s.length()-1); i >= 0; i--) { 
+		//for (int i = (s.length()-1); i >= 0; i--) { 
+		for (int i = 0; i < s.length(); i++) { 
 			char c = s.at(i);
 			std::vector<Vector3f> texCoord = texCoordMap[c];
 			//std::vector<Vector3f> texCoord = texCoordMap['a'];
-			std::vector<Vector3f> vertices = textVertices[textVertices.size() - 1 - i];
-			//std::vector<Vector3f> vertices = textVertices[i];
+			//std::vector<Vector3f> vertices = textVertices[textVertices.size() - 1 - i];
+			std::vector<Vector3f> vertices = textVertices[i];
 			
 			m->AddSolidColorRect(vertices, texCoord, 0xFFFFFFFF);
 		}
