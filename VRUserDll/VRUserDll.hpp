@@ -7,9 +7,11 @@
 #endif
 
 //#include "../OculusSample0/src/Win32_GLAppUtil.h" //NG
-#include "GL/CAPI_GLE.h"
-#include "Extras/OVR_Math.h"
-#include "OVR_CAPI_GL.h"
+
+//moved these to stdafx.h
+//#include "GL/CAPI_GLE.h"
+//#include "Extras/OVR_Math.h"
+//#include "OVR_CAPI_GL.h"
 
 //#include "SceneManager.h"
 

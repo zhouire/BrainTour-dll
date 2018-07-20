@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Network Files">
+      <UniqueIdentifier>{48b1f2ca-9871-453b-bf21-66e33eb171c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -33,6 +36,24 @@
     <ClInclude Include="stb_image.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkManager\ClientNetwork.h">
+      <Filter>Source Files\Network Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager\NetworkData.h">
+      <Filter>Source Files\Network Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager\NetworkServices.h">
+      <Filter>Source Files\Network Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager\ServerNetwork.h">
+      <Filter>Source Files\Network Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager\ServerManager.h">
+      <Filter>Source Files\Network Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager\ClientManager.h">
+      <Filter>Source Files\Network Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -46,6 +67,21 @@
     </ClCompile>
     <ClCompile Include="CAPI_GLE.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkManager\ClientNetwork.cpp">
+      <Filter>Source Files\Network Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkManager\NetworkServices.cpp">
+      <Filter>Source Files\Network Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkManager\ServerNetwork.cpp">
+      <Filter>Source Files\Network Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkManager\ServerManager.cpp">
+      <Filter>Source Files\Network Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkManager\ClientManager.cpp">
+      <Filter>Source Files\Network Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

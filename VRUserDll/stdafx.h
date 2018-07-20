@@ -12,6 +12,15 @@
 #include <windows.h>
 
 
+#include <stdio.h>
+#include <tchar.h>
+
+#include "GL/CAPI_GLE.h"
+#include "Extras/OVR_Math.h"
+#include "OVR_CAPI_GL.h"
+#include <SceneManager.h>
+
+
 
 // TODO: reference additional headers your program requires here
 //#include "SceneManager.h"

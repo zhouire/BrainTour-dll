@@ -664,12 +664,14 @@ struct Scene
 	std::map<Model*, int> volumeModels;
 	std::map<Model*, int> tempVolumeLines;
 
+	//local temp models; Client can only edit its own temp models
+	std::map<Model*, int> localTempWorldMarkers;
+	std::map<Model*, int> localTempWorldLines;
+	std::map<Model*, int> localTempVolumeLines;
+
 	float MARKER_SIZE = 0.02f;
 	float TARGET_SIZE = 0.01f;
 	float LINE_THICKNESS = 0.01f;
-	//for calculating size/length
-	//float WORLDTOVOXELSCALE = 100;
-	//Vector3f VOXELSIZE{50,50,100};
 
 	//world = green, volume = cyan, target = red, phantom = purple
 	DWORD WORLDMODE_COLOR = 0xff008000;
@@ -686,6 +688,7 @@ struct Scene
 	//targetMode is true if world, false if volume
 	bool targetMode;
 
+	bool clientMode;
 	bool worldMode = true;
 
 	//for line drawing functionality
@@ -743,16 +746,23 @@ struct Scene
 	{
 		RemoveModel(n);
 		tempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
+
+		//for clients; local editing
+		localTempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
 	}
 
-	void AddTempLine(Model * n)
+	void AddTempLine(Model * n, bool worldMode)
 	{
 		if (worldMode) {
 			tempWorldLines.insert(std::pair<Model *, int>(n, 1));
+			//for clients; local editing
+			localTempWorldLines.insert(std::pair<Model*, int>(n, 1));
 		}
 
 		else {
 			tempVolumeLines.insert(std::pair<Model *, int>(n, 1));
+			//for clients; local editing
+			localTempVolumeLines.insert(std::pair<Model*, int>(n, 1));
 		}
 	}
 
@@ -855,7 +865,7 @@ struct Scene
 		marker->AddSolidColorBox(-0.5f*size, -0.5f*size, -0.5f*size, 0.5f*size, 0.5f*size, 0.5f*size, color);
 		marker->AllocateBuffers();
 		marker->Pos = pos;
-		AddRemovableMarker(marker, worldMode);
+		//AddRemovableMarker(marker, worldMode);
 
 		return marker;
 	}
@@ -1271,6 +1281,9 @@ struct Scene
 					targetMode = (volumeModels.count(model) == 0);
 
 					Model *newMarker = CreateMarker(MARKER_SIZE, TARGET_COLOR, modelPos, targetMode);
+					//removed this from CreateMarker function; put here
+					AddRemovableMarker(newMarker, worldMode);
+
 					//removing the old green model; replaced by new red one
 					RemoveModel(model);
 
@@ -1362,6 +1375,8 @@ struct Scene
 		if (targetModelType == "marker") {
 			Vector3f targetPos = targetModel->Pos;
 			Model *newMarker = CreateMarker(MARKER_SIZE, color, targetPos, targetMode);
+
+			AddRemovableMarker(newMarker, worldMode);
 		}
 
 		else if (targetModelType == "straight line") {
@@ -1508,7 +1523,7 @@ struct Scene
 				}
 				//dynamic lines must be regenerated at each timestamp
 				else {
-					AddTempLine(newStraightLine);
+					AddTempLine(newStraightLine, worldMode);
 				}				
 			}
 			
@@ -1537,7 +1552,7 @@ struct Scene
 
 				//dynamic lines must be regenerated at every timestamp
 				else {
-					AddTempLine(newCurvedLine);
+					AddTempLine(newCurvedLine, worldMode);
 				}
 			}
 			
@@ -1559,6 +1574,7 @@ struct Scene
 			//stop showing the phantom marker if not pressing A
 			if (!(inputState.Buttons & ovrButton_A)) {
 				removeTempMarkers();
+
 			}
 			//allow user to create a new marker if they have stopped pressing X
 			if (!(inputState.Buttons & ovrButton_X) && !canCreateMarker) {
@@ -1571,7 +1587,10 @@ struct Scene
 			//create a new marker if the user is pressing A+X and the user is allowed to
 			if (inputState.Buttons & ovrButton_X && canCreateMarker) {
 				if (inputState.Buttons & ovrButton_A) {
-					CreateMarker(MARKER_SIZE, color, trans_rightP, worldMode);
+					Model * marker = CreateMarker(MARKER_SIZE, color, trans_rightP, worldMode);
+
+					AddRemovableMarker(marker, worldMode);
+
 					canCreateMarker = false;
 				}
 			}
@@ -1583,6 +1602,8 @@ struct Scene
 				}
 
 				Model *newMarker = CreateMarker(MARKER_SIZE, PHANTOM_COLOR, pos, true);
+
+				AddRemovableMarker(newMarker, worldMode);
 				
 				AddTemp(newMarker);
 
@@ -1678,12 +1699,20 @@ struct Scene
 		new_pos = gHeadOrientation.Inverted().Transform(new_pos - gHeadPos);
 		Vector3f trans_rightP = view.Inverted().Transform(new_pos);
 		
-		for (auto const &m : tempWorldMarkers) {
+		//for (auto const &m : tempWorldMarkers) {
+		for (auto const &m : localTempWorldMarkers) {
 			auto model = m.first;
-			model->Pos = trans_rightP;
+			//model->Pos = trans_rightP;
+			moveTempModel(model, trans_rightP);
 		}
 
 		removeTempLines();
+	}
+
+
+	virtual void moveTempModel(Model * m, Vector3f newPos)
+	{
+		m->Pos = newPos;
 	}
 
 	
@@ -1692,28 +1721,87 @@ struct Scene
 	//called in moveTempModels
 	void removeTempLines()
 	{
-		for (auto const &m : tempWorldLines) {
-			auto model = m.first;
-			tempWorldLines.erase(model);
+		if (clientMode) {
+			for (auto const &m : localTempWorldLines) {
+				auto model = m.first;
+				//tempWorldLines.erase(model);
+				removeTempLine(model);
+			}
+
+			for (auto const &m : localTempVolumeLines) {
+				auto model = m.first;
+				//tempVolumeLines.erase(model);
+				removeTempLine(model);
+			}
 		}
 
-		for (auto const &m : tempVolumeLines) {
-			auto model = m.first;
-			tempVolumeLines.erase(model);
+		else {
+			for (auto const &m : tempWorldLines) {
+				auto model = m.first;
+				//tempWorldLines.erase(model);
+				removeTempLine(model);
+			}
+
+			for (auto const &m : tempVolumeLines) {
+				auto model = m.first;
+				//tempVolumeLines.erase(model);
+				removeTempLine(model);
+			}
 		}
+	}
+
+
+	//in Client Scene, this will be overwritten to send message and remove locally
+	virtual void removeTempLine(Model * m) {
+		if (!clientMode) {
+			tempWorldLines.erase(m);
+			tempVolumeLines.erase(m);
+		}
+
+		localTempWorldLines.erase(m);
+		localTempVolumeLines.erase(m);
+
 	}
 	
 	//clear map of temp markers
 	void removeTempMarkers()
-	{
-		for (auto const &m : tempWorldMarkers) {
-			auto model = m.first;
-			tempWorldMarkers.erase(model);
-			//possibly redundant
-			RemoveModel(model);
+	{	
+		if (clientMode) {
+			for (auto const &m : localTempWorldMarkers) {
+				auto model = m.first;
+				/*
+				tempWorldMarkers.erase(model);
+				//possibly redundant
+				RemoveModel(model);
+				*/
+				removeTempMarker(model);
+			}
+		}
+
+		else {
+			for (auto const &m : tempWorldMarkers) {
+				auto model = m.first;
+				/*
+				tempWorldMarkers.erase(model);
+				//possibly redundant
+				RemoveModel(model);
+				*/
+				removeTempMarker(model);
+			}
 		}
 		
 	}
+
+	//in a Client Scene, this will be overriden to send a message and remove locally
+	virtual void removeTempMarker(Model * model) {
+		tempWorldMarkers.erase(model);
+		
+		localTempWorldMarkers.erase(model);
+
+		//possibly redundant
+		RemoveModel(model);
+	}
+
 
 	//clears the vector of HUD elements; clear and reset at every timeslot
 	void ClearHUD()
@@ -1780,8 +1868,9 @@ struct Scene
 	}
 
 	//initialization; when scene created, create textures as well
-	Scene()
+	Scene(bool client)
 	{
+		clientMode = client;
 		CreateTextures();
 	}
 }; 

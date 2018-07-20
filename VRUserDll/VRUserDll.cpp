@@ -4,7 +4,7 @@
 #include "stdafx.h"
 
 #include "VRUserDll.hpp"
-#include "SceneManager.h"
+//#include "SceneManager.h"
 
 #include <algorithm>
 #include <vector>
