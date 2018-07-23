@@ -22,19 +22,6 @@ public:
 	ClientType client_type;
 	ClientScene * clientScene;
 
-	/*
-	void sendPacket(Packet);
-	void AddRemovable(Model*, bool);
-	void AddRemovableMarker(Model*, bool);
-	void AddTemp(Model*);
-	void AddTempLine(Model*);
-	void AddRemovableStraightLine(Model*, Vector3f, Vector3f, glm::quat, bool);
-	void AddRemovableCurvedLine(Model*, std::vector<Vector3f>, std::vector<glm::quat>, bool);
-	void RemoveModel(Model*);
-
-	void VRActions();
-	*/
-
 	//old
 	void sendActionPackets();
 
