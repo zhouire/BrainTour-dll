@@ -730,7 +730,7 @@ struct Scene
 	Add functions
 	*************************************/
 
-	void AddRemovable(Model * n, bool worldMode)
+	virtual void AddRemovable(Model * n, bool worldMode)
 	{
 		//don't actually care about the values
 		if (worldMode) {
@@ -742,7 +742,7 @@ struct Scene
 		}
 	}
 
-	void AddTemp(Model * n)
+	virtual void AddTemp(Model * n)
 	{
 		RemoveModel(n);
 		tempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
@@ -751,7 +751,7 @@ struct Scene
 		localTempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
 	}
 
-	void AddTempLine(Model * n, bool worldMode)
+	virtual void AddTempLine(Model * n, bool worldMode)
 	{
 		if (worldMode) {
 			tempWorldLines.insert(std::pair<Model *, int>(n, 1));
@@ -766,13 +766,13 @@ struct Scene
 		}
 	}
 
-	void AddRemovableMarker(Model * n, bool worldMode)
+	virtual void AddRemovableMarker(Model * n, bool worldMode)
 	{
 		removableMarkers.insert(std::pair<Model*, int>(n, 1));
 		AddRemovable(n, worldMode);
 	}
 
-	void AddRemovableStraightLine(Model * n, Vector3f start, Vector3f end, glm::quat handQ, bool worldMode)
+	virtual void AddRemovableStraightLine(Model * n, Vector3f start, Vector3f end, glm::quat handQ, bool worldMode)
 	{
 		std::vector<Vector3f> core{ start,end };
 		LineComponents line;
@@ -784,7 +784,7 @@ struct Scene
 		AddRemovable(n, worldMode);
 	}
 	
-	void AddRemovableCurvedLine(Model * n, std::vector<Vector3f> lineCore, std::vector<glm::quat> allHandQ, bool worldMode)
+	virtual void AddRemovableCurvedLine(Model * n, std::vector<Vector3f> lineCore, std::vector<glm::quat> allHandQ, bool worldMode)
 	{
 		LineComponents line;
 		line.Core = lineCore;
@@ -796,7 +796,7 @@ struct Scene
 
 
 	//calling this removes non-temp models from all "removable" maps
-	void RemoveModel(Model * n)
+	virtual void RemoveModel(Model * n)
 	{
 		worldModels.erase(n);
 		removableMarkers.erase(n);
@@ -1709,7 +1709,7 @@ struct Scene
 		removeTempLines();
 	}
 
-
+	//overridden in ClientScene to send a message to the Server
 	virtual void moveTempModel(Model * m, Vector3f newPos)
 	{
 		m->Pos = newPos;
@@ -1753,11 +1753,15 @@ struct Scene
 
 	//in Client Scene, this will be overwritten to send message and remove locally
 	virtual void removeTempLine(Model * m) {
+		/*
 		if (!clientMode) {
 			tempWorldLines.erase(m);
 			tempVolumeLines.erase(m);
 		}
-
+		*/
+		tempWorldLines.erase(m);
+		tempVolumeLines.erase(m);
+		//the server's local maps are not broadcast to clients; they don't have a real purpose
 		localTempWorldLines.erase(m);
 		localTempVolumeLines.erase(m);
 
@@ -1874,3 +1878,6 @@ struct Scene
 		CreateTextures();
 	}
 }; 
+
+
+

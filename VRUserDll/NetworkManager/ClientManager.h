@@ -4,6 +4,8 @@
 #include "ClientNetwork.h"
 #include "NetworkData.h"
 
+#include "ClientScene.h"
+
 enum ClientType {
 	VR,
 	Screen,
@@ -18,8 +20,9 @@ public:
 	ClientNetwork * network;
 	Proxy * proxy;
 	ClientType client_type;
-	Scene * clientScene;
+	ClientScene * clientScene;
 
+	/*
 	void sendPacket(Packet);
 	void AddRemovable(Model*, bool);
 	void AddRemovableMarker(Model*, bool);
@@ -30,6 +33,7 @@ public:
 	void RemoveModel(Model*);
 
 	void VRActions();
+	*/
 
 	//old
 	void sendActionPackets();

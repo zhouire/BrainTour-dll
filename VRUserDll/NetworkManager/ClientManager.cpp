@@ -8,7 +8,7 @@ ClientManager::ClientManager(ClientType type, Proxy * p)
 	
     network = new ClientNetwork();
 	client_type = type;
-	clientScene = new Scene();
+	clientScene = new ClientScene(true, network);
 	proxy = p;
 
     // send init packet
@@ -30,6 +30,7 @@ ClientManager::~ClientManager(void)
 }
 
 
+/*
 //BASIC FUNCTION USED TO SEND EVERY PACKET AFTER CONSTRUCTION
 void ClientManager::sendPacket(Packet packet) {
 	const unsigned int packet_size = sizeof(packet);
@@ -43,9 +44,9 @@ void ClientManager::sendPacket(Packet packet) {
 
 
 
-/*************************************************
-MESSAGE-SENDING PARALLELS TO SCENEMANAGER FUNCTIONS
-**************************************************/
+
+//MESSAGE-SENDING PARALLELS TO SCENEMANAGER FUNCTIONS
+
 void ClientManager::AddRemovable(Model * m, bool worldMode)
 {
 	Packet packet;
@@ -134,10 +135,8 @@ void ClientManager::RemoveModel(Model * m)
 
 
 
+//Dealing with actions (controller/touchscreen/keyboard)
 
-/*********************************************************
-Dealing with actions (controller/touchscreen/keyboard)
-**********************************************************/
 
 
 void VRActions() {
@@ -146,10 +145,10 @@ void VRActions() {
 
 
 void ClientManager::sendStringPackets(Model * m) {
-	/*
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
-	*/
+	
+	//const unsigned int packet_size = sizeof(Packet);
+	//char packet_data[packet_size];
+	
 
 	Packet strPacket;
 	strPacket.packet_type = STRING_PACKET;
@@ -163,6 +162,7 @@ void ClientManager::sendStringPackets(Model * m) {
 
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
+*/
 
 
 void ClientManager::update()

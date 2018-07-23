@@ -16,15 +16,21 @@ enum PacketTypes {
 
 	ADD_REMOVABLE_MARKER = 4,
 
-	ADD_TEMP_MARKER = 5,
+	ADD_TEMP = 5,
 
 	ADD_TEMP_LINE = 6,
 
-	ADD_STRAIGHT_LINE = 7,
+	ADD_REMOVABLE_STRAIGHT_LINE = 7,
 
-	ADD_CURVED_LINE = 8,
+	ADD_REMOVABLE_CURVED_LINE = 8,
 
 	REMOVE_MODEL = 9,
+
+	MOVE_TEMP_MODEL = 10,
+
+	REMOVE_TEMP_LINE = 11,
+
+	REMOVE_TEMP_MARKER = 12,
 
 };
 
@@ -58,6 +64,7 @@ struct Packet {
 	Proxy * proxy;
 	Model * m;
 	bool worldMode;
+	Vector3f pos;
 	std::vector<Vector3f> * lineCore;
 	std::vector<glm::quat> * allHandQ;
 
