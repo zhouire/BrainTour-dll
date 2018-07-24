@@ -1710,6 +1710,7 @@ struct Scene
 	}
 
 	//overridden in ClientScene to send a message to the Server
+	//do not move the model locally, because it should be moved here via the pointer (try moving it in ClientScene if doesn't work)
 	virtual void moveTempModel(Model * m, Vector3f newPos)
 	{
 		m->Pos = newPos;

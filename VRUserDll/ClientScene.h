@@ -82,11 +82,11 @@ struct ClientScene : public Scene
 
 		//we need to make sure everything is a pointer
 		//also don't forget to convert the lineCore back to start, end when the Server receives it
-		std::vector<Vector3f> * lineCore;
+		std::vector<Vector3f> * lineCore = new std::vector<Vector3f>;
 		lineCore->push_back(start);
 		lineCore->push_back(end);
 
-		std::vector<glm::quat> * allHandQ;
+		std::vector<glm::quat> * allHandQ = new std::vector<glm::quat>;
 		allHandQ->push_back(handQ);
 
 		packet.lineCore = lineCore;
@@ -101,11 +101,11 @@ struct ClientScene : public Scene
 		packet.packet_type = ADD_REMOVABLE_CURVED_LINE;
 		packet.m = n;
 
-		std::vector<Vector3f> * core;
+		std::vector<Vector3f> * core = new std::vector<Vector3f>;
 		core->assign(lineCore.begin(), lineCore.end());
 		packet.lineCore = core;
 
-		std::vector<glm::quat> * q;
+		std::vector<glm::quat> * q = new std::vector<glm::quat>;
 		q->assign(allHandQ.begin(), allHandQ.end());
 		packet.allHandQ = q;
 
@@ -127,7 +127,7 @@ struct ClientScene : public Scene
 		packet.packet_type = MOVE_TEMP_MODEL;
 		packet.m = m;
 
-		std::vector<Vector3f> * lineCore;
+		std::vector<Vector3f> * lineCore = std::vector<Vector3f>;
 		lineCore->push_back(newPos);
 
 		packet.lineCore = lineCore;
