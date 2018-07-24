@@ -8,9 +8,9 @@ enum PacketTypes {
 
 	INIT_CONNECTION = 0,
 
-	MASTER_PROXY_UPDATE = 1,
+	SERVER_PROXY_UPDATE = 1,
 
-	MASTER_SCENE_UPDATE = 2,
+	SERVER_SCENE_UPDATE = 2,
 
 	ADD_REMOVABLE = 3,
 
@@ -62,9 +62,9 @@ struct Packet {
 
 	//used in INIT_CONNECTION
 	Proxy * proxy;
+	Scene * s;
 	Model * m;
 	bool worldMode;
-	Vector3f pos;
 	std::vector<Vector3f> * lineCore;
 	std::vector<glm::quat> * allHandQ;
 

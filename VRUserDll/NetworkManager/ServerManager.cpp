@@ -11,6 +11,7 @@ ServerManager::ServerManager(void)
 
 	//initialize our serverside variables
 	serverProxy = new Proxy();
+	serverScene = new Scene(false);
 
     // set up the server network to listen 
     network = new ServerNetwork(); 
@@ -67,26 +68,72 @@ void ServerManager::receiveFromClients()
 
                     printf("server received init packet from client\n");
 
-                    sendActionPackets();
+					sendSceneUpdate();
+
+					if (presentationMode) {
+						sendProxyUpdate();
+					}
+                    //sendActionPackets();
 
                     break;
 
-                case ACTION_EVENT:
+				case ADD_REMOVABLE:
+					serverScene->AddRemovable(packet.m, packet.worldMode);
+					sendSceneUpdate();
+					break;
 
-                    printf("server received action event packet from client\n");
-					sendStringPackets();
-					/*
-					if (client_id % 2 == 1) {
-						sendStringPackets();
-					}
-					else {
-						sendActionPackets();
-					}
-					*/
-					
+				case ADD_TEMP:
+					serverScene->AddTemp(packet.m);
+					sendSceneUpdate();
+					break;
 
-                    break;
+				case ADD_TEMP_LINE:
+					serverScene->AddTempLine(packet.m, packet.worldMode);
+					sendSceneUpdate();
+					break;
 
+				case ADD_REMOVABLE_MARKER:
+					serverScene->AddRemovableMarker(packet.m, packet.worldMode);
+					sendSceneUpdate();
+					break;
+
+				case ADD_REMOVABLE_STRAIGHT_LINE:
+				{
+					Vector3f start = (*packet.lineCore)[0];
+					Vector3f end = (*packet.lineCore)[1];
+					glm::quat handQ = (*packet.allHandQ)[0];
+
+					serverScene->AddRemovableStraightLine(packet.m, start, end, handQ, packet.worldMode);
+					sendSceneUpdate();
+					break;
+				}
+
+				case ADD_REMOVABLE_CURVED_LINE:
+					serverScene->AddRemovableCurvedLine(packet.m, *packet.lineCore, *packet.allHandQ, packet.worldMode);
+					sendSceneUpdate();
+					break;
+
+				case REMOVE_MODEL:
+					serverScene->RemoveModel(packet.m);
+					sendSceneUpdate();
+					break;
+
+				case MOVE_TEMP_MODEL:
+					serverScene->moveTempModel(packet.m, (*packet.lineCore)[0]);
+					sendSceneUpdate();
+					break;
+
+				case REMOVE_TEMP_LINE:
+					serverScene->removeTempLine(packet.m);
+					sendSceneUpdate();
+					break;
+
+				case REMOVE_TEMP_MARKER:
+					serverScene->removeTempMarker(packet.m);
+					sendSceneUpdate();
+					break;
+
+				/*
 				case STRING_PACKET:
 				{
 					int pt = packet.packet_type;
@@ -112,21 +159,7 @@ void ServerManager::receiveFromClients()
 
 					break;
 				}
-
-				case STRING_APPEND:
-				{
-					//std::string s = centralModel->S;
-					//s.append(packet.s->c_str());
-
-					//centralModel->S = s;
-					centralModel->S = *(packet.s);
-
-					printf("server received client keystroke\n");
-
-					sendModelUpdate();
-
-					break;
-				}
+				*/
 
                 default:
 
@@ -139,6 +172,36 @@ void ServerManager::receiveFromClients()
 }
 
 
+void ServerManager::sendSceneUpdate()
+{
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.packet_type = SERVER_SCENE_UPDATE;
+	packet.s = serverScene;
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+
+void ServerManager::sendProxyUpdate()
+{
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.packet_type = SERVER_PROXY_UPDATE;
+	packet.proxy = serverProxy;
+	
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+/*
 void ServerManager::sendActionPackets()
 {
     // send action packet
@@ -182,3 +245,4 @@ void ServerManager::sendModelUpdate()
 
 	network->sendToAll(packet_data, packet_size);
 }
+*/

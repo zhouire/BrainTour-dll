@@ -49,6 +49,7 @@ void ClientManager::update()
         i += sizeof(Packet);
 
         switch (packet.packet_type) {
+			/*
 			case INIT_CONNECTION:
 
 				printf("\n");
@@ -57,7 +58,7 @@ void ClientManager::update()
 				addToModelVector(iter);
 
 				break;
-
+				*/
             default:
 
                 printf("error in packet types\n");

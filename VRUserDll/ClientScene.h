@@ -1,5 +1,7 @@
 #pragma once
 
+#include "stdafx.h"
+
 //Message-sending version of Scene
 struct ClientScene : public Scene
 {
@@ -124,12 +126,20 @@ struct ClientScene : public Scene
 		Packet packet;
 		packet.packet_type = MOVE_TEMP_MODEL;
 		packet.m = m;
-		packet.pos = newPos;
+
+		std::vector<Vector3f> * lineCore;
+		lineCore->push_back(newPos);
+
+		packet.lineCore = lineCore;
 
 		sendPacket(packet);
 	}
 
 	void removeTempLine(Model * m) {
+		//for local client record-keeping
+		localTempWorldLines.erase(m);
+		localTempVolumeLines.erase(m);
+
 		Packet packet;
 		packet.packet_type = REMOVE_TEMP_LINE;
 		packet.m = m;
@@ -138,6 +148,9 @@ struct ClientScene : public Scene
 	}
 
 	void removeTempMarker(Model * m) {
+		//for local client record-keeping
+		localTempWorldMarkers.erase(m);
+
 		Packet packet;
 		packet.packet_type = REMOVE_TEMP_MARKER;
 		packet.m = m;
