@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 14 for Windows Desktop
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VRUserDll", "VRUserDll.vcxproj", "{58F791F6-629F-4ABC-8504-CA04EFE7050A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VRUserDll", "Projects\VRUserDll\VRUserDll.vcxproj", "{58F791F6-629F-4ABC-8504-CA04EFE7050A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Projects\Server\Server.vcxproj", "{D2420935-DD3C-4388-A47E-4F09C495ABCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,19 @@ Global
 		{58F791F6-629F-4ABC-8504-CA04EFE7050A}.Release|x64.Build.0 = Release|x64
 		{58F791F6-629F-4ABC-8504-CA04EFE7050A}.Release|x86.ActiveCfg = Release|Win32
 		{58F791F6-629F-4ABC-8504-CA04EFE7050A}.Release|x86.Build.0 = Release|Win32
+		{D2420935-DD3C-4388-A47E-4F09C495ABCB}.Debug|x64.ActiveCfg = Debug|x64
+		{D2420935-DD3C-4388-A47E-4F09C495ABCB}.Debug|x64.Build.0 = Debug|x64
+		{D2420935-DD3C-4388-A47E-4F09C495ABCB}.Debug|x86.ActiveCfg = Debug|Win32
+		{D2420935-DD3C-4388-A47E-4F09C495ABCB}.Debug|x86.Build.0 = Debug|Win32
+		{D2420935-DD3C-4388-A47E-4F09C495ABCB}.Release|x64.ActiveCfg = Release|x64
+		{D2420935-DD3C-4388-A47E-4F09C495ABCB}.Release|x64.Build.0 = Release|x64
+		{D2420935-DD3C-4388-A47E-4F09C495ABCB}.Release|x86.ActiveCfg = Release|Win32
+		{D2420935-DD3C-4388-A47E-4F09C495ABCB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FF4AA7D4-E5D3-4B0C-917C-137E609AD52A}
 	EndGlobalSection
 EndGlobal

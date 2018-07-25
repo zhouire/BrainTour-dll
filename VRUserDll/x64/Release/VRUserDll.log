@@ -1,4 +1,22 @@
-﻿  ClientManager.cpp
+﻿  stdafx.cpp
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1101): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1538): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1822): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1823): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1843): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1844): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1859): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1860): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  dllmain.cpp
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1101): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1538): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1822): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1823): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1843): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1844): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1859): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\SceneManager.h(1860): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  ClientManager.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C3646: 'sin6_family': unknown override specifier
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(195): error C3646: 'sin6_scope_struct': unknown override specifier
@@ -173,6 +191,7 @@ NetworkManager\ClientNetwork.cpp(59): error C2227: left of '->ai_addr' must poin
 NetworkManager\ClientNetwork.cpp(59): error C2227: left of '->ai_addrlen' must point to class/struct/union/generic type
 NetworkManager\ClientNetwork.cpp(59): error C2660: 'connect': function does not take 1 arguments
 NetworkManager\ClientNetwork.cpp(72): error C3861: 'freeaddrinfo': identifier not found
+  NetworkServices.cpp
   ServerManager.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C3646: 'sin6_family': unknown override specifier
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
