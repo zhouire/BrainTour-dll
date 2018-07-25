@@ -14,27 +14,25 @@ enum ClientType {
 class ClientManager
 {
 public:
-	ClientManager(ClientType, Proxy *);
+	ClientManager(ClientType);
 	~ClientManager(void);
 
 	ClientNetwork * network;
-	Proxy * proxy;
+	Proxy * clientProxy;
 	ClientType client_type;
 	ClientScene * clientScene;
 
-	//old
-	void sendActionPackets();
-
-	void sendStringPackets(Model *);
-
-	void addToModelString(std::string *);
-
-	void addToModelVector(int);
+	bool init;
+	float clientId;
+	bool active;
+	bool presentationMode;
 
     char network_data[MAX_PACKET_SIZE];
 
     void update();
-	//old
+	
+	void controllerUpdate(Proxy *, ovrTrackingState, ovrInputState, int&);
 
+	void sendClientProxyUpdate();
 };
 

@@ -49,7 +49,7 @@ struct Proxy {
 	Vector3f gHeadPos;
 	Matrix4f gHeadOrientation;
 
-	float Scale;
+	float scale;
 	Vector3f voxelSize;
 
 	Matrix4f view;
@@ -67,6 +67,9 @@ struct Packet {
 	bool worldMode;
 	std::vector<Vector3f> * lineCore;
 	std::vector<glm::quat> * allHandQ;
+	int clientId;
+	bool active;
+
 
 
 

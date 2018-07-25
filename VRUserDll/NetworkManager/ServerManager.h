@@ -18,6 +18,10 @@ public:
 
 	void sendSceneUpdate();
 
+	void sendPresentationMode();
+
+	void sendInitPacket(int);
+
 	void changePresentationMode();
 
 	void changeActiveClient();

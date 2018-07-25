@@ -1,18 +1,423 @@
-﻿  stdafx.cpp
-  CAPI_GLE.cpp
-  dllmain.cpp
+﻿  ClientManager.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C3646: 'sin6_family': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(195): error C3646: 'sin6_scope_struct': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(195): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(224): error C3646: 'si_family': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(224): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(336): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(336): error C2146: syntax error: missing ';' before identifier 'scopeid_unspecified'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(627): error C2039: 'sin6_family': is not a member of 'sockaddr_in6'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(188): note: see declaration of 'sockaddr_in6'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(638): error C2039: 'sin6_family': is not a member of 'sockaddr_in6'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(188): note: see declaration of 'sockaddr_in6'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(840): error C3646: 'gr_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(840): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(849): error C3646: 'gsr_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(849): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(850): error C3646: 'gsr_source': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(850): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(859): error C3646: 'gf_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(859): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C3646: 'gf_slist': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2143: syntax error: missing ',' before '['
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2143: syntax error: missing ')' before ';'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2238: unexpected token(s) preceding ';'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(895): error C3646: 'scope_id': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(895): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(898): error C2118: negative subscript
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(905): error C3646: 'scope_id': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(905): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(908): error C2118: negative subscript
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(914): error C3646: 'protocol': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(914): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(91): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(91): error C2146: syntax error: missing ';' before identifier 'ADDRINFOT'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(98): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(98): error C2146: syntax error: missing ';' before identifier 'ADDRINFO'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(103): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(103): error C2146: syntax error: missing ';' before identifier 'ADDRINFOEX'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(125): error C2061: syntax error: identifier 'PADDRINFOA'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(136): error C2061: syntax error: identifier 'PADDRINFOW'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(197): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(197): error C2143: syntax error: missing ',' before '*'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(216): error C2061: syntax error: identifier 'PADDRINFOEXW'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(400): error C2065: 'PADDRINFOA': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(401): error C2146: syntax error: missing ')' before identifier 'pAddrInfo'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(408): error C2065: 'PADDRINFOW': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(409): error C2146: syntax error: missing ')' before identifier 'pAddrInfo'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(451): error C2065: 'PADDRINFOEXA': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(452): error C2146: syntax error: missing ')' before identifier 'pAddrInfoEx'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(460): error C2065: 'PADDRINFOEXW': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(461): error C2146: syntax error: missing ')' before identifier 'pAddrInfoEx'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(832): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(832): error C2143: syntax error: missing ',' before '*'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(840): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(853): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(853): error C2660: 'memset': function does not take 2 arguments
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(854): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(859): error C2039: 'gf_slist': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(859): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(880): error C2061: syntax error: identifier 'SOCKADDR_STORAGE'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(888): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(893): error C2065: 'SOCKADDR_STORAGE': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(901): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(901): error C2660: 'memset': function does not take 2 arguments
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(902): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(911): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(911): error C2039: 'gf_slist': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+NetworkManager\ClientManager.cpp(79): warning C4018: '<': signed/unsigned mismatch
+NetworkManager\ClientManager.cpp(87): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  ClientNetwork.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C3646: 'sin6_family': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(195): error C3646: 'sin6_scope_struct': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(195): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(224): error C3646: 'si_family': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(224): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(336): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(336): error C2146: syntax error: missing ';' before identifier 'scopeid_unspecified'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(627): error C2039: 'sin6_family': is not a member of 'sockaddr_in6'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(188): note: see declaration of 'sockaddr_in6'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(638): error C2039: 'sin6_family': is not a member of 'sockaddr_in6'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(188): note: see declaration of 'sockaddr_in6'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(840): error C3646: 'gr_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(840): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(849): error C3646: 'gsr_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(849): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(850): error C3646: 'gsr_source': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(850): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(859): error C3646: 'gf_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(859): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C3646: 'gf_slist': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2143: syntax error: missing ',' before '['
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2143: syntax error: missing ')' before ';'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2238: unexpected token(s) preceding ';'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(895): error C3646: 'scope_id': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(895): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(898): error C2118: negative subscript
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(905): error C3646: 'scope_id': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(905): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(908): error C2118: negative subscript
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(914): error C3646: 'protocol': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(914): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(91): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(91): error C2146: syntax error: missing ';' before identifier 'ADDRINFOT'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(98): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(98): error C2146: syntax error: missing ';' before identifier 'ADDRINFO'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(103): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(103): error C2146: syntax error: missing ';' before identifier 'ADDRINFOEX'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(125): error C2061: syntax error: identifier 'PADDRINFOA'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(136): error C2061: syntax error: identifier 'PADDRINFOW'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(197): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(197): error C2143: syntax error: missing ',' before '*'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(216): error C2061: syntax error: identifier 'PADDRINFOEXW'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(400): error C2065: 'PADDRINFOA': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(401): error C2146: syntax error: missing ')' before identifier 'pAddrInfo'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(408): error C2065: 'PADDRINFOW': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(409): error C2146: syntax error: missing ')' before identifier 'pAddrInfo'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(451): error C2065: 'PADDRINFOEXA': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(452): error C2146: syntax error: missing ')' before identifier 'pAddrInfoEx'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(460): error C2065: 'PADDRINFOEXW': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(461): error C2146: syntax error: missing ')' before identifier 'pAddrInfoEx'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(832): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(832): error C2143: syntax error: missing ',' before '*'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(840): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(853): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(853): error C2660: 'memset': function does not take 2 arguments
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(854): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(859): error C2039: 'gf_slist': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(859): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(880): error C2061: syntax error: identifier 'SOCKADDR_STORAGE'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(888): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(893): error C2065: 'SOCKADDR_STORAGE': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(901): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(901): error C2660: 'memset': function does not take 2 arguments
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(902): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(911): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(911): error C2039: 'gf_slist': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+NetworkManager\ClientNetwork.cpp(16): error C2079: 'hints' uses undefined struct 'ClientNetwork::{ctor}::addrinfo'
+NetworkManager\ClientNetwork.cpp(30): error C2228: left of '.ai_family' must have class/struct/union
+  NetworkManager\ClientNetwork.cpp(30): note: type is 'int'
+NetworkManager\ClientNetwork.cpp(31): error C2228: left of '.ai_socktype' must have class/struct/union
+  NetworkManager\ClientNetwork.cpp(31): note: type is 'int'
+NetworkManager\ClientNetwork.cpp(32): error C2228: left of '.ai_protocol' must have class/struct/union
+  NetworkManager\ClientNetwork.cpp(32): note: type is 'int'
+NetworkManager\ClientNetwork.cpp(36): error C2660: 'getaddrinfo': function does not take 4 arguments
+NetworkManager\ClientNetwork.cpp(46): error C2027: use of undefined type 'ClientNetwork::{ctor}::addrinfo'
+  NetworkManager\ClientNetwork.cpp(14): note: see declaration of 'ClientNetwork::{ctor}::addrinfo'
+NetworkManager\ClientNetwork.cpp(46): error C2227: left of '->ai_next' must point to class/struct/union/generic type
+NetworkManager\ClientNetwork.cpp(49): error C2027: use of undefined type 'ClientNetwork::{ctor}::addrinfo'
+  NetworkManager\ClientNetwork.cpp(14): note: see declaration of 'ClientNetwork::{ctor}::addrinfo'
+NetworkManager\ClientNetwork.cpp(49): error C2227: left of '->ai_family' must point to class/struct/union/generic type
+NetworkManager\ClientNetwork.cpp(49): error C2227: left of '->ai_socktype' must point to class/struct/union/generic type
+NetworkManager\ClientNetwork.cpp(50): error C2027: use of undefined type 'ClientNetwork::{ctor}::addrinfo'
+  NetworkManager\ClientNetwork.cpp(14): note: see declaration of 'ClientNetwork::{ctor}::addrinfo'
+NetworkManager\ClientNetwork.cpp(50): error C2227: left of '->ai_protocol' must point to class/struct/union/generic type
+NetworkManager\ClientNetwork.cpp(50): error C2660: 'socket': function does not take 1 arguments
+NetworkManager\ClientNetwork.cpp(59): error C2027: use of undefined type 'ClientNetwork::{ctor}::addrinfo'
+  NetworkManager\ClientNetwork.cpp(14): note: see declaration of 'ClientNetwork::{ctor}::addrinfo'
+NetworkManager\ClientNetwork.cpp(59): error C2227: left of '->ai_addr' must point to class/struct/union/generic type
+NetworkManager\ClientNetwork.cpp(59): error C2227: left of '->ai_addrlen' must point to class/struct/union/generic type
+NetworkManager\ClientNetwork.cpp(59): error C2660: 'connect': function does not take 1 arguments
+NetworkManager\ClientNetwork.cpp(72): error C3861: 'freeaddrinfo': identifier not found
+  ServerManager.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C3646: 'sin6_family': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(195): error C3646: 'sin6_scope_struct': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(195): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(224): error C3646: 'si_family': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(224): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(336): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(336): error C2146: syntax error: missing ';' before identifier 'scopeid_unspecified'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(627): error C2039: 'sin6_family': is not a member of 'sockaddr_in6'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(188): note: see declaration of 'sockaddr_in6'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(638): error C2039: 'sin6_family': is not a member of 'sockaddr_in6'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(188): note: see declaration of 'sockaddr_in6'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(840): error C3646: 'gr_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(840): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(849): error C3646: 'gsr_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(849): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(850): error C3646: 'gsr_source': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(850): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(859): error C3646: 'gf_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(859): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C3646: 'gf_slist': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2143: syntax error: missing ',' before '['
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2143: syntax error: missing ')' before ';'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2238: unexpected token(s) preceding ';'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(895): error C3646: 'scope_id': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(895): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(898): error C2118: negative subscript
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(905): error C3646: 'scope_id': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(905): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(908): error C2118: negative subscript
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(914): error C3646: 'protocol': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(914): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(91): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(91): error C2146: syntax error: missing ';' before identifier 'ADDRINFOT'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(98): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(98): error C2146: syntax error: missing ';' before identifier 'ADDRINFO'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(103): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(103): error C2146: syntax error: missing ';' before identifier 'ADDRINFOEX'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(125): error C2061: syntax error: identifier 'PADDRINFOA'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(136): error C2061: syntax error: identifier 'PADDRINFOW'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(197): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(197): error C2143: syntax error: missing ',' before '*'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(216): error C2061: syntax error: identifier 'PADDRINFOEXW'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(400): error C2065: 'PADDRINFOA': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(401): error C2146: syntax error: missing ')' before identifier 'pAddrInfo'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(408): error C2065: 'PADDRINFOW': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(409): error C2146: syntax error: missing ')' before identifier 'pAddrInfo'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(451): error C2065: 'PADDRINFOEXA': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(452): error C2146: syntax error: missing ')' before identifier 'pAddrInfoEx'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(460): error C2065: 'PADDRINFOEXW': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(461): error C2146: syntax error: missing ')' before identifier 'pAddrInfoEx'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(832): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(832): error C2143: syntax error: missing ',' before '*'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(840): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(853): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(853): error C2660: 'memset': function does not take 2 arguments
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(854): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(859): error C2039: 'gf_slist': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(859): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(880): error C2061: syntax error: identifier 'SOCKADDR_STORAGE'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(888): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(893): error C2065: 'SOCKADDR_STORAGE': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(901): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(901): error C2660: 'memset': function does not take 2 arguments
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(902): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(911): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(911): error C2039: 'gf_slist': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+NetworkManager\ServerManager.cpp(58): warning C4018: '<': signed/unsigned mismatch
+  ServerNetwork.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C3646: 'sin6_family': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(195): error C3646: 'sin6_scope_struct': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(195): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(224): error C3646: 'si_family': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(224): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(336): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(336): error C2146: syntax error: missing ';' before identifier 'scopeid_unspecified'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(627): error C2039: 'sin6_family': is not a member of 'sockaddr_in6'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(188): note: see declaration of 'sockaddr_in6'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(638): error C2039: 'sin6_family': is not a member of 'sockaddr_in6'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(188): note: see declaration of 'sockaddr_in6'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(840): error C3646: 'gr_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(840): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(849): error C3646: 'gsr_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(849): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(850): error C3646: 'gsr_source': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(850): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(859): error C3646: 'gf_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(859): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C3646: 'gf_slist': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2143: syntax error: missing ',' before '['
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2143: syntax error: missing ')' before ';'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2238: unexpected token(s) preceding ';'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(895): error C3646: 'scope_id': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(895): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(898): error C2118: negative subscript
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(905): error C3646: 'scope_id': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(905): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(908): error C2118: negative subscript
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(914): error C3646: 'protocol': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(914): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(91): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(91): error C2146: syntax error: missing ';' before identifier 'ADDRINFOT'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(98): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(98): error C2146: syntax error: missing ';' before identifier 'ADDRINFO'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(103): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(103): error C2146: syntax error: missing ';' before identifier 'ADDRINFOEX'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(125): error C2061: syntax error: identifier 'PADDRINFOA'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(136): error C2061: syntax error: identifier 'PADDRINFOW'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(197): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(197): error C2143: syntax error: missing ',' before '*'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(216): error C2061: syntax error: identifier 'PADDRINFOEXW'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(400): error C2065: 'PADDRINFOA': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(401): error C2146: syntax error: missing ')' before identifier 'pAddrInfo'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(408): error C2065: 'PADDRINFOW': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(409): error C2146: syntax error: missing ')' before identifier 'pAddrInfo'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(451): error C2065: 'PADDRINFOEXA': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(452): error C2146: syntax error: missing ')' before identifier 'pAddrInfoEx'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(460): error C2065: 'PADDRINFOEXW': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(461): error C2146: syntax error: missing ')' before identifier 'pAddrInfoEx'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(832): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(832): error C2143: syntax error: missing ',' before '*'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(840): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(853): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(853): error C2660: 'memset': function does not take 2 arguments
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(854): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(859): error C2039: 'gf_slist': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(859): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(880): error C2061: syntax error: identifier 'SOCKADDR_STORAGE'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(888): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(893): error C2065: 'SOCKADDR_STORAGE': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(901): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(901): error C2660: 'memset': function does not take 2 arguments
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(902): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(911): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(911): error C2039: 'gf_slist': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+NetworkManager\ServerNetwork.cpp(18): error C2079: 'hints' uses undefined struct 'ServerNetwork::{ctor}::addrinfo'
+NetworkManager\ServerNetwork.cpp(29): error C2228: left of '.ai_family' must have class/struct/union
+  NetworkManager\ServerNetwork.cpp(29): note: type is 'int'
+NetworkManager\ServerNetwork.cpp(30): error C2228: left of '.ai_socktype' must have class/struct/union
+  NetworkManager\ServerNetwork.cpp(30): note: type is 'int'
+NetworkManager\ServerNetwork.cpp(31): error C2228: left of '.ai_protocol' must have class/struct/union
+  NetworkManager\ServerNetwork.cpp(31): note: type is 'int'
+NetworkManager\ServerNetwork.cpp(32): error C2228: left of '.ai_flags' must have class/struct/union
+  NetworkManager\ServerNetwork.cpp(32): note: type is 'int'
+NetworkManager\ServerNetwork.cpp(32): error C2065: 'AI_PASSIVE': undeclared identifier
+NetworkManager\ServerNetwork.cpp(35): error C2660: 'getaddrinfo': function does not take 4 arguments
+NetworkManager\ServerNetwork.cpp(44): error C2027: use of undefined type 'ServerNetwork::{ctor}::addrinfo'
+  NetworkManager\ServerNetwork.cpp(17): note: see declaration of 'ServerNetwork::{ctor}::addrinfo'
+NetworkManager\ServerNetwork.cpp(44): error C2227: left of '->ai_family' must point to class/struct/union/generic type
+NetworkManager\ServerNetwork.cpp(44): error C2227: left of '->ai_socktype' must point to class/struct/union/generic type
+NetworkManager\ServerNetwork.cpp(44): error C2227: left of '->ai_protocol' must point to class/struct/union/generic type
+NetworkManager\ServerNetwork.cpp(44): error C2660: 'socket': function does not take 1 arguments
+NetworkManager\ServerNetwork.cpp(48): error C3861: 'freeaddrinfo': identifier not found
+NetworkManager\ServerNetwork.cpp(65): error C2027: use of undefined type 'ServerNetwork::{ctor}::addrinfo'
+  NetworkManager\ServerNetwork.cpp(17): note: see declaration of 'ServerNetwork::{ctor}::addrinfo'
+NetworkManager\ServerNetwork.cpp(65): error C2227: left of '->ai_addr' must point to class/struct/union/generic type
+NetworkManager\ServerNetwork.cpp(65): error C2227: left of '->ai_addrlen' must point to class/struct/union/generic type
+NetworkManager\ServerNetwork.cpp(65): error C2660: 'bind': function does not take 1 arguments
+NetworkManager\ServerNetwork.cpp(69): error C3861: 'freeaddrinfo': identifier not found
+NetworkManager\ServerNetwork.cpp(76): error C3861: 'freeaddrinfo': identifier not found
   VRUserDll.cpp
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1091): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1523): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1729): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1730): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1750): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1751): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1766): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\zhoui\documents\8kexm\braintour-dll\vruserdll\SceneManager.h(1767): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-     Creating library C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.lib and object C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.exp
-  Generating code
-  All 1508 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  VRUserDll.vcxproj -> C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.dll
-  VRUserDll.vcxproj -> C:\Users\zhoui\Documents\8keXm\BrainTour-dll\VRUserDll\x64\Release\VRUserDll.pdb (Full PDB)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C3646: 'sin6_family': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(189): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(195): error C3646: 'sin6_scope_struct': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(195): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(224): error C3646: 'si_family': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(224): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(336): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(336): error C2146: syntax error: missing ';' before identifier 'scopeid_unspecified'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(627): error C2039: 'sin6_family': is not a member of 'sockaddr_in6'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(188): note: see declaration of 'sockaddr_in6'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(638): error C2039: 'sin6_family': is not a member of 'sockaddr_in6'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(188): note: see declaration of 'sockaddr_in6'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(840): error C3646: 'gr_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(840): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(849): error C3646: 'gsr_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(849): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(850): error C3646: 'gsr_source': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(850): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(859): error C3646: 'gf_group': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(859): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C3646: 'gf_slist': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2143: syntax error: missing ',' before '['
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2143: syntax error: missing ')' before ';'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(862): error C2238: unexpected token(s) preceding ';'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(895): error C3646: 'scope_id': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(895): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(898): error C2118: negative subscript
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(905): error C3646: 'scope_id': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(905): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(908): error C2118: negative subscript
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(914): error C3646: 'protocol': unknown override specifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(914): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(91): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(91): error C2146: syntax error: missing ';' before identifier 'ADDRINFOT'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(98): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(98): error C2146: syntax error: missing ';' before identifier 'ADDRINFO'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(103): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(103): error C2146: syntax error: missing ';' before identifier 'ADDRINFOEX'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(125): error C2061: syntax error: identifier 'PADDRINFOA'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(136): error C2061: syntax error: identifier 'PADDRINFOW'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(197): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(197): error C2143: syntax error: missing ',' before '*'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(216): error C2061: syntax error: identifier 'PADDRINFOEXW'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(400): error C2065: 'PADDRINFOA': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(401): error C2146: syntax error: missing ')' before identifier 'pAddrInfo'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(408): error C2065: 'PADDRINFOW': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(409): error C2146: syntax error: missing ')' before identifier 'pAddrInfo'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(451): error C2065: 'PADDRINFOEXA': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(452): error C2146: syntax error: missing ')' before identifier 'pAddrInfoEx'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(460): error C2065: 'PADDRINFOEXW': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(461): error C2146: syntax error: missing ')' before identifier 'pAddrInfoEx'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(832): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(832): error C2143: syntax error: missing ',' before '*'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(840): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(853): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(853): error C2660: 'memset': function does not take 2 arguments
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(854): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(859): error C2039: 'gf_slist': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(859): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(880): error C2061: syntax error: identifier 'SOCKADDR_STORAGE'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(888): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(893): error C2065: 'SOCKADDR_STORAGE': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(901): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(901): error C2660: 'memset': function does not take 2 arguments
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(902): error C2039: 'gf_group': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(911): error C2065: 'SourceList': undeclared identifier
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ws2tcpip.h(911): error C2039: 'gf_slist': is not a member of 'group_filter'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ws2ipdef.h(857): note: see declaration of 'group_filter'

@@ -54,6 +54,9 @@
     <ClInclude Include="NetworkManager\ClientManager.h">
       <Filter>Source Files\Network Files</Filter>
     </ClInclude>
+    <ClInclude Include="ClientScene.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

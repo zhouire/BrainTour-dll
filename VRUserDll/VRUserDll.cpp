@@ -5,6 +5,7 @@
 
 #include "VRUserDll.hpp"
 //#include "SceneManager.h"
+#include "ClientManager.h"
 
 #include <algorithm>
 #include <vector>
@@ -58,7 +59,8 @@ static void drawCube(float size)
 
 
 
-static Scene * roomScene = nullptr;
+//static Scene * roomScene = nullptr;
+static ClientManager * VRclient;
 
 
 namespace VRUserProxy {
@@ -67,7 +69,8 @@ namespace VRUserProxy {
 		proxy = p;
 		OVR::GLEContext::SetCurrentContext(context);
 
-		roomScene = new Scene();
+		//roomScene = new Scene();
+		VRclient = new ClientManager(VR);
 
 		//setter functions
 		//int maxLen = proxy->VolumeSize[0];
@@ -89,7 +92,7 @@ namespace VRUserProxy {
 	VRUSERDLL_API void OnHandleTouch(void *recv, ovrTrackingState& trackState, ovrInputState &inputState, OVR::Matrix4f& view) {
 		using namespace OVR;
 
-		DPrintf("VRUserProxy::OnHadleTouch\n");
+		//DPrintf("VRUserProxy::OnHadleTouch\n");
 
 		float *Position = proxy->GetPosition(recv);
 		int &ClipMode = proxy->GetClipMode(recv);
@@ -100,28 +103,50 @@ namespace VRUserProxy {
 		Vector3f &gHeadPos = proxy->GetGlobalHeadPosition(recv);
 		Matrix4f &gHeadOrientation = proxy->GetGlobalHeadPose(recv);
 
+		/*
 		ovrPosef         handPoses[2];
 		handPoses[ovrHand_Left] = trackState.HandPoses[ovrHand_Left].ThePose;
 		handPoses[ovrHand_Right] = trackState.HandPoses[ovrHand_Right].ThePose;
 
 		//head pose; currently unused
 		ovrPosef hmdPose = trackState.HeadPose.ThePose;
-
+		*/
 
 		int maxLen = proxy->VolumeSize[0];
 		if (maxLen < proxy->VolumeSize[1]) maxLen = proxy->VolumeSize[1];
 		if (maxLen < proxy->VolumeSize[2]) maxLen = proxy->VolumeSize[2];
 		float scale = proxy->ObjectScale / maxLen;
-		//roomScene -> SetWorldToVoxelScale(scale);
-		//roomScene->SetVoxelSize(proxy->VoxelSize[0], proxy->VoxelSize[1], proxy->VoxelSize[2]);
 
 		Vector3f voxelSize;
 		voxelSize.x = proxy->VoxelSize[0];
 		voxelSize.y = proxy->VoxelSize[1];
 		voxelSize.z = proxy->VoxelSize[2];
 
+		Proxy * p = new Proxy();
+		p->Position[0] = Position[0];
+		p->Position[1] = Position[1];
+		p->Position[2] = Position[2];
+
+		p->ClipMode = ClipMode;
+		p->ClipWidth = ClipWidth;
+		p->ClipPos = ClipPos;
+
+		p->Pose = Pose;
+		p->gPose = gPose;
+		p->gHeadPos = gHeadPos;
+		p->gHeadOrientation = gHeadOrientation;
+
+		p->scale = scale;
+		p->voxelSize = voxelSize;
+
+		p->view = view;
+
+		VRclient->clientProxy = p;
+
+		
 		DPrintf("VRUserProxy::GetInputState OK\n");
 		int RoiMode = 0;
+		/*
 		Matrix4f v = view;
 		v.M[0][3] = 0.f;
 		v.M[1][3] = 0.f;
@@ -246,6 +271,11 @@ namespace VRUserProxy {
 		lastButtons = inputState.Buttons;
 		lastHandPoses[ovrHand_Left] = handPoses[ovrHand_Left];
 		lastHandPoses[ovrHand_Right] = handPoses[ovrHand_Right];
+		*/
+
+		VRclient->update();
+		VRclient->controllerUpdate(p, trackState, inputState, RoiMode);
+
 
 		// update Roi
 		if (RoiMode == 0) {
@@ -262,8 +292,13 @@ namespace VRUserProxy {
 		}
 	}
 
+
+
 	VRUSERDLL_API void DrawPreVolumeRendering(OVR::Matrix4f& view, OVR::Matrix4f& proj, OVR::Quatf& gPose)
 	{	
+		//update proj in our Proxy object
+		(VRclient->clientProxy)->proj = proj;
+
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadTransposeMatrixf(&proj.M[0][0]);
@@ -370,7 +405,7 @@ namespace VRUserProxy {
 			}
 		}
 
-		roomScene->Render(view, proj, rot);
+		(VRclient->clientScene)->Render(view, proj, rot);
 
 		glPopMatrix();
 

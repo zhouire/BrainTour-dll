@@ -74,13 +74,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Program Files\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll;NetworkManager;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\VRUserDll;C:\Program Files\glm;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll;NetworkManager;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -150,6 +151,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientScene.h" />
     <ClInclude Include="NetworkManager\ClientManager.h" />
     <ClInclude Include="NetworkManager\ClientNetwork.h" />
     <ClInclude Include="NetworkManager\NetworkData.h" />

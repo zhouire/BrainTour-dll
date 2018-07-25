@@ -127,7 +127,7 @@ struct ClientScene : public Scene
 		packet.packet_type = MOVE_TEMP_MODEL;
 		packet.m = m;
 
-		std::vector<Vector3f> * lineCore = std::vector<Vector3f>;
+		std::vector<Vector3f> * lineCore = new std::vector<Vector3f>;
 		lineCore->push_back(newPos);
 
 		packet.lineCore = lineCore;

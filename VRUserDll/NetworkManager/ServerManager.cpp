@@ -12,6 +12,8 @@ ServerManager::ServerManager(void)
 	//initialize our serverside variables
 	serverProxy = new Proxy();
 	serverScene = new Scene(false);
+	//default presentationMode is false; set the activeClient when we switch into presentationMode
+	presentationMode = false;
 
     // set up the server network to listen 
     network = new ServerNetwork(); 
@@ -26,9 +28,10 @@ void ServerManager::update()
     // get new clients
    if(network->acceptNewClient(client_id))
    {
-        printf("client %d has been connected to the server\n",client_id);
+	   sendInitPacket(client_id);
+       printf("client %d has been connected to the server\n",client_id);
 
-        client_id++;
+       client_id++;
    }
 
    receiveFromClients();
@@ -36,8 +39,6 @@ void ServerManager::update()
 
 void ServerManager::receiveFromClients()
 {
-
-    //Packet packet;
 	Packet packet;
 
     // go through all clients
@@ -69,6 +70,7 @@ void ServerManager::receiveFromClients()
                     printf("server received init packet from client\n");
 
 					sendSceneUpdate();
+					sendPresentationMode();
 
 					if (presentationMode) {
 						sendProxyUpdate();
@@ -133,6 +135,11 @@ void ServerManager::receiveFromClients()
 					sendSceneUpdate();
 					break;
 
+				case CLIENT_PROXY_UPDATE:
+					*(serverProxy) = *(packet.proxy);
+					sendProxyUpdate();
+					break;
+
 				/*
 				case STRING_PACKET:
 				{
@@ -171,6 +178,21 @@ void ServerManager::receiveFromClients()
     }
 }
 
+//broadcast the newest client_id to the whole network, but only the newest-connected one
+//which has not received an init packet will recognize and adopt it.
+void ServerManager::sendInitPacket(int client_id)
+{
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.packet_type = SERVER_SCENE_UPDATE;
+	packet.clientId = client_id;
+
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
 
 void ServerManager::sendSceneUpdate()
 {
@@ -196,6 +218,22 @@ void ServerManager::sendProxyUpdate()
 	packet.packet_type = SERVER_PROXY_UPDATE;
 	packet.proxy = serverProxy;
 	
+	packet.serialize(packet_data);
+
+	network->sendToAll(packet_data, packet_size);
+}
+
+
+void ServerManager::sendPresentationMode()
+{
+	const unsigned int packet_size = sizeof(Packet);
+	char packet_data[packet_size];
+
+	Packet packet;
+	packet.packet_type = SERVER_PROXY_UPDATE;
+	//repurpose the worldMode bool to send presentation mode
+	packet.worldMode = presentationMode;
+
 	packet.serialize(packet_data);
 
 	network->sendToAll(packet_data, packet_size);
