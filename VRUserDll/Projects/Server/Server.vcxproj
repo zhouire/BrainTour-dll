@@ -18,6 +18,28 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CAPI_GLE.cpp" />
+    <ClCompile Include="NetworkServices.cpp" />
+    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="ServerManager.cpp" />
+    <ClCompile Include="ServerNetwork.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="NetworkData.h" />
+    <ClInclude Include="NetworkServices.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="ServerManager.h" />
+    <ClInclude Include="ServerNetwork.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="winsock2.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{D2420935-DD3C-4388-A47E-4F09C495ABCB}</ProjectGuid>
@@ -72,16 +94,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server;..\..\Dependencies\OculusSDK\LibOVRKernel\Src;..\..\Dependencies\OculusSDK\LibOVR\Include;..\..\Dependencies\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server\Common;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server\Common\NetworkManager;$(IncludePath)</IncludePath>
-    <LibraryPath>..\Dependencies\OculusSDK\LibOVRKernel\Src;..\Dependencies\OculusSDK\LibOVR\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files\boost_1_67_0;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRPlatform\Include;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRAvatar\Include;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server;C:\Program Files\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Src;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost_1_67_0\stage\lib;C:\Program Files\boost_1_67_0\libs;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRPlatform\Windows;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRAvatar\Windows;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server;..\..\Dependencies\OculusSDK\LibOVRKernel\Src;..\..\Dependencies\OculusSDK\LibOVR\Include;..\..\Dependencies\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server\Common;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server\Common\NetworkManager;$(IncludePath)</IncludePath>
-    <LibraryPath>..\Dependencies\OculusSDK\LibOVRKernel\Src;..\Dependencies\OculusSDK\LibOVR\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files\boost_1_67_0;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRPlatform\Include;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRAvatar\Include;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server;C:\Program Files\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Src;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost_1_67_0\stage\lib;C:\Program Files\boost_1_67_0\libs;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRPlatform\Windows;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRAvatar\Windows;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -154,36 +176,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="Common\ClientScene.h" />
-    <ClInclude Include="Common\NetworkManager\ClientManager.h" />
-    <ClInclude Include="Common\NetworkManager\ClientNetwork.h" />
-    <ClInclude Include="Common\NetworkManager\NetworkData.h" />
-    <ClInclude Include="Common\NetworkManager\NetworkServices.h" />
-    <ClInclude Include="Common\NetworkManager\ServerManager.h" />
-    <ClInclude Include="Common\NetworkManager\ServerNetwork.h" />
-    <ClInclude Include="Common\SceneManager.h" />
-    <ClInclude Include="Common\shared.h" />
-    <ClInclude Include="Common\stb_image.h" />
-    <ClInclude Include="Common\winsock2.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Common\CAPI_GLE.cpp" />
-    <ClCompile Include="Common\NetworkManager\ClientManager.cpp" />
-    <ClCompile Include="Common\NetworkManager\ClientNetwork.cpp" />
-    <ClCompile Include="Common\NetworkManager\NetworkServices.cpp" />
-    <ClCompile Include="Common\NetworkManager\ServerManager.cpp" />
-    <ClCompile Include="Common\NetworkManager\ServerNetwork.cpp" />
-    <ClCompile Include="Server.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
