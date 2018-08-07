@@ -1,6 +1,6 @@
 #pragma once
-#include <winsock2.h>
-#include <Windows.h>
+//#include <winsock2.h>
+//#include <Windows.h>
 
 class NetworkServices
 {

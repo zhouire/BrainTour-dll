@@ -27,37 +27,37 @@
     <ClInclude Include="VRUserDll.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\NetworkManager\ClientManager.h">
+    <ClInclude Include="Common\NetworkManager\ClientManager.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\NetworkManager\ClientNetwork.h">
+    <ClInclude Include="Common\NetworkManager\ClientNetwork.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\NetworkManager\NetworkData.h">
+    <ClInclude Include="Common\NetworkManager\NetworkData.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\NetworkManager\NetworkServices.h">
+    <ClInclude Include="Common\NetworkManager\NetworkServices.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\NetworkManager\ServerManager.h">
+    <ClInclude Include="Common\NetworkManager\ServerManager.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\NetworkManager\ServerNetwork.h">
+    <ClInclude Include="Common\NetworkManager\ServerNetwork.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\SceneManager.h">
+    <ClInclude Include="Common\ClientScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\shared.h">
+    <ClInclude Include="Common\SceneManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\stb_image.h">
+    <ClInclude Include="Common\shared.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\winsock2.h">
+    <ClInclude Include="Common\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\ClientScene.h">
+    <ClInclude Include="Common\winsock2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,23 +71,23 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\NetworkManager\ClientManager.cpp">
+    <ClCompile Include="Common\NetworkManager\ClientManager.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\NetworkManager\ClientNetwork.cpp">
+    <ClCompile Include="Common\NetworkManager\ClientNetwork.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\NetworkManager\NetworkServices.cpp">
+    <ClCompile Include="Common\NetworkManager\NetworkServices.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\NetworkManager\ServerManager.cpp">
+    <ClCompile Include="Common\NetworkManager\ServerManager.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\NetworkManager\ServerNetwork.cpp">
+    <ClCompile Include="Common\NetworkManager\ServerNetwork.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\CAPI_GLE.cpp">
-      <Filter>Resource Files</Filter>
+    <ClCompile Include="Common\CAPI_GLE.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

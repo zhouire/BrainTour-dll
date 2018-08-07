@@ -1,5 +1,4 @@
 #include "StdAfx.h"
-//#include "shared.h"
 #include "ClientNetwork.h"
 
 
@@ -34,7 +33,7 @@ ClientNetwork::ClientNetwork(void)
 
 	
     //resolve server address and port 
-    iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
+    iResult = ::getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
 
     if( iResult != 0 ) 
     {
@@ -57,11 +56,11 @@ ClientNetwork::ClientNetwork(void)
         }
 
         // Connect to server.
-        iResult = connect( ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+        iResult = ::connect( ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
 
         if (iResult == SOCKET_ERROR)
         {
-            closesocket(ConnectSocket);
+            ::closesocket(ConnectSocket);
             ConnectSocket = INVALID_SOCKET;
             printf ("The server is down... did not connect");
         }
@@ -70,7 +69,7 @@ ClientNetwork::ClientNetwork(void)
 
 
     // no longer need address info for server
-    freeaddrinfo(result);
+    ::freeaddrinfo(result);
 
 
 
@@ -89,14 +88,14 @@ ClientNetwork::ClientNetwork(void)
     if (iResult == SOCKET_ERROR)
     {
         printf("ioctlsocket failed with error: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
+        ::closesocket(ConnectSocket);
         WSACleanup();
         exit(1);        
     }
 
 	//disable nagle
     char value = 1;
-    setsockopt( ConnectSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
+    ::setsockopt( ConnectSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
 }
 
 
@@ -111,7 +110,7 @@ int ClientNetwork::receivePackets(char * recvbuf)
     if ( iResult == 0 )
     {
         printf("Connection closed\n");
-        closesocket(ConnectSocket);
+        ::closesocket(ConnectSocket);
         WSACleanup();
         exit(1);
     }

@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\Dependencies\OculusSDK\LibOVRKernel\Src;..\..\Dependencies\OculusSDK\LibOVR\Include;..\..\Dependencies\glm;..\..\Common\NetworkManager;..\..\Common;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server;..\..\Dependencies\OculusSDK\LibOVRKernel\Src;..\..\Dependencies\OculusSDK\LibOVR\Include;..\..\Dependencies\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server\Common;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server\Common\NetworkManager;$(IncludePath)</IncludePath>
     <LibraryPath>..\Dependencies\OculusSDK\LibOVRKernel\Src;..\Dependencies\OculusSDK\LibOVR\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\Dependencies\OculusSDK\LibOVRKernel\Src;..\..\Dependencies\OculusSDK\LibOVR\Include;..\..\Dependencies\glm;..\..\Common\NetworkManager;..\..\Common;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server;..\..\Dependencies\OculusSDK\LibOVRKernel\Src;..\..\Dependencies\OculusSDK\LibOVR\Include;..\..\Dependencies\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server\Common;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server\Common\NetworkManager;$(IncludePath)</IncludePath>
     <LibraryPath>..\Dependencies\OculusSDK\LibOVRKernel\Src;..\Dependencies\OculusSDK\LibOVR\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -155,26 +155,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Common\NetworkManager\ClientManager.h" />
-    <ClInclude Include="..\..\Common\NetworkManager\ClientNetwork.h" />
-    <ClInclude Include="..\..\Common\NetworkManager\NetworkData.h" />
-    <ClInclude Include="..\..\Common\NetworkManager\NetworkServices.h" />
-    <ClInclude Include="..\..\Common\NetworkManager\ServerManager.h" />
-    <ClInclude Include="..\..\Common\NetworkManager\ServerNetwork.h" />
-    <ClInclude Include="..\..\Common\SceneManager.h" />
-    <ClInclude Include="..\..\Common\shared.h" />
-    <ClInclude Include="..\..\Common\stb_image.h" />
-    <ClInclude Include="..\..\Common\winsock2.h" />
+    <ClInclude Include="Common\ClientScene.h" />
+    <ClInclude Include="Common\NetworkManager\ClientManager.h" />
+    <ClInclude Include="Common\NetworkManager\ClientNetwork.h" />
+    <ClInclude Include="Common\NetworkManager\NetworkData.h" />
+    <ClInclude Include="Common\NetworkManager\NetworkServices.h" />
+    <ClInclude Include="Common\NetworkManager\ServerManager.h" />
+    <ClInclude Include="Common\NetworkManager\ServerNetwork.h" />
+    <ClInclude Include="Common\SceneManager.h" />
+    <ClInclude Include="Common\shared.h" />
+    <ClInclude Include="Common\stb_image.h" />
+    <ClInclude Include="Common\winsock2.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Common\CAPI_GLE.cpp" />
-    <ClCompile Include="..\..\Common\NetworkManager\ClientManager.cpp" />
-    <ClCompile Include="..\..\Common\NetworkManager\ClientNetwork.cpp" />
-    <ClCompile Include="..\..\Common\NetworkManager\NetworkServices.cpp" />
-    <ClCompile Include="..\..\Common\NetworkManager\ServerManager.cpp" />
-    <ClCompile Include="..\..\Common\NetworkManager\ServerNetwork.cpp" />
+    <ClCompile Include="Common\CAPI_GLE.cpp" />
+    <ClCompile Include="Common\NetworkManager\ClientManager.cpp" />
+    <ClCompile Include="Common\NetworkManager\ClientNetwork.cpp" />
+    <ClCompile Include="Common\NetworkManager\NetworkServices.cpp" />
+    <ClCompile Include="Common\NetworkManager\ServerManager.cpp" />
+    <ClCompile Include="Common\NetworkManager\ServerNetwork.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

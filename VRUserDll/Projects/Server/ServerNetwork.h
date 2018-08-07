@@ -1,6 +1,6 @@
 #pragma once
-#include <winsock2.h>
-#include <Windows.h>
+//#include <winsock2.h>
+//#include <Windows.h>
 #include "NetworkServices.h"
 #include <ws2tcpip.h>
 #include <map>
@@ -37,5 +37,7 @@ public:
 
     // table to keep track of each client's socket
     std::map<unsigned int, SOCKET> sessions; 
+	//table to keep track of the sockets we can send to (keep receiving from exited clients, but don't send to them)
+	//std::map<unsigned int, SOCKET> send_sessions;
 };
 

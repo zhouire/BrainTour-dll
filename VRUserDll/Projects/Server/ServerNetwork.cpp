@@ -1,5 +1,4 @@
 #include "StdAfx.h"
-//#include "shared.h"
 #include "ServerNetwork.h"
 
 
@@ -33,7 +32,7 @@ ServerNetwork::ServerNetwork(void)
     hints.ai_flags = AI_PASSIVE;
 
 	    // Resolve the server address and port
-    iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
+    iResult = ::getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
 
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);
@@ -46,42 +45,42 @@ ServerNetwork::ServerNetwork(void)
 
     if (ListenSocket == INVALID_SOCKET) {
         printf("socket failed with error: %ld\n", WSAGetLastError());
-        freeaddrinfo(result);
+        ::freeaddrinfo(result);
         WSACleanup();
         exit(1);
     }
 
     // Set the mode of the socket to be nonblocking
     u_long iMode = 1;
-    iResult = ioctlsocket(ListenSocket, FIONBIO, &iMode);
+    iResult = ::ioctlsocket(ListenSocket, FIONBIO, &iMode);
 
     if (iResult == SOCKET_ERROR) {
         printf("ioctlsocket failed with error: %d\n", WSAGetLastError());
-        closesocket(ListenSocket);
+        ::closesocket(ListenSocket);
         WSACleanup();
         exit(1);
     }
 
     // Setup the TCP listening socket
-    iResult = bind( ListenSocket, result->ai_addr, (int)result->ai_addrlen);
+    iResult = ::bind( ListenSocket, result->ai_addr, (int)result->ai_addrlen);
 
     if (iResult == SOCKET_ERROR) {
         printf("bind failed with error: %d\n", WSAGetLastError());
-        freeaddrinfo(result);
-        closesocket(ListenSocket);
+        ::freeaddrinfo(result);
+        ::closesocket(ListenSocket);
         WSACleanup();
         exit(1);
     }
 
     // no longer need address information
-    freeaddrinfo(result);
+    ::freeaddrinfo(result);
 
     // start listening for new clients attempting to connect
-    iResult = listen(ListenSocket, SOMAXCONN);
+    iResult = ::listen(ListenSocket, SOMAXCONN);
 
     if (iResult == SOCKET_ERROR) {
         printf("listen failed with error: %d\n", WSAGetLastError());
-        closesocket(ListenSocket);
+        ::closesocket(ListenSocket);
         WSACleanup();
         exit(1);
     }
@@ -96,16 +95,19 @@ ServerNetwork::~ServerNetwork(void)
 bool ServerNetwork::acceptNewClient(unsigned int & id)
 {
     // if client waiting, accept the connection and save the socket
-    ClientSocket = accept(ListenSocket,NULL,NULL);
+    ClientSocket = ::accept(ListenSocket,NULL,NULL);
 
     if (ClientSocket != INVALID_SOCKET) 
     {
         //disable nagle on the client's socket
         char value = 1;
-        setsockopt( ClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
+        ::setsockopt( ClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
 
         // insert new client into session id table
         sessions.insert( pair<unsigned int, SOCKET>(id, ClientSocket) );
+		
+		//insert client into send_session table
+		//send_sessions.insert(pair<unsigned int, SOCKET>(id, ClientSocket));
 
         return true;
     }
@@ -137,18 +139,30 @@ int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf)
 void ServerNetwork::sendToAll(char * packets, int totalSize)
 {
     SOCKET currentSocket;
-    std::map<unsigned int, SOCKET>::iterator iter;
+    //std::map<unsigned int, SOCKET>::iterator iter;
     int iSendResult;
 
-    for (iter = sessions.begin(); iter != sessions.end(); iter++)
-    {
-        currentSocket = iter->second;
+	//for (iter = sessions.begin(); iter != sessions.end(); iter++)
+	//for (auto iter = sessions.cbegin(), next_it = sessions.cbegin(); iter != sessions.cend(); iter = next_it)
+	for (auto iter = sessions.begin(); iter != sessions.end() /* not hoisted */; /* no inc. */)
+	{
+		//next_it = iter; ++next_it;
+
+        //currentSocket = iter->second;
+		currentSocket = iter->second;
         iSendResult = NetworkServices::sendMessage(currentSocket, packets, totalSize);
 
         if (iSendResult == SOCKET_ERROR) 
         {
             printf("send failed with error: %d\n", WSAGetLastError());
             closesocket(currentSocket);
+			//send_sessions.erase(iter++);
+			sessions.erase(iter++);
         }
+
+		else {
+			++iter;
+		}
     }
 }
+
