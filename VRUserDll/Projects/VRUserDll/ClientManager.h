@@ -27,12 +27,26 @@ public:
 	bool active;
 	bool presentationMode;
 
+	bool curPacket;
+	std::string tempBuf;
+	int nextDataSize;
+
     char network_data[MAX_PACKET_SIZE];
+
+	std::string serializeToChar(Packet&);
+
+	Packet deserializeToPacket(const char *, int);
+
+	void sendSizeData(int);
 
     void update();
 	
 	void controllerUpdate(Proxy *, ovrTrackingState, ovrInputState, int&);
 
 	void sendClientProxyUpdate();
+
+	BasicScene convertClientSceneToBasic(ClientScene);
+
+	void updateClientSceneFromBasic(BasicScene);
 };
 

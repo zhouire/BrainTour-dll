@@ -244,9 +244,19 @@ struct Model
 {
 	struct Vertex
 	{
+		friend class boost::serialization::access;
+
 		Vector3f  Pos;
 		DWORD     C;
 		float     U, V;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int version) {
+			ar & Pos;
+			ar & C;
+			ar & U;
+			ar & V;
+		}
 	};
 
 	Vector3f        Pos;
@@ -642,14 +652,25 @@ struct Model
 
 
 //------------------------------------------------------------------------- 
+
+
+struct LineComponents
+{
+	friend class boost::serialization::access;
+
+	std::vector<Vector3f> Core;
+	std::vector<glm::quat> Q;
+
+	template<class Archive>
+	void serialize(Archive & ar, const unsigned int version) {
+		ar & Core;
+		ar & Q;
+	}
+};
+
+
 struct Scene
 {
-	struct LineComponents
-	{
-		std::vector<Vector3f> Core;
-		std::vector<glm::quat> Q;
-	};
-
 	//use map for built-in find function
 	std::map<Model*, int> worldModels;
 	//markers have meaningless int values
@@ -699,7 +720,7 @@ struct Scene
 
 
 	//for creating the HUD
-	std::map <char*, std::array<int, 3>> image_files;
+	std::map <const char*, std::array<int, 3>> image_files;
 	std::vector<Model*> HUDcomponents;
 	bool visibleHUD = true;
 

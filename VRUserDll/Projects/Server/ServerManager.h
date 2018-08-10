@@ -10,6 +10,12 @@ public:
     ServerManager(void);
     ~ServerManager(void);
 
+	std::string serializeToChar(Packet&);
+
+	Packet deserializeToPacket(const char *, int);
+
+	void sendSizeData(int);
+
     void update();
 
 	void receiveFromClients();
@@ -25,6 +31,10 @@ public:
 	void changePresentationMode();
 
 	void changeActiveClient();
+
+	BasicScene convertServerSceneToBasic(Scene);
+
+	void updateServerSceneFromBasic(BasicScene);
 
 private:
 	//holding essential location/display variables, push to all clients upon change
@@ -45,4 +55,10 @@ private:
 
 	// data buffer
    char network_data[MAX_PACKET_SIZE];
+//old
+
+//just for keeping track of data received from the stream
+   bool * curPacket;
+   std::vector<std::string> tempBuf;
+   int * nextDataSize;
 };

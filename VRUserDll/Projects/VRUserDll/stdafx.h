@@ -42,7 +42,15 @@
 #include "GL/CAPI_GLE.h"
 #include "Extras/OVR_Math.h"
 #include "OVR_CAPI_GL.h"
-#include <SceneManager.h>
+#include "SceneManager.h"
+
+#define GLM_ENABLE_EXPERIMENTAL
+
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
+
+
+#include "Serialization.h"
 
 // TODO: reference additional headers your program requires here
 //#include "SceneManager.h"

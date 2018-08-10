@@ -37,11 +37,16 @@ enum PacketTypes {
 
 
 struct Proxy {
+	friend class boost::serialization::access;
 
 	Proxy()
 	{}
 
-	float *Position;
+	//float *Position;
+	float PositionX;
+	float PositionY;
+	float PositionZ;
+
 	int ClipMode;
 	float ClipWidth;
 	float ClipPos;
@@ -55,46 +60,74 @@ struct Proxy {
 
 	Matrix4f view;
 	Matrix4f proj;
+
+	template<class Archive>
+	void serialize(Archive & ar, const unsigned int version) {
+		ar & PositionX;
+		ar & PositionY;
+		ar & PositionZ;
+		ar & ClipMode;
+		ar & ClipWidth;
+		ar & ClipPos;
+		ar & Pose;
+		ar & gPose;
+		ar & gHeadPos;
+		ar & gHeadOrientation;
+		ar & scale;
+		ar & voxelSize;
+		ar & view;
+		ar & proj;
+	}
+
+};
+
+
+//this is a small segment sent before each Packet, defining the Packet's size for deserialization
+struct Size {
+	Size() {}
+
+	int size;
+
+	void serialize(char * data) {
+		memcpy(data, this, sizeof(Size));
+	}
+
+	void deserialize(char * data) {
+		memcpy(this, data, sizeof(Size));
+	}
 };
 
 
 struct Packet {
+	friend class boost::serialization::access;
+
 	unsigned int packet_type;
 
 	//used in INIT_CONNECTION
-	Proxy * proxy;
-	Scene * s;
-	Model * m;
+	Proxy proxy;
+	BasicScene scene;
+	Model m;
 	bool worldMode;
-	std::vector<Vector3f> * lineCore;
-	std::vector<glm::quat> * allHandQ;
+	std::vector<Vector3f> lineCore;
+	std::vector<glm::quat> allHandQ;
 	int clientId;
 	bool active;
 
+	Packet() :
+		m(Vector3f(0,0,0), nullptr)
+	{}
 
 
-
-    void serialize(char * data) {
-        memcpy(data, this, sizeof(Packet));
-    }
-
-    void deserialize(char * data) {
-        memcpy(this, data, sizeof(Packet));
-    }
-};
-
-/*
-struct StringPacket{
-
-	unsigned int packet_type;
-	std::string str;
-
-	void serialize(char * data) {
-		memcpy(data, this, sizeof(StringPacket));
-	}
-
-	void deserialize(char * data) {
-		memcpy(this, data, sizeof(StringPacket));
+	template<class Archive>
+	void serialize(Archive & ar, const unsigned int version) {
+		ar & packet_type;
+		ar & proxy;
+		ar & scene;
+		ar & m;
+		ar & worldMode;
+		ar & lineCore;
+		ar & allHandQ;
+		ar & clientId;
+		ar & active;
 	}
 };
-*/

@@ -45,16 +45,19 @@ ClientManager::ClientManager(ClientType type)
 	active = false;
 	presentationMode = false;
 
-    // send init packet
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
+	curPacket = false;
+	nextDataSize = sizeof(::Size);
 
+    // send init packet
     Packet packet;
     packet.packet_type = INIT_CONNECTION;
 
-    packet.serialize(packet_data);
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
 
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+	sendSizeData(packet_size);
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
 
@@ -63,10 +66,55 @@ ClientManager::~ClientManager(void)
 }
 
 
+std::string ClientManager::serializeToChar(Packet &packet)
+{
+	// serialize obj into an std::string
+	std::string serial_str;
+	boost::iostreams::back_insert_device<std::string> inserter(serial_str);
+	boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+	boost::archive::binary_oarchive oa(s);
+
+	oa << packet; //serializable object
+
+	// don't forget to flush the stream to finish writing into the buffer
+	s.flush();
+
+	return serial_str;
+}
+
+Packet ClientManager::deserializeToPacket(const char * buffer, int buflen)
+{
+	Packet packet;
+	// wrap buffer inside a stream and deserialize serial_str into obj
+	boost::iostreams::basic_array_source<char> device(buffer, buflen);
+	boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s(device);
+	boost::archive::binary_iarchive ia(s);
+	ia >> packet;
+
+	return packet;
+}
+
+void ClientManager::sendSizeData(int packet_size) {
+	::Size s;
+	s.size = packet_size;
+
+	const unsigned int s_size = sizeof(::Size);
+	char s_data[s_size];
+
+	s.serialize(s_data);
+
+	//printf("client serializing size\n");
+
+	NetworkServices::sendMessage(network->ConnectSocket, s_data, s_size);
+}
+
+
+
 void ClientManager::update()
 {
     Packet packet;
-	Scene * curScene;
+	//Scene * curScene;
+	::Size size;
 
     int data_length = network->receivePackets(network_data);
 
@@ -77,10 +125,68 @@ void ClientManager::update()
     }
 
     int i = 0;
-    while (i < (unsigned int)data_length) 
-    {		
-		packet.deserialize(&(network_data[i]));
-        i += sizeof(Packet);
+
+	while (i < (unsigned int)data_length)
+	{
+		//this part deals with receiving data of varying sizes
+
+		if (!curPacket) {
+			//if the remaining data + data in tempBuf < enough data to construct Size object
+			//just add the remaining data to the tempBuf, increment i, skip rest of loop
+			if ((data_length - i + tempBuf.size()) < sizeof(::Size)) {
+				//just append the rest of the data, add to i, and skip everything else
+				tempBuf.append(&(network_data[i]), (data_length - i - 1));
+				//add enough to overflow the while condition
+				i += sizeof(::Size);
+
+				continue;
+			}
+
+			//if we have enough data in the network_data and tempBuf, append enough data to tempBuf to
+			//construct a Size object, deserialize tempBuf into Size size, use value in size to update
+			//nextDataSize, clear tempBuf (because we have already deserialized), increment i, flip the 
+			//curPacket switch (because we constructed a full object), and skip rest of loop
+			else {
+				//dynamic, so keep track of starting value for computations
+				int s = tempBuf.size();
+
+				tempBuf.append(&(network_data[i]), (sizeof(::Size) - s));
+				size.deserialize((char*)(tempBuf.data()));
+				nextDataSize = size.size;
+				curPacket = !curPacket;
+
+				i += (sizeof(::Size) - s);
+
+				tempBuf.clear();
+
+				continue;
+			}
+		}
+
+		else {
+			//if the remaining data + data in tempBuf < enough data to construct the next Packet
+			//add remaining data to tempBuf, increment i, skip rest of loop
+			if ((data_length - i + tempBuf.size()) < nextDataSize) {
+				tempBuf.append(&(network_data[i]), (data_length - i - 1));
+				i += nextDataSize;
+				continue;
+			}
+
+			//if we have enough data to construct the next full Packet, append enough data to tempBuf to
+			//construct the Packet, deserialize tempBuf into Packet packet, clear tempBuf, flip the 
+			//curPacket switch, increment i, and MOVE ON to rest of loop
+			else {
+				int s = tempBuf.size();
+
+				tempBuf.append(&(network_data[i]), (nextDataSize - s));
+				packet = deserializeToPacket((tempBuf.data()), nextDataSize);
+				curPacket = !curPacket;
+
+				i += (nextDataSize - s);
+
+				tempBuf.clear();
+			}
+		}
 
         switch (packet.packet_type) {
 			case INIT_CONNECTION:
@@ -92,7 +198,8 @@ void ClientManager::update()
 				break;
 
 			case SERVER_SCENE_UPDATE:
-				curScene = packet.s;
+				/*
+				curScene = packet.scene;
 				//rendering variables
 				clientScene->worldModels = curScene->worldModels;
 				clientScene->tempWorldMarkers = curScene->tempWorldMarkers;
@@ -103,31 +210,38 @@ void ClientManager::update()
 				clientScene->removableMarkers = curScene->removableMarkers;
 				clientScene->removableStraightLines = curScene->removableStraightLines;
 				clientScene->removableCurvedLines = curScene->removableCurvedLines;
+				*/
+
+				updateClientSceneFromBasic(packet.scene);
 
 				break;
 
 			case SERVER_PROXY_UPDATE:
 				if (!active) {
-					Proxy * curProxy = packet.proxy;
+					Proxy curProxy = packet.proxy;
 
-					clientProxy->Position[0] = curProxy->Position[0];
-					clientProxy->Position[1] = curProxy->Position[1];
-					clientProxy->Position[2] = curProxy->Position[2];
+					//clientProxy->Position[0] = curProxy->Position[0];
+					//clientProxy->Position[1] = curProxy->Position[1];
+					//clientProxy->Position[2] = curProxy->Position[2];
 
-					clientProxy->ClipMode = curProxy->ClipMode;
-					clientProxy->ClipWidth = curProxy->ClipWidth;
-					clientProxy->ClipPos = curProxy->ClipPos;
+					clientProxy->PositionX = curProxy.PositionX;
+					clientProxy->PositionY = curProxy.PositionY;
+					clientProxy->PositionZ = curProxy.PositionZ;
 
-					clientProxy->Pose = curProxy->Pose;
-					clientProxy->gPose = curProxy->gPose;
-					clientProxy->gHeadPos = curProxy->gHeadPos;
-					clientProxy->gHeadOrientation = curProxy->gHeadOrientation;
+					clientProxy->ClipMode = curProxy.ClipMode;
+					clientProxy->ClipWidth = curProxy.ClipWidth;
+					clientProxy->ClipPos = curProxy.ClipPos;
 
-					clientProxy->scale = curProxy->scale;
-					clientProxy->voxelSize = curProxy->voxelSize;
+					clientProxy->Pose = curProxy.Pose;
+					clientProxy->gPose = curProxy.gPose;
+					clientProxy->gHeadPos = curProxy.gHeadPos;
+					clientProxy->gHeadOrientation = curProxy.gHeadOrientation;
 
-					clientProxy->view = curProxy->view;
-					clientProxy->proj = curProxy->proj;
+					clientProxy->scale = curProxy.scale;
+					clientProxy->voxelSize = curProxy.voxelSize;
+
+					clientProxy->view = curProxy.view;
+					clientProxy->proj = curProxy.proj;
 				}
 
 				break;
@@ -239,9 +353,12 @@ void ClientManager::controllerUpdate(Proxy * p, ovrTrackingState trackState, ovr
 		float forward = inputState.Thumbstick[ovrHand_Right].y*speed;
 
 		Vector3f movement = v.Inverted().Transform(Vector3f(0.0f, 0.0f, forward));
-		clientProxy->Position[0] += movement.x;
-		clientProxy->Position[1] += movement.y;
-		clientProxy->Position[2] += movement.z;
+		//clientProxy->Position[0] += movement.x;
+		//clientProxy->Position[1] += movement.y;
+		//clientProxy->Position[2] += movement.z;
+		clientProxy->PositionX += movement.x;
+		clientProxy->PositionY += movement.y;
+		clientProxy->PositionZ += movement.z;
 	}
 
 	//R Thumb stick
@@ -252,9 +369,12 @@ void ClientManager::controllerUpdate(Proxy * p, ovrTrackingState trackState, ovr
 		float mx = inputState.Thumbstick[ovrHand_Right].x*speed;
 		float my = inputState.Thumbstick[ovrHand_Right].y*speed;
 		Vector3f movement = v.Inverted().Transform(Vector3f(mx, my, 0.f));
-		clientProxy->Position[0] += movement.x;
-		clientProxy->Position[1] += movement.y;
-		clientProxy->Position[2] += movement.z;
+		//clientProxy->Position[0] += movement.x;
+		//clientProxy->Position[1] += movement.y;
+		//clientProxy->Position[2] += movement.z;
+		clientProxy->PositionX += movement.x;
+		clientProxy->PositionY += movement.y;
+		clientProxy->PositionZ += movement.z;
 	}
 
 
@@ -268,9 +388,12 @@ void ClientManager::controllerUpdate(Proxy * p, ovrTrackingState trackState, ovr
 		ovrPosef pose1 = handPoses[ovrHand_Right];
 		ovrPosef pose0 = lastHandPoses[ovrHand_Right];
 		Vector3f movement = v.Inverted().Transform(Vector3f(pose1.Position) - Vector3f(pose0.Position)) * -(positionTrackingSpeed*inputState.HandTrigger[ovrHand_Right]);
-		clientProxy->Position[0] += movement.x;
-		clientProxy->Position[1] += movement.y;
-		clientProxy->Position[2] += movement.z;
+		//clientProxy->Position[0] += movement.x;
+		//clientProxy->Position[1] += movement.y;
+		//clientProxy->Position[2] += movement.z;
+		clientProxy->PositionX += movement.x;
+		clientProxy->PositionY += movement.y;
+		clientProxy->PositionZ += movement.z;
 		//DPrintf("Motion: %.4f, %.4f, %.4f\n", movement.x, movement.y, movement.z);
 		// rotation
 		Quatf q0(pose0.Orientation);
@@ -290,14 +413,41 @@ void ClientManager::controllerUpdate(Proxy * p, ovrTrackingState trackState, ovr
 
 
 void ClientManager::sendClientProxyUpdate() {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
-
 	Packet packet;
 	packet.packet_type = CLIENT_PROXY_UPDATE;
-	packet.proxy = clientProxy;
+	packet.proxy = *clientProxy;
 
-	packet.serialize(packet_data);
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
 
+	sendSizeData(packet_size);
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+
+BasicScene ClientManager::convertClientSceneToBasic(ClientScene c) {
+	BasicScene basic;
+
+	basic.worldModels = c.worldModels;
+	basic.tempWorldMarkers = c.tempWorldMarkers;
+	basic.tempWorldLines = c.tempWorldLines;
+	basic.volumeModels = c.volumeModels;
+	basic.tempVolumeLines = c.tempVolumeLines;
+	basic.removableMarkers = c.removableMarkers;
+	basic.removableStraightLines = c.removableStraightLines;
+	basic.removableCurvedLines = c.removableCurvedLines;
+
+	return basic;
+}
+
+void ClientManager::updateClientSceneFromBasic(BasicScene b) {
+	clientScene->worldModels = b.worldModels;
+	clientScene->tempWorldMarkers = b.tempWorldMarkers;
+	clientScene->tempWorldLines = b.tempWorldLines;
+	clientScene->volumeModels = b.volumeModels;
+	clientScene->tempVolumeLines = b.tempVolumeLines;
+	clientScene->removableMarkers = b.removableMarkers;
+	clientScene->removableStraightLines = b.removableStraightLines;
+	clientScene->removableCurvedLines = b.removableCurvedLines;
 }

@@ -62,5 +62,8 @@
     <ClInclude Include="winsock2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Serialization.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

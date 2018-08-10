@@ -33,6 +33,7 @@
     <ClInclude Include="NetworkData.h" />
     <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Serialization.h" />
     <ClInclude Include="ServerManager.h" />
     <ClInclude Include="ServerNetwork.h" />
     <ClInclude Include="stb_image.h" />
@@ -94,16 +95,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Program Files\boost_1_67_0;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRPlatform\Include;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRAvatar\Include;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server;C:\Program Files\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Src;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\boost_1_67_0\stage\lib;C:\Program Files\boost_1_67_0\libs;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRPlatform\Windows;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRAvatar\Windows;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server;C:\Program Files\boost_1_67_0;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Src;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files\boost_1_67_0;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRPlatform\Include;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRAvatar\Include;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server;C:\Program Files\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Src;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\boost_1_67_0\stage\lib;C:\Program Files\boost_1_67_0\libs;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRPlatform\Windows;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OVRAvatar\Windows;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Projects\Server;C:\Program Files\boost_1_67_0;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\glm;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Src;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -124,8 +125,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\Dependencies\OculusSDK\LibOVRKernel\Lib;..\..\Dependencies\OculusSDK\LibOVR\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>..\..\Dependencies\OculusSDK\LibOVR\Lib\LibOVR.lib;..\..\Dependencies\OculusSDK\LibOVRKernel\Lib\LibOVRKernel.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib\libboost_serialization-vc141-mt-gd-x64-1_67.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib\LibOVR.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib\LibOVRKernel.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -154,8 +155,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\Dependencies\OculusSDK\LibOVRKernel\Lib;..\..\Dependencies\OculusSDK\LibOVR\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>..\..\Dependencies\OculusSDK\LibOVR\Lib\LibOVR.lib;..\..\Dependencies\OculusSDK\LibOVRKernel\Lib\LibOVRKernel.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib\libboost_serialization-vc141-mt-gd-x64-1_67.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib\LibOVR.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib\LibOVRKernel.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

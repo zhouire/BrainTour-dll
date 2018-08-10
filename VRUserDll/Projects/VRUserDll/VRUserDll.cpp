@@ -72,7 +72,10 @@ namespace VRUserProxy {
 		OVR::GLEContext::SetCurrentContext(context);
 
 		//roomScene = new Scene();
-		VRclient = new ClientManager(VR);
+		//VRclient = new ClientManager(VR);
+		//SetConsoleCtrlHandler(ClientExitRoutine, true);
+		// create thread with arbitrary argument for the run function
+		//_beginthread(clientLoop, 0, (void*)12);
 
 		//setter functions
 		//int maxLen = proxy->VolumeSize[0];
