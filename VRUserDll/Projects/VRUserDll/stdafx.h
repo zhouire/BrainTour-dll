@@ -42,13 +42,14 @@
 #include "GL/CAPI_GLE.h"
 #include "Extras/OVR_Math.h"
 #include "OVR_CAPI_GL.h"
-#include "SceneManager.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 
+#include "SceneManager.h"
+#include "ClientScene.h"
 
 #include "Serialization.h"
 
