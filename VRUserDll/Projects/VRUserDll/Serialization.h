@@ -76,12 +76,31 @@ namespace boost {
 			ar & s.h;
 		}
 
-
 		template<class Archive>
 		void serialize(Archive & ar, DepthBuffer & d, const unsigned int version)
 		{
 			ar & d.texId;
+			//ar & d._size;
 		}
+
+		/*
+		template<class Archive>
+		inline void save_construct_data(Archive & ar, const DepthBuffer * d, const unsigned int version)
+		{
+			// save data required to construct instance
+			ar << d->_size;
+		}
+
+		template<class Archive>
+		inline void load_construct_data(Archive & ar, DepthBuffer * d, const unsigned int version) 
+		{
+			// retrieve data from archive required to construct new instance
+			Sizei s;
+			ar >> s;
+			// invoke inplace constructor to initialize instance of my_class
+			::new(d)my_class(s);
+		}
+		*/
 
 		
 		template<class Archive>
@@ -98,21 +117,98 @@ namespace boost {
 		{
 			ar & s.program;
 			ar & s.texture;
+
+			//ar & s._pixelShader;
+			//ar & s._vertexShader;
 		}
+
+		
+		template<class Archive>
+		inline void save_construct_data(Archive & ar, const ShaderFill & s, const unsigned int version)
+		{
+			// save data required to construct instance
+			ar << s->_vertexShader << s->_pixelShader << s->texture;
+		}
+
+		template<class Archive>
+		inline void load_construct_data(Archive & ar, ShaderFill * s, const unsigned int version)
+		{
+			// retrieve data from archive required to construct new instance
+			GLuint vertexShader;
+			GLuint pixelShader;
+			TextureBuffer * _texture;
+
+			ar >> vertexShader >> pixelShader >> _texture;
+			// invoke inplace constructor to initialize instance of my_class
+			::new(s)ShaderFill(vertexShader, pixelShader, _texture);
+		}
+		
+
+
 		
 
 		template<class Archive>
 		void serialize(Archive & ar, VertexBuffer & v, const unsigned int version)
 		{
 			ar & v.buffer;
+			//ar & v._size;
+			//ar & v._vertices;
 		}
+
+		
+		template<class Archive>
+		inline void save_construct_data(Archive & ar, const VertexBuffer * v, const unsigned int version)
+		{
+			// save data required to construct instance
+			ar << v->_size << v->_vertices;
+		}
+
+		template<class Archive>
+		inline void load_construct_data(Archive & ar, VertexBuffer * v, const unsigned int version)
+		{
+			// retrieve data from archive required to construct new instance
+			void * vertices;
+			size_t size;
+
+			ar >> vertices >> size;
+			// invoke inplace constructor to initialize instance of my_class
+			::new(v)VertexBuffer(vertices, size);
+		}
+		
+
 
 
 		template<class Archive>
 		void serialize(Archive & ar, IndexBuffer & i, const unsigned int version)
 		{
 			ar & i.buffer;
+
+			//ar & i._indices;
+			//ar & i._size;
 		}
+
+		
+		template<class Archive>
+		inline void save_construct_data(Archive & ar, const IndexBuffer * i, const unsigned int version)
+		{
+			// save data required to construct instance
+			ar << i->_indices << i->_size;
+		}
+
+		template<class Archive>
+		inline void load_construct_data(Archive & ar, IndexBuffer * i, const unsigned int version)
+		{
+			// retrieve data from archive required to construct new instance
+			void * indices;
+			size_t size;
+
+			ar >> indices >> size;
+			// invoke inplace constructor to initialize instance of my_class
+			::new(i)IndexBuffer(indices, size);
+		}
+		
+
+
 
 
 		template<class Archive>

@@ -1,4 +1,6 @@
 #pragma once
+
+#include "Serialization.h"
 #include <string.h>
 #include <string>
 

@@ -31,7 +31,6 @@ bool OnDown(unsigned int last, unsigned int current, unsigned int mask) {
 
 ClientManager::ClientManager(ClientType type)
 {
-	
     network = new ClientNetwork();
 	client_type = type;
 	clientScene = new ClientScene(true, network);

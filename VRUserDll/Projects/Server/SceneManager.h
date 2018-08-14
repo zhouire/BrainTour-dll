@@ -32,8 +32,11 @@ using namespace OVR;
 struct DepthBuffer
 {
 	GLuint        texId;
+	//Sizei		  _size;
 
-	DepthBuffer(Sizei size)
+	DepthBuffer(Sizei size) //:
+		//for serialization of struct with no default constructor
+		//_size(size)
 	{
 		glGenTextures(1, &texId);
 		glBindTexture(GL_TEXTURE_2D, texId);
@@ -157,8 +160,15 @@ struct ShaderFill
 	GLuint            program;
 	TextureBuffer   * texture;
 
+	GLuint _vertexShader;
+	GLuint _pixelShader;
+
 	ShaderFill(GLuint vertexShader, GLuint pixelShader, TextureBuffer* _texture)
 	{
+		//for serializing with no defualt constructor
+		_vertexShader = vertexShader;
+		_pixelShader = pixelShader;
+
 		texture = _texture;
 
 		program = glCreateProgram();
@@ -201,8 +211,16 @@ struct VertexBuffer
 {
 	GLuint    buffer;
 
+	void* _vertices;
+	size_t _size;
+
 	VertexBuffer(void* vertices, size_t size)
 	{
+		//for serializing no default constructor
+		//_vertices = vertices;
+		memcpy(_vertices, vertices, size);
+		_size = size;
+
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
@@ -222,8 +240,16 @@ struct IndexBuffer
 {
 	GLuint    buffer;
 
+	void* _indices;
+	size_t _size;
+
 	IndexBuffer(void* indices, size_t size)
 	{
+		//for serializing no default constructor
+		//_indices = indices;
+		memcpy(_indices, indices, size);
+		_size = size;
+
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
@@ -720,7 +746,6 @@ struct Scene
 
 
 	//for creating the HUD
-	//std::map <char*, std::array<int, 3>> image_files;
 	std::map <const char*, std::array<int, 3>> image_files;
 	std::vector<Model*> HUDcomponents;
 	bool visibleHUD = true;

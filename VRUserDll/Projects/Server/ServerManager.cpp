@@ -283,8 +283,8 @@ void ServerManager::receiveFromClients()
 //which has not received an init packet will recognize and adopt it.
 void ServerManager::sendInitPacket(int client_id)
 {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
+	//const unsigned int packet_size = sizeof(Packet);
+	//char packet_data[packet_size];
 
 	Packet packet;
 	packet.packet_type = INIT_CONNECTION;
@@ -301,8 +301,8 @@ void ServerManager::sendInitPacket(int client_id)
 
 void ServerManager::sendSceneUpdate()
 {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
+	//const unsigned int packet_size = sizeof(Packet);
+	//char packet_data[packet_size];
 
 	Packet packet;
 	packet.packet_type = SERVER_SCENE_UPDATE;
@@ -319,8 +319,8 @@ void ServerManager::sendSceneUpdate()
 
 void ServerManager::sendProxyUpdate()
 {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
+	//const unsigned int packet_size = sizeof(Packet);
+	//char packet_data[packet_size];
 
 	Packet packet;
 	packet.packet_type = SERVER_PROXY_UPDATE;
@@ -337,8 +337,8 @@ void ServerManager::sendProxyUpdate()
 
 void ServerManager::sendPresentationMode()
 {
-	const unsigned int packet_size = sizeof(Packet);
-	char packet_data[packet_size];
+	//const unsigned int packet_size = sizeof(Packet);
+	//char packet_data[packet_size];
 
 	Packet packet;
 	packet.packet_type = SERVER_PROXY_UPDATE;

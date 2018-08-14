@@ -62,7 +62,7 @@ static void drawCube(float size)
 
 
 //static Scene * roomScene = nullptr;
-static ClientManager * VRclient;
+static ClientManager * VRclient = nullptr;
 
 
 namespace VRUserProxy {
@@ -72,19 +72,10 @@ namespace VRUserProxy {
 		OVR::GLEContext::SetCurrentContext(context);
 
 		//roomScene = new Scene();
-		//VRclient = new ClientManager(VR);
+		VRclient = new ClientManager(VR);
 		//SetConsoleCtrlHandler(ClientExitRoutine, true);
 		// create thread with arbitrary argument for the run function
 		//_beginthread(clientLoop, 0, (void*)12);
-
-		//setter functions
-		//int maxLen = proxy->VolumeSize[0];
-		//if (maxLen < proxy->VolumeSize[1]) maxLen = proxy->VolumeSize[1];
-		//if (maxLen < proxy->VolumeSize[2]) maxLen = proxy->VolumeSize[2];
-		//float scale = proxy->ObjectScale / maxLen;
-
-		//roomScene->SetWorldToVoxelScale(scale);
-		//roomScene->SetVoxelSize(proxy->VoxelSize[0], proxy->VoxelSize[1], proxy->VoxelSize[2]);
 
 		return 0;
 	}
@@ -127,26 +118,26 @@ namespace VRUserProxy {
 		voxelSize.y = proxy->VoxelSize[1];
 		voxelSize.z = proxy->VoxelSize[2];
 
-		Proxy * p = new Proxy();
-		p->Position[0] = Position[0];
-		p->Position[1] = Position[1];
-		p->Position[2] = Position[2];
+		//Proxy * p = new Proxy();
+		(VRclient->clientProxy)->PositionX = Position[0];
+		(VRclient->clientProxy)->PositionY = Position[1];
+		(VRclient->clientProxy)->PositionZ = Position[2];
 
-		p->ClipMode = ClipMode;
-		p->ClipWidth = ClipWidth;
-		p->ClipPos = ClipPos;
+		(VRclient->clientProxy)->ClipMode = ClipMode;
+		(VRclient->clientProxy)->ClipWidth = ClipWidth;
+		(VRclient->clientProxy)->ClipPos = ClipPos;
 
-		p->Pose = Pose;
-		p->gPose = gPose;
-		p->gHeadPos = gHeadPos;
-		p->gHeadOrientation = gHeadOrientation;
+		(VRclient->clientProxy)->Pose = Pose;
+		(VRclient->clientProxy)->gPose = gPose;
+		(VRclient->clientProxy)->gHeadPos = gHeadPos;
+		(VRclient->clientProxy)->gHeadOrientation = gHeadOrientation;
 
-		p->scale = scale;
-		p->voxelSize = voxelSize;
+		(VRclient->clientProxy)->scale = scale;
+		(VRclient->clientProxy)->voxelSize = voxelSize;
 
-		p->view = view;
+		(VRclient->clientProxy)->view = view;
 
-		VRclient->clientProxy = p;
+		//(VRclient->clientProxy) = p;
 
 		
 		DPrintf("VRUserProxy::GetInputState OK\n");
@@ -279,7 +270,7 @@ namespace VRUserProxy {
 		*/
 
 		VRclient->update();
-		VRclient->controllerUpdate(p, trackState, inputState, RoiMode);
+		VRclient->controllerUpdate(VRclient->clientProxy, trackState, inputState, RoiMode);
 
 
 		// update Roi

@@ -32,8 +32,11 @@ using namespace OVR;
 struct DepthBuffer
 {
 	GLuint        texId;
+	//Sizei		  _size;
 
-	DepthBuffer(Sizei size)
+	DepthBuffer(Sizei size) //:
+		//for serialization of struct with no default constructor
+		//_size(size)
 	{
 		glGenTextures(1, &texId);
 		glBindTexture(GL_TEXTURE_2D, texId);
@@ -157,8 +160,17 @@ struct ShaderFill
 	GLuint            program;
 	TextureBuffer   * texture;
 
-	ShaderFill(GLuint vertexShader, GLuint pixelShader, TextureBuffer* _texture)
+	const GLuint _vertexShader;
+	const GLuint _pixelShader;
+
+	ShaderFill(GLuint vertexShader, GLuint pixelShader, TextureBuffer* _texture) :
+		_vertexShader(vertexShader),
+		_pixelShader(pixelShader)
 	{
+		//for serializing with no defualt constructor
+		//_vertexShader = vertexShader;
+		//_pixelShader = pixelShader;
+
 		texture = _texture;
 
 		program = glCreateProgram();
@@ -201,8 +213,18 @@ struct VertexBuffer
 {
 	GLuint    buffer;
 
-	VertexBuffer(void* vertices, size_t size)
+	const void* _vertices;
+	const size_t _size;
+
+	VertexBuffer(void* vertices, size_t size) :
+		_vertices(vertices),
+		_size(size)
 	{
+		//for serializing no default constructor
+		//_vertices = vertices;
+		//memcpy(_vertices, vertices, size);
+		//_size = size;
+
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
@@ -222,8 +244,18 @@ struct IndexBuffer
 {
 	GLuint    buffer;
 
-	IndexBuffer(void* indices, size_t size)
+	const void* _indices;
+	const size_t _size;
+
+	IndexBuffer(void* indices, size_t size) :
+		_indices(indices),
+		_size(size)
 	{
+		//for serializing no default constructor
+		//_indices = indices;
+		//memcpy(_indices, indices, size);
+		//_size = size;
+
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);

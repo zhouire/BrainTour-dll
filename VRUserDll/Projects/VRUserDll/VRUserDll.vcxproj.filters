@@ -24,9 +24,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="winsock2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ClientManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
