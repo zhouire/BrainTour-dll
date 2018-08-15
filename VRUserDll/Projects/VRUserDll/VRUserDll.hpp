@@ -1,10 +1,13 @@
 // VRUserDll.hpp
 
+/*
 #ifdef VRUSERDLL_EXPORTS
 #define VRUSERDLL_API __declspec(dllexport)
 #else
 #define VRUSERDLL_API __declspec(dllimport)
 #endif
+*/
+#define VRUSERDLL_API __declspec(dllexport)
 
 
 //#define VRUSERDLL_API __declspec(dllexport)

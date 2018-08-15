@@ -38,7 +38,10 @@
     </ClCompile>
     <ClCompile Include="ClientManager.cpp" />
     <ClCompile Include="ClientNetwork.cpp" />
-    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="dllmain.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
     <ClCompile Include="NetworkServices.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -124,14 +127,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINDLL;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib\libboost_serialization-vc140-mt-x64-1_67.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib\LibOVR.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib\LibOVRKernel.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib\libboost_serialization-vc140-mt-s-x64-1_67.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib\LibOVR.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib\LibOVRKernel.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -157,12 +160,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINDLL;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib\libboost_serialization-vc140-mt-x64-1_67.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib\LibOVR.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib\LibOVRKernel.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib\libboost_serialization-vc140-mt-s-x64-1_67.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib\LibOVR.lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib\LibOVRKernel.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\OculusSDK\LibOVR\Lib;E:\Classes\2018 Summer\UROP\BrainTour-dll\VRUserDll\Dependencies\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

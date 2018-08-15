@@ -1,5 +1,8 @@
 #include "stdafx.h"
 //#include "shared.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+
 #include "ClientManager.h"
 
 #include <vector>
