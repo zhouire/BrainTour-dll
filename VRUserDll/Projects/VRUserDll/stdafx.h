@@ -48,10 +48,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "SceneManager.h"
-#include "ClientScene.h"
+//#include "SceneManager.h"
+//#include "ClientScene.h"
 
-#include "Serialization.h"
+//#include "Serialization.h"
 
 // TODO: reference additional headers your program requires here
 //#include "SceneManager.h"

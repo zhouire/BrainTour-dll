@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SceneManager.h>
+
 //this contains only the variables required to Render a Scene
 struct BasicScene
 {

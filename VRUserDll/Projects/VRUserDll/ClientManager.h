@@ -2,7 +2,7 @@
 #include <winsock2.h>
 #include <Windows.h>
 #include "ClientNetwork.h"
-#include "NetworkData.h"
+//#include "NetworkData.h"
 
 #include "ClientScene.h"
 

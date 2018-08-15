@@ -1,6 +1,7 @@
 #pragma once
+
 #include "ServerNetwork.h"
-#include "NetworkData.h"
+//#include "NetworkData.h"
 
 class ServerManager
 {

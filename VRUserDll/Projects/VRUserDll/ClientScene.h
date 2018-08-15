@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stdafx.h"
+
 #include "ClientNetwork.h"
 //#include "shared.h"
 

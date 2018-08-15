@@ -6,6 +6,9 @@
 #define VRUSERDLL_API __declspec(dllimport)
 #endif
 
+
+//#define VRUSERDLL_API __declspec(dllexport)
+
 //#include "../OculusSample0/src/Win32_GLAppUtil.h" //NG
 
 //moved these to stdafx.h

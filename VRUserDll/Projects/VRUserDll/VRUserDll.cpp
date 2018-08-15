@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 
+#define STB_IMAGE_IMPLEMENTATON
+
 #include "VRUserDll.hpp"
 //#include "SceneManager.h"
 #include "ClientManager.h"
