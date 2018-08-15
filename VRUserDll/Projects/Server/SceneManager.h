@@ -72,11 +72,22 @@ struct TextureBuffer
 	GLuint              fboId;
 	Sizei               texSize;
 
+	const bool _rendertarget;
+	const int _mipLevels;
+	std::vector<unsigned char> _data;
+
 	TextureBuffer(bool rendertarget, Sizei size, int mipLevels, unsigned char * data) :
 		texId(0),
 		fboId(0),
-		texSize(0, 0)
+		texSize(0, 0),
+
+		_rendertarget(rendertarget),
+		_mipLevels(mipLevels)
 	{
+		//this is for serializing the parameter data
+		_data.assign(data, data + (size.w * size.h));
+		//------------------
+
 		texSize = size;
 
 		glGenTextures(1, &texId);
@@ -160,14 +171,16 @@ struct ShaderFill
 	GLuint            program;
 	TextureBuffer   * texture;
 
-	GLuint _vertexShader;
-	GLuint _pixelShader;
+	const GLuint _vertexShader;
+	const GLuint _pixelShader;
 
-	ShaderFill(GLuint vertexShader, GLuint pixelShader, TextureBuffer* _texture)
+	ShaderFill(GLuint vertexShader, GLuint pixelShader, TextureBuffer* _texture) :
+		_vertexShader(vertexShader),
+		_pixelShader(pixelShader)
 	{
 		//for serializing with no defualt constructor
-		_vertexShader = vertexShader;
-		_pixelShader = pixelShader;
+		//_vertexShader = vertexShader;
+		//_pixelShader = pixelShader;
 
 		texture = _texture;
 
@@ -206,20 +219,24 @@ struct ShaderFill
 	}
 };
 
+/*
 //----------------------------------------------------------------
 struct VertexBuffer
 {
 	GLuint    buffer;
 
+	//const void* _vertices;
 	void* _vertices;
-	size_t _size;
+	const size_t _size;
 
-	VertexBuffer(void* vertices, size_t size)
+	VertexBuffer(void* vertices, size_t size) :
+		//_vertices(vertices),
+		_size(size)
 	{
 		//for serializing no default constructor
 		//_vertices = vertices;
 		memcpy(_vertices, vertices, size);
-		_size = size;
+		//_size = (const size_t) size;
 
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -234,25 +251,86 @@ struct VertexBuffer
 		}
 	}
 };
+*/
+
+
+//-------------------------------------------------------
+struct Vertex
+{
+	friend class boost::serialization::access;
+
+	Vector3f  Pos;
+	DWORD     C;
+	float     U, V;
+
+	template<class Archive>
+	void serialize(Archive & ar, const unsigned int version) {
+		ar & Pos;
+		ar & C;
+		ar & U;
+		ar & V;
+	}
+};
+
+
+struct VertexBuffer
+{
+	GLuint    buffer;
+
+	//const void* _vertices;
+	//Vertex * _vertices;
+	std::vector<Vertex> _vertices;
+	const size_t _size;
+
+	VertexBuffer(Vertex * vertices, size_t size) :
+		//_vertices(vertices),
+		_size(size)
+	{
+		//for serializing no default constructor
+		//_vertices = vertices;
+		//memcpy(_vertices, vertices, size);
+		//_size = (const size_t) size;
+		//*_vertices = *vertices;
+		_vertices.assign(vertices, vertices + size);
+
+		glGenBuffers(1, &buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		glBufferData(GL_ARRAY_BUFFER, size, (const void*)vertices, GL_STATIC_DRAW);
+	}
+	~VertexBuffer()
+	{
+		if (buffer)
+		{
+			glDeleteBuffers(1, &buffer);
+			buffer = 0;
+		}
+	}
+};
+
 
 //----------------------------------------------------------------
 struct IndexBuffer
 {
 	GLuint    buffer;
 
-	void* _indices;
-	size_t _size;
+	//void* _indices;
+	//GLushort * _indices;
+	std::vector<GLushort> _indices;
+	const size_t _size;
 
-	IndexBuffer(void* indices, size_t size)
+	IndexBuffer(GLushort * indices, size_t size) :
+		//_indices(indices),
+		_size(size)
 	{
 		//for serializing no default constructor
 		//_indices = indices;
-		memcpy(_indices, indices, size);
-		_size = size;
+		//memcpy(_indices, indices, size);
+		//_size = size;
+		_indices.assign(indices, indices + size);
 
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, (const void *) indices, GL_STATIC_DRAW);
 	}
 	~IndexBuffer()
 	{
@@ -265,9 +343,11 @@ struct IndexBuffer
 };
 
 
+
 //-------------------------------------------------------
 struct Model
 {
+	/*
 	struct Vertex
 	{
 		friend class boost::serialization::access;
@@ -284,6 +364,7 @@ struct Model
 			ar & V;
 		}
 	};
+	*/
 
 	Vector3f        Pos;
 	Quatf           Rot;
