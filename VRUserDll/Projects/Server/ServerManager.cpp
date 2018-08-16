@@ -5,9 +5,10 @@
 
 unsigned int ServerManager::client_id; 
 
-ServerManager::ServerManager(void)
+//ServerManager::ServerManager(void)
+ServerManager::ServerManager()
 {
-    // id's to assign clients for our table
+	// id's to assign clients for our table
     client_id = 0;
 	curPacket = new bool;
 	nextDataSize = new int;

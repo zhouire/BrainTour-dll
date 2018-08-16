@@ -7,8 +7,9 @@ class ServerManager
 {
 
 public:
+	
+	ServerManager(void);
 
-    ServerManager(void);
     ~ServerManager(void);
 
 	std::string serializeToChar(Packet&);
