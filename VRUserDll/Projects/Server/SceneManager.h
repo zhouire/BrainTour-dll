@@ -834,8 +834,8 @@ struct Scene
 
 	Model * lengthDisplay;
 
-	//std::string imagePath = "E:\\Classes\\2018 Summer\\UROP\\BrainTour-dll\\TestSolution0\\Images\\";
-	std::string imagePath = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\TestSolution0\\Images\\";
+	std::string imagePath = "E:\\Classes\\2018 Summer\\UROP\\BrainTour-dll\\TestSolution0\\Images\\";
+	//std::string imagePath = "C:\\Users\\zhoui\\Documents\\8keXm\\BrainTour-dll\\TestSolution0\\Images\\";
 
 	
 

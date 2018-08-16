@@ -82,7 +82,9 @@ void ServerManager::update()
        client_id++;
    }
 
-   receiveFromClients();
+   if (client_id > 0) {
+	   receiveFromClients();
+   }
 }
 
 void ServerManager::receiveFromClients()
