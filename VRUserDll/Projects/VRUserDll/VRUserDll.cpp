@@ -73,11 +73,7 @@ namespace VRUserProxy {
 		proxy = p;
 		OVR::GLEContext::SetCurrentContext(context);
 
-		//roomScene = new Scene();
 		VRclient = new ClientManager(VR);
-		//SetConsoleCtrlHandler(ClientExitRoutine, true);
-		// create thread with arbitrary argument for the run function
-		//_beginthread(clientLoop, 0, (void*)12);
 
 		return 0;
 	}
@@ -273,6 +269,22 @@ namespace VRUserProxy {
 
 		VRclient->update();
 		VRclient->controllerUpdate(VRclient->clientProxy, trackState, inputState, RoiMode);
+
+		//updating the DLL proxy with the clientProxy
+		Position[0] = (VRclient->clientProxy)->PositionX;
+		Position[1] = (VRclient->clientProxy)->PositionY;
+		Position[2] = (VRclient->clientProxy)->PositionZ;
+
+		ClipMode = (VRclient->clientProxy)->ClipMode;
+		ClipWidth = (VRclient->clientProxy)->ClipWidth;
+		ClipPos = (VRclient->clientProxy)->ClipPos;
+
+		Pose = (VRclient->clientProxy)->Pose;
+		gPose = (VRclient->clientProxy)->gPose;
+		gHeadPos = (VRclient->clientProxy)->gHeadPos;
+		gHeadOrientation = (VRclient->clientProxy)->gHeadOrientation;
+
+		view = (VRclient->clientProxy)->view;
 
 
 		// update Roi
