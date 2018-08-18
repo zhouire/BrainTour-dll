@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SceneManager.h>
+#include "SceneManager.h"
 
 //this contains only the variables required to Render a Scene
 struct BasicScene
@@ -110,7 +110,7 @@ namespace boost {
 		{
 			ar & t.texId;
 			ar & t.fboId;
-			ar & t.texSize;
+			//ar & t.texSize;
 		}
 
 		template<class Archive>
@@ -141,7 +141,7 @@ namespace boost {
 		void serialize(Archive & ar, ShaderFill & s, const unsigned int version)
 		{
 			ar & s.program;
-			ar & s.texture;
+			//ar & s.texture;
 
 			//ar & s._pixelShader;
 			//ar & s._vertexShader;
@@ -149,7 +149,7 @@ namespace boost {
 
 		
 		template<class Archive>
-		inline void save_construct_data(Archive & ar, const ShaderFill & s, const unsigned int version)
+		inline void save_construct_data(Archive & ar, const ShaderFill * s, const unsigned int version)
 		{
 			// save data required to construct instance
 			ar << s->_vertexShader << s->_pixelShader << s->texture;
@@ -240,14 +240,14 @@ namespace boost {
 		template<class Archive>
 		void serialize(Archive & ar, Model & m, const unsigned int version)
 		{
-			ar & m.Pos;
+			//ar & m.Pos;
 			ar & m.Rot;
 			ar & m.Mat;
 			ar & m.numVertices;
 			ar & m.numIndices;
 			ar & m.Vertices;
 			ar & m.Indices;
-			ar & m.Fill;
+			//ar & m.Fill;
 			ar & m.vertexBuffer;
 			ar & m.indexBuffer;
 		}
