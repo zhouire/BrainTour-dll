@@ -5,6 +5,7 @@
 #include <string>
 
 #define MAX_PACKET_SIZE 1000000
+//#define MAX_PACKET_SIZE 600000
 
 enum PacketTypes {
 
@@ -35,6 +36,8 @@ enum PacketTypes {
 	REMOVE_TEMP_MARKER = 12,
 
 	CLIENT_PROXY_UPDATE = 13,
+
+	SERVER_PRESENTATION_MODE = 14,
 };
 
 

@@ -51,6 +51,7 @@ ClientManager::ClientManager(ClientType type)
 	nextDataSize = sizeof(::Size);
 
     // send init packet
+	
     Packet packet;
     packet.packet_type = INIT_CONNECTION;
 
@@ -60,6 +61,7 @@ ClientManager::ClientManager(ClientType type)
 
 	sendSizeData(packet_size);
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+	
 }
 
 
@@ -114,7 +116,8 @@ void ClientManager::sendSizeData(int packet_size) {
 
 void ClientManager::update()
 {
-    Packet packet;
+    //Packet packet;
+	Packet * packet = new Packet();
 	//Scene * curScene;
 	::Size size;
 
@@ -181,7 +184,7 @@ void ClientManager::update()
 				int s = tempBuf.size();
 
 				tempBuf.append(&(network_data[i]), (nextDataSize - s));
-				packet = deserializeToPacket((tempBuf.data()), nextDataSize);
+				*packet = deserializeToPacket((tempBuf.data()), nextDataSize);
 				curPacket = !curPacket;
 
 				i += (nextDataSize - s);
@@ -190,10 +193,10 @@ void ClientManager::update()
 			}
 		}
 
-        switch (packet.packet_type) {
+        switch (packet->packet_type) {
 			case INIT_CONNECTION:
 				if (!init) {
-					clientId = packet.clientId;
+					clientId = packet->clientId;
 					init = true;
 				}
 
@@ -214,13 +217,13 @@ void ClientManager::update()
 				clientScene->removableCurvedLines = curScene->removableCurvedLines;
 				*/
 
-				updateClientSceneFromBasic(packet.scene);
+				updateClientSceneFromBasic(packet->scene);
 
 				break;
 
 			case SERVER_PROXY_UPDATE:
 				if (!active) {
-					Proxy curProxy = packet.proxy;
+					Proxy curProxy = packet->proxy;
 
 					//clientProxy->Position[0] = curProxy->Position[0];
 					//clientProxy->Position[1] = curProxy->Position[1];

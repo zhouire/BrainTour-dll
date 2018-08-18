@@ -7,6 +7,7 @@
 #define VRUSERDLL_API __declspec(dllimport)
 #endif
 */
+
 #define VRUSERDLL_API __declspec(dllexport)
 
 

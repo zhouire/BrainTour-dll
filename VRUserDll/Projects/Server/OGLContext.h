@@ -260,3 +260,5 @@ struct OGL
 		OVR_DEBUG_LOG(("Message from OpenGL: %s\n", message));
 	}
 };
+
+//static OGL Platform;

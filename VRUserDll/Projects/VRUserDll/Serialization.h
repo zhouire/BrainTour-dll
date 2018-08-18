@@ -195,7 +195,7 @@ namespace boost {
 			std::vector<Vertex> vertices;
 			size_t size;
 
-			ar >> vertices >> size;
+			ar >> size >> vertices;
 			// invoke inplace constructor to initialize instance of my_class
 			::new(v)VertexBuffer(&vertices[0], size);
 		}

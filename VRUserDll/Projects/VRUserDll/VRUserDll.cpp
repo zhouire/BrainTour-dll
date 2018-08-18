@@ -9,7 +9,7 @@
 //#include "SceneManager.h"
 #include "ClientManager.h"
 
-#include <process.h>
+//#include <process.h>
 
 #include <algorithm>
 #include <vector>
@@ -77,6 +77,7 @@ namespace VRUserProxy {
 
 		return 0;
 	}
+
 	bool OnDown(unsigned int last, unsigned int current, unsigned int mask) {
 		return (last&mask) == 0 && (current&mask);
 	}
@@ -140,132 +141,6 @@ namespace VRUserProxy {
 		
 		DPrintf("VRUserProxy::GetInputState OK\n");
 		int RoiMode = 0;
-		/*
-		Matrix4f v = view;
-		v.M[0][3] = 0.f;
-		v.M[1][3] = 0.f;
-		v.M[2][3] = 0.f;
-		v.M[3][3] = 1.f;
-		v.M[3][0] = 0.f;
-		v.M[3][1] = 0.f;
-		v.M[3][2] = 0.f;
-
-		//move all temp markers and remove all temp lines before any actions
-		roomScene->moveTempModels(handPoses[ovrHand_Right], gPose, gHeadPos, gHeadOrientation, view);
-
-		// left trigger
-		if (inputState.IndexTrigger[ovrHand_Left] > 0.5f) {
-			RoiMode = 1;
-		}
-
-		// Left Stick is for Volume Clip
-		if (ClipMode) {
-			if (inputState.Buttons & ovrButton_LThumb) {
-				float speed = 0.02f;
-				ClipWidth +=
-					inputState.Thumbstick[ovrHand_Left].x*speed +
-					inputState.Thumbstick[ovrHand_Left].y*speed;
-				ClipWidth = Clip<float>(0.01f, 1.0f, ClipWidth);
-			}
-			else {
-				float speed = 0.02f;
-				ClipPos +=
-					inputState.Thumbstick[ovrHand_Left].x*speed +
-					inputState.Thumbstick[ovrHand_Left].y*speed;
-				ClipPos = Clip<float>(0.0f, 1.0f, ClipPos);
-			}
-		}
-		// Index Trigger + Rotation (ROI Rotation)
-#if 0
-		if (inputState.IndexTrigger[ovrHand_Left]>0.5f) {
-			Quatf q1(handPoses[ovrHand_Left].Orientation);
-			Quatf q0(lastHandPoses[ovrHand_Left].Orientation);
-			Matrix4f Pose0 = Pose;
-			//Pose = Pose * Matrix4f(q1).Inverted() * Matrix4f(q0);
-			Pose = Matrix4f(q0) * Matrix4f(q1).Inverted() * Pose;
-			Vector3f center = gHeadPos + Vector3f(0.f, 0.f, -(RoiDepth + RoiRange*0.5f)*gObjectScale);
-			Vector3f p = -(Pose.Transform(center) - Pose0.Transform(center));
-			Position[0] += p.x;
-			Position[1] += p.y;
-			Position[2] += p.z;
-		}
-#endif
-
-		// Hand Trigger + Rotation (Object Rot)
-		else if (inputState.HandTrigger[ovrHand_Left]>0.5f) {
-			Quatf q0(handPoses[ovrHand_Left].Orientation);
-			Quatf q1(lastHandPoses[ovrHand_Left].Orientation);
-			//gPose = gPose * q1.Inverse() * q0;
-			gPose = q0 * q1.Inverse() * gPose;
-		}
-
-		
-		if (OnDown(lastButtons, inputState.Buttons, ovrButton_X))
-		{
-			if (!(inputState.Buttons & ovrButton_A)) {
-				// Handle A button down
-				ClipMode = (ClipMode + 1) % 4;
-			}
-		}
-		
-
-
-		//Controller actions influencing the scene (A,B,X,Y)
-		roomScene->ControllerActions(handPoses[ovrHand_Left], handPoses[ovrHand_Right], gPose, gHeadPos, inputState, gHeadOrientation, view, scale, voxelSize);
-
-		//R Thumb Pressed
-
-		if (inputState.Buttons & ovrButton_RThumb) {
-			// Zoom
-			DPrintf(" StickZoom\n");
-			float speed = -0.8f;
-			float forward = inputState.Thumbstick[ovrHand_Right].y*speed;
-
-			Vector3f movement = v.Inverted().Transform(Vector3f(0.0f, 0.0f, forward));
-			Position[0] += movement.x;
-			Position[1] += movement.y;
-			Position[2] += movement.z;
-		}
-
-		//R Thumb stick
-		else {
-			DPrintf(" RThumb\n");
-			// Translation
-			float speed = 0.1f;
-			float mx = inputState.Thumbstick[ovrHand_Right].x*speed;
-			float my = inputState.Thumbstick[ovrHand_Right].y*speed;
-			Vector3f movement = v.Inverted().Transform(Vector3f(mx, my, 0.f));
-			Position[0] += movement.x;
-			Position[1] += movement.y;
-			Position[2] += movement.z;
-		}
-
-
-
-		// R Hand Trigger for MotionTracking
-		if (inputState.HandTrigger[ovrHand_Right] > 0.1f) {
-			DPrintf(" R Tracking\n");
-			// translation
-			//static float positionTrackingSpeed = option::Option("PositionTrackingSpeed", 6.0f);
-			static float positionTrackingSpeed = 6.0f;
-			ovrPosef pose1 = handPoses[ovrHand_Right];
-			ovrPosef pose0 = lastHandPoses[ovrHand_Right];
-			Vector3f movement = v.Inverted().Transform(Vector3f(pose1.Position) - Vector3f(pose0.Position)) * -(positionTrackingSpeed*inputState.HandTrigger[ovrHand_Right]);
-			Position[0] += movement.x;
-			Position[1] += movement.y;
-			Position[2] += movement.z;
-			//DPrintf("Motion: %.4f, %.4f, %.4f\n", movement.x, movement.y, movement.z);
-			// rotation
-			Quatf q0(pose0.Orientation);
-			Quatf q1(pose1.Orientation);
-			Pose = Pose * Matrix4f(q0) * Matrix4f(q1).Transposed();
-		}
-
-		//lastLeftHandTrigger = inputState.HandTrigger[ovrHand_Left];
-		lastButtons = inputState.Buttons;
-		lastHandPoses[ovrHand_Left] = handPoses[ovrHand_Left];
-		lastHandPoses[ovrHand_Right] = handPoses[ovrHand_Right];
-		*/
 
 		VRclient->update();
 		VRclient->controllerUpdate(VRclient->clientProxy, trackState, inputState, RoiMode);
@@ -283,8 +158,6 @@ namespace VRUserProxy {
 		gPose = (VRclient->clientProxy)->gPose;
 		gHeadPos = (VRclient->clientProxy)->gHeadPos;
 		gHeadOrientation = (VRclient->clientProxy)->gHeadOrientation;
-
-		view = (VRclient->clientProxy)->view;
 
 
 		// update Roi

@@ -44,6 +44,7 @@ std::string ServerManager::serializeToChar(Packet &packet)
 	return serial_str;
 }
 
+
 Packet ServerManager::deserializeToPacket(const char * buffer, int buflen)
 {
 	Packet packet;
@@ -79,6 +80,10 @@ void ServerManager::update()
 	   sendInitPacket(client_id);
        printf("client %d has been connected to the server\n",client_id);
 
+	   curPacket[client_id] = false;
+	   nextDataSize[client_id] = sizeof(::Size);
+	   tempBuf.push_back("");
+
        client_id++;
    }
 
@@ -87,38 +92,16 @@ void ServerManager::update()
    }
 }
 
+
+
 void ServerManager::receiveFromClients()
 {
-	Packet packet;
+	Packet * packet = new Packet();
 	::Size size;
 
-    // go through all clients
-	/*
-    std::map<unsigned int, SOCKET>::iterator iter;
-
-    for(iter = network->sessions.begin(); iter != network->sessions.end(); iter++)
-    {
-		int data_length = network->receiveData(iter->first, network_data);
-
-        if (data_length <= 0) 
-        {
-            //no data recieved
-            continue;
-        }
-
-        int i = 0;
-        while (i < (unsigned int)data_length) 
-        {
-
-			packet.deserialize(&(network_data[i]));
-			i += sizeof(Packet);
-
-			Model * n = new Model(Vector3f(0, 0, 0), nullptr);
-			*n = packet.m;
-			*/
 
 	// go through all clients
-	for (auto iter = network->sessions.begin(); iter != network->sessions.end() /* not hoisted */; /* no inc. */)
+	for (auto iter = network->sessions.begin(); iter != network->sessions.end(); /* not hoisted; no inc.*/)
 	{
 		bool client_exit = false;
 
@@ -129,6 +112,8 @@ void ServerManager::receiveFromClients()
 			//no data recieved
 			continue;
 		}
+
+		printf("%i\n", data_length);
 
 		int i = 0;
 		while (i < (unsigned int)data_length)
@@ -166,7 +151,7 @@ void ServerManager::receiveFromClients()
 					continue;
 				}
 			}
-
+			
 			else {
 				//if the remaining data + data in tempBuf < enough data to construct the next Packet
 				//add remaining data to tempBuf, increment i, skip rest of loop
@@ -179,40 +164,45 @@ void ServerManager::receiveFromClients()
 				//if we have enough data to construct the next full Packet, append enough data to tempBuf to
 				//construct the Packet, deserialize tempBuf into Packet packet, clear tempBuf, flip the 
 				//curPacket switch, increment i, and MOVE ON to rest of loop
+				
 				else {
 					int s = tempBuf[iter->first].size();
 
 					tempBuf[iter->first].append(&(network_data[i]), (nextDataSize[iter->first] - s));
-					packet = deserializeToPacket((tempBuf[iter->first].data()), (nextDataSize[iter->first]));
+					printf("size is %i \n", nextDataSize[iter->first]);
+					*packet = deserializeToPacket((tempBuf[iter->first].data()), (nextDataSize[iter->first]));
 					curPacket[iter->first] = false;
 
 					i += (nextDataSize[iter->first] - s);
 
 					tempBuf[iter->first].clear();
 				}
+				
 			}
-
+			
+			
 			Model * n = new Model(Vector3f(0, 0, 0), nullptr);
-			*n = packet.m;
+			*n = packet->m;
 
-            switch (packet.packet_type) {
+            switch (packet->packet_type) {
 
                 case INIT_CONNECTION:
 
                     printf("server received init packet from client\n");
 
+					//sendInitPacket(client_id - 1);
+
 					sendSceneUpdate();
-					sendPresentationMode();
+					//sendPresentationMode();
 
 					if (presentationMode) {
 						sendProxyUpdate();
 					}
-                    //sendActionPackets();
 
                     break;
 
 				case ADD_REMOVABLE:
-					serverScene->AddRemovable(n, packet.worldMode);
+					serverScene->AddRemovable(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
@@ -222,28 +212,28 @@ void ServerManager::receiveFromClients()
 					break;
 
 				case ADD_TEMP_LINE:
-					serverScene->AddTempLine(n, packet.worldMode);
+					serverScene->AddTempLine(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
 				case ADD_REMOVABLE_MARKER:
-					serverScene->AddRemovableMarker(n, packet.worldMode);
+					serverScene->AddRemovableMarker(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
 				case ADD_REMOVABLE_STRAIGHT_LINE:
 				{
-					Vector3f start = (packet.lineCore)[0];
-					Vector3f end = (packet.lineCore)[1];
-					glm::quat handQ = (packet.allHandQ)[0];
+					Vector3f start = (packet->lineCore)[0];
+					Vector3f end = (packet->lineCore)[1];
+					glm::quat handQ = (packet->allHandQ)[0];
 
-					serverScene->AddRemovableStraightLine(n, start, end, handQ, packet.worldMode);
+					serverScene->AddRemovableStraightLine(n, start, end, handQ, packet->worldMode);
 					sendSceneUpdate();
 					break;
 				}
 
 				case ADD_REMOVABLE_CURVED_LINE:
-					serverScene->AddRemovableCurvedLine(n, packet.lineCore, packet.allHandQ, packet.worldMode);
+					serverScene->AddRemovableCurvedLine(n, packet->lineCore, packet->allHandQ, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
@@ -253,7 +243,7 @@ void ServerManager::receiveFromClients()
 					break;
 
 				case MOVE_TEMP_MODEL:
-					serverScene->moveTempModel(n, (packet.lineCore)[0]);
+					serverScene->moveTempModel(n, (packet->lineCore)[0]);
 					sendSceneUpdate();
 					break;
 
@@ -268,7 +258,7 @@ void ServerManager::receiveFromClients()
 					break;
 
 				case CLIENT_PROXY_UPDATE:
-					*(serverProxy) = packet.proxy;
+					*(serverProxy) = packet->proxy;
 					sendProxyUpdate();
 					break;
 
@@ -278,9 +268,11 @@ void ServerManager::receiveFromClients()
 
                     break;
             }
+			
         }
     }
 }
+
 
 //broadcast the newest client_id to the whole network, but only the newest-connected one
 //which has not received an init packet will recognize and adopt it.
@@ -297,6 +289,8 @@ void ServerManager::sendInitPacket(int client_id)
 	std::string buffer = serializeToChar(packet);
 	char * packet_data = (char*)(buffer.data());
 	const unsigned int packet_size = buffer.size();
+
+	printf("init packet size: %i \n", packet_size);
 
 	sendSizeData(packet_size);
 	network->sendToAll(packet_data, packet_size);
@@ -344,7 +338,7 @@ void ServerManager::sendPresentationMode()
 	//char packet_data[packet_size];
 
 	Packet packet;
-	packet.packet_type = SERVER_PROXY_UPDATE;
+	packet.packet_type = SERVER_PRESENTATION_MODE;
 	//repurpose the worldMode bool to send presentation mode
 	packet.worldMode = presentationMode;
 
