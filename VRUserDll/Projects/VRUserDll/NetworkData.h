@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Serialization.h"
+#include "ClientSerialization.h"
 #include <string.h>
 #include <string>
 

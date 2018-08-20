@@ -59,10 +59,10 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Serialization.h">
+    <ClInclude Include="OGLContext.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="OGLContext.h">
+    <ClInclude Include="ServerSerialization.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

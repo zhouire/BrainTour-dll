@@ -22,10 +22,10 @@
     <ClInclude Include="ClientManager.h" />
     <ClInclude Include="ClientNetwork.h" />
     <ClInclude Include="ClientScene.h" />
+    <ClInclude Include="ClientSerialization.h" />
     <ClInclude Include="NetworkData.h" />
     <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Serialization.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

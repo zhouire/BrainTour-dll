@@ -42,10 +42,10 @@
     <ClInclude Include="SceneManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Serialization.h">
+    <ClInclude Include="VRUserDll.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="VRUserDll.hpp">
+    <ClInclude Include="ClientSerialization.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

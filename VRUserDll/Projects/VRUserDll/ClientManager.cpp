@@ -30,13 +30,15 @@ bool OnDown(unsigned int last, unsigned int current, unsigned int mask) {
 	return (last&mask) == 0 && (current&mask);
 }
 
-
+//Scene * tempScene = new Scene(true);
+//ShaderFill * plainFill = tempScene->grid_material[0];
 
 ClientManager::ClientManager(ClientType type)
 {
     network = new ClientNetwork();
 	client_type = type;
 	clientScene = new ClientScene(true, network);
+
 	//clientProxy = p;
 
 	//auto-set to false, set to true when this is the active client during presentationMode
@@ -71,7 +73,6 @@ ClientManager::ClientManager(ClientType type)
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data2, packet_size2);
 	
 }
-
 
 ClientManager::~ClientManager(void)
 {

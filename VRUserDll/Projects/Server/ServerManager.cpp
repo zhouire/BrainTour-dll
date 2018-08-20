@@ -3,6 +3,10 @@
 #include "ServerManager.h"
 
 
+//#include <boost/serialization/export.hpp>
+//BOOST_CLASS_EXPORT_GUID(ShaderFill, "ShaderFill")
+
+
 unsigned int ServerManager::client_id; 
 
 //ServerManager::ServerManager(void)
