@@ -33,11 +33,8 @@ using namespace OVR;
 struct DepthBuffer
 {
 	GLuint        texId;
-	//Sizei		  _size;
 
-	DepthBuffer(Sizei size) //:
-		//for serialization of struct with no default constructor
-		//_size(size)
+	DepthBuffer(Sizei size)
 	{
 		glGenTextures(1, &texId);
 		glBindTexture(GL_TEXTURE_2D, texId);
@@ -56,6 +53,11 @@ struct DepthBuffer
 
 		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.w, size.h, 0, GL_DEPTH_COMPONENT, type, NULL);
 	}
+
+	//default constructor for serialization
+	DepthBuffer()
+	{}
+
 	~DepthBuffer()
 	{
 		if (texId)
@@ -73,22 +75,11 @@ struct TextureBuffer
 	GLuint              fboId;
 	Sizei               texSize;
 
-	const bool _rendertarget;
-	const int _mipLevels;
-	std::vector<unsigned char> _data;
-
 	TextureBuffer(bool rendertarget, Sizei size, int mipLevels, unsigned char * data) :
 		texId(0),
 		fboId(0),
-		texSize(0, 0),
-
-		_rendertarget(rendertarget),
-		_mipLevels(mipLevels)
+		texSize(0, 0)
 	{
-		//this is for serializing the parameter data
-		_data.assign(data, data + (size.w * size.h));
-		//------------------
-
 		texSize = size;
 
 		glGenTextures(1, &texId);
@@ -121,6 +112,11 @@ struct TextureBuffer
 			glGenFramebuffers(1, &fboId);
 		}
 	}
+
+	//default constructor for serialization
+	TextureBuffer()
+	{}
+
 
 	~TextureBuffer()
 	{
@@ -172,16 +168,8 @@ struct ShaderFill
 	GLuint            program;
 	TextureBuffer   * texture;
 
-	const GLuint _vertexShader;
-	const GLuint _pixelShader;
-
-	ShaderFill(GLuint vertexShader, GLuint pixelShader, TextureBuffer* _texture) :
-		_vertexShader(vertexShader),
-		_pixelShader(pixelShader)
+	ShaderFill(GLuint vertexShader, GLuint pixelShader, TextureBuffer* _texture) 
 	{
-		//for serializing with no defualt constructor
-		//_vertexShader = vertexShader;
-		//_pixelShader = pixelShader;
 
 		texture = _texture;
 
@@ -204,6 +192,11 @@ struct ShaderFill
 			OVR_DEBUG_LOG(("Linking shaders failed: %s\n", msg));
 		}
 	}
+
+	//default constructor for serialization
+	ShaderFill()
+	{}
+
 
 	~ShaderFill()
 	{
@@ -278,26 +271,18 @@ struct VertexBuffer
 {
 	GLuint    buffer;
 
-	//const void* _vertices;
-	//Vertex * _vertices;
-	std::vector<Vertex> _vertices;
-	const size_t _size;
-
-	VertexBuffer(Vertex * vertices, size_t size) :
-		//_vertices(vertices),
-		_size(size)
+	VertexBuffer(Vertex * vertices, size_t size) 
 	{
-		//for serializing no default constructor
-		//_vertices = vertices;
-		//memcpy(_vertices, vertices, size);
-		//_size = (const size_t) size;
-		//*_vertices = *vertices;
-		_vertices.assign(vertices, vertices + size);
-
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 		glBufferData(GL_ARRAY_BUFFER, size, (const void*)vertices, GL_STATIC_DRAW);
 	}
+
+	//default constructor for serialization
+	VertexBuffer()
+	{}
+
+
 	~VertexBuffer()
 	{
 		if (buffer)
@@ -314,25 +299,19 @@ struct IndexBuffer
 {
 	GLuint    buffer;
 
-	//void* _indices;
-	//GLushort * _indices;
-	std::vector<GLushort> _indices;
-	const size_t _size;
-
-	IndexBuffer(GLushort * indices, size_t size) :
-		//_indices(indices),
-		_size(size)
+	IndexBuffer(GLushort * indices, size_t size) 
 	{
-		//for serializing no default constructor
-		//_indices = indices;
-		//memcpy(_indices, indices, size);
-		//_size = size;
-		_indices.assign(indices, indices + size);
 
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, (const void *) indices, GL_STATIC_DRAW);
 	}
+
+	//default constructor for serialization
+	IndexBuffer()
+	{}
+
+
 	~IndexBuffer()
 	{
 		if (buffer)
@@ -348,25 +327,6 @@ struct IndexBuffer
 //-------------------------------------------------------
 struct Model
 {
-	/*
-	struct Vertex
-	{
-		friend class boost::serialization::access;
-
-		Vector3f  Pos;
-		DWORD     C;
-		float     U, V;
-
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned int version) {
-			ar & Pos;
-			ar & C;
-			ar & U;
-			ar & V;
-		}
-	};
-	*/
-
 	Vector3f        Pos;
 	Quatf           Rot;
 	Matrix4f        Mat;
@@ -386,6 +346,10 @@ struct Model
 		Fill(fill),
 		vertexBuffer(nullptr),
 		indexBuffer(nullptr)
+	{}
+
+	//default constructor for serialization
+	Model()
 	{}
 
 	~Model()

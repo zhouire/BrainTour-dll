@@ -82,7 +82,6 @@ namespace boost {
 		void serialize(Archive & ar, DepthBuffer & d, const unsigned int version)
 		{
 			ar & d.texId;
-			//ar & d._size;
 		}
 
 		/*
@@ -110,9 +109,10 @@ namespace boost {
 		{
 			ar & t.texId;
 			ar & t.fboId;
-			//ar & t.texSize;
+			ar & t.texSize;
 		}
 
+		/*
 		template<class Archive>
 		inline void save_construct_data(Archive & ar, const TextureBuffer * t, const unsigned int version)
 		{
@@ -133,7 +133,7 @@ namespace boost {
 			// invoke inplace constructor to initialize instance of my_class
 			::new(t)TextureBuffer(rendertarget, size, mipLevels, &data[0]);
 		}
-
+		*/
 
 
 
@@ -141,13 +141,10 @@ namespace boost {
 		void serialize(Archive & ar, ShaderFill & s, const unsigned int version)
 		{
 			ar & s.program;
-			//ar & s.texture;
-
-			//ar & s._pixelShader;
-			//ar & s._vertexShader;
+			ar & s.texture;
 		}
 
-		
+		/*
 		template<class Archive>
 		inline void save_construct_data(Archive & ar, const ShaderFill * s, const unsigned int version)
 		{
@@ -167,6 +164,7 @@ namespace boost {
 			// invoke inplace constructor to initialize instance of my_class
 			::new(s)ShaderFill(vertexShader, pixelShader, _texture);
 		}
+		*/
 
 
 		
@@ -175,11 +173,9 @@ namespace boost {
 		void serialize(Archive & ar, VertexBuffer & v, const unsigned int version)
 		{
 			ar & v.buffer;
-			//ar & v._size;
-			//ar & v._vertices;
 		}
 
-		
+		/*
 		template<class Archive>
 		inline void save_construct_data(Archive & ar, const VertexBuffer * v, const unsigned int version)
 		{
@@ -199,6 +195,7 @@ namespace boost {
 			// invoke inplace constructor to initialize instance of my_class
 			::new(v)VertexBuffer(&vertices[0], size);
 		}
+		*/
 		
 
 
@@ -207,12 +204,9 @@ namespace boost {
 		void serialize(Archive & ar, IndexBuffer & i, const unsigned int version)
 		{
 			ar & i.buffer;
-
-			//ar & i._indices;
-			//ar & i._size;
 		}
 
-		
+		/*
 		template<class Archive>
 		inline void save_construct_data(Archive & ar, const IndexBuffer * i, const unsigned int version)
 		{
@@ -232,6 +226,7 @@ namespace boost {
 			// invoke inplace constructor to initialize instance of my_class
 			::new(i)IndexBuffer(&indices[0], size);
 		}
+		*/
 		
 
 
@@ -240,18 +235,19 @@ namespace boost {
 		template<class Archive>
 		void serialize(Archive & ar, Model & m, const unsigned int version)
 		{
-			//ar & m.Pos;
+			ar & m.Pos;
 			ar & m.Rot;
 			ar & m.Mat;
 			ar & m.numVertices;
 			ar & m.numIndices;
 			ar & m.Vertices;
 			ar & m.Indices;
-			//ar & m.Fill;
+			ar & m.Fill;
 			ar & m.vertexBuffer;
 			ar & m.indexBuffer;
 		}
 
+		/*
 		template<class Archive>
 		inline void save_construct_data(Archive & ar, const Model * m, const unsigned int version)
 		{
@@ -270,6 +266,7 @@ namespace boost {
 			// invoke inplace constructor to initialize instance of my_class
 			::new(m)Model(pos, fill);
 		}
+		*/
 
 
 	} // namespace serialization
