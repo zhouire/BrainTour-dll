@@ -331,8 +331,10 @@ struct Model
 	Quatf           Rot;
 	Matrix4f        Mat;
 	int             numVertices, numIndices;
-	Vertex          Vertices[20000]; // Note fixed maximum
-	GLushort        Indices[40000];
+	//Vertex          Vertices[20000]; // Note fixed maximum
+	//GLushort        Indices[40000];
+	std::vector<Vertex>		Vertices;
+	std::vector<GLushort>	Indices;
 	ShaderFill    * Fill;
 	VertexBuffer  * vertexBuffer;
 	IndexBuffer   * indexBuffer;
@@ -370,8 +372,20 @@ struct Model
 		return Mat;
 	}
 
-	void AddVertex(const Vertex& v) { Vertices[numVertices++] = v; }
-	void AddIndex(GLushort a) { Indices[numIndices++] = a; }
+	//void AddVertex(const Vertex& v) { Vertices[numVertices++] = v; }
+	//void AddIndex(GLushort a) { Indices[numIndices++] = a; }
+	void AddVertex(const Vertex& v)
+	{
+		numVertices += 1;
+		Vertices.push_back(v);
+	}
+
+	void AddIndex(GLushort a)
+	{
+		numIndices += 1;
+		Indices.push_back(a);
+	}
+
 
 	void AllocateBuffers()
 	{

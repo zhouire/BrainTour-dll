@@ -331,11 +331,15 @@ struct Model
 	Quatf           Rot;
 	Matrix4f        Mat;
 	int             numVertices, numIndices;
-	Vertex          Vertices[20000]; // Note fixed maximum
-	GLushort        Indices[40000];
+	//Vertex          Vertices[20000]; // Note fixed maximum
+	//GLushort        Indices[40000];
+	std::vector<Vertex>		Vertices;
+	std::vector<GLushort>	Indices;
 	ShaderFill    * Fill;
 	VertexBuffer  * vertexBuffer;
 	IndexBuffer   * indexBuffer;
+
+	ShaderFill * plainFill;
 
 	Model(Vector3f pos, ShaderFill * fill) :
 		numVertices(0),
@@ -346,11 +350,15 @@ struct Model
 		Fill(fill),
 		vertexBuffer(nullptr),
 		indexBuffer(nullptr)
-	{}
+	{
+		CreatePlainTexture();
+	}
 
 	//default constructor for serialization
 	Model()
-	{}
+	{
+		CreatePlainTexture();
+	}
 
 	~Model()
 	{
@@ -364,8 +372,20 @@ struct Model
 		return Mat;
 	}
 
-	void AddVertex(const Vertex& v) { Vertices[numVertices++] = v; }
-	void AddIndex(GLushort a) { Indices[numIndices++] = a; }
+	//void AddVertex(const Vertex& v) { Vertices[numVertices++] = v; }
+	//void AddIndex(GLushort a) { Indices[numIndices++] = a; }
+	void AddVertex(const Vertex& v)
+	{
+		numVertices += 1;
+		Vertices.push_back(v);
+	}
+
+	void AddIndex(GLushort a)
+	{
+		numIndices += 1;
+		Indices.push_back(a);
+	}
+
 
 	void AllocateBuffers()
 	{
@@ -378,6 +398,84 @@ struct Model
 		delete vertexBuffer; vertexBuffer = nullptr;
 		delete indexBuffer; indexBuffer = nullptr;
 	}
+
+	//creating the textures
+	GLuint CreateShader(GLenum type, const GLchar* src)
+	{
+		GLuint shader = glCreateShader(type);
+
+		glShaderSource(shader, 1, &src, NULL);
+		glCompileShader(shader);
+
+		GLint r;
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &r);
+		if (!r)
+		{
+			GLchar msg[1024];
+			glGetShaderInfoLog(shader, sizeof(msg), 0, msg);
+			if (msg[0]) {
+				OVR_DEBUG_LOG(("Compiling shader failed: %s\n", msg));
+			}
+			return 0;
+		}
+
+		return shader;
+	}
+
+
+	void CreatePlainTexture()
+	{
+		static const GLchar* VertexShaderSrc =
+			"#version 150\n"
+			"uniform mat4 matWVP;\n"
+			"in      vec4 Position;\n"
+			"in      vec4 Color;\n"
+			"in      vec2 TexCoord;\n"
+			"out     vec2 oTexCoord;\n"
+			"out     vec4 oColor;\n"
+			"void main()\n"
+			"{\n"
+			"   gl_Position = (matWVP * Position);\n"
+			"   oTexCoord   = TexCoord;\n"
+			"   oColor.rgb  = pow(Color.rgb, vec3(2.2));\n"   // convert from sRGB to linear
+			"   oColor.a    = Color.a;\n"
+			"}\n";
+
+		static const char* FragmentShaderSrc =
+			"#version 150\n"
+			"uniform sampler2D Texture0;\n"
+			"in      vec4      oColor;\n"
+			"in      vec2      oTexCoord;\n"
+			"out     vec4      FragColor;\n"
+			"void main()\n"
+			"{\n"
+			"   FragColor = oColor * texture2D(Texture0, oTexCoord);\n"
+			"}\n";
+
+		GLuint    vshader = CreateShader(GL_VERTEX_SHADER, VertexShaderSrc);
+		GLuint    fshader = CreateShader(GL_FRAGMENT_SHADER, FragmentShaderSrc);
+
+		// Make textures
+		static DWORD tex_pixels[256 * 256];
+
+		for (int j = 0; j < 256; ++j)
+		{
+			for (int i = 0; i < 256; ++i)
+			{
+				tex_pixels[j * 256 + i] = 0xffffffff;// blank
+			}
+		}
+		TextureBuffer * generated_texture = new TextureBuffer(false, Sizei(256, 256), 4, (unsigned char *)tex_pixels);
+
+		ShaderFill * generated_shaderfill = new ShaderFill(vshader, fshader, generated_texture);
+
+		plainFill = generated_shaderfill;
+
+		glDeleteShader(vshader);
+		glDeleteShader(fshader);
+	}
+
+
 
 	void AddSolidColorBox(float x1, float y1, float z1, float x2, float y2, float z2, DWORD c)
 	{
