@@ -97,7 +97,7 @@ std::string ClientManager::serializeToChar(Packet * packet)
 
 Packet * ClientManager::deserializeToPacket(const char * buffer, int buflen)
 {
-	Packet * packet = new Packet();
+	Packet * packet;
 	// wrap buffer inside a stream and deserialize serial_str into obj
 	boost::iostreams::basic_array_source<char> device(buffer, buflen);
 	boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s(device);
