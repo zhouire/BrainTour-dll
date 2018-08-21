@@ -327,6 +327,9 @@ struct IndexBuffer
 //-------------------------------------------------------
 struct Model
 {
+	int				client_creator;
+	unsigned int	id;
+
 	Vector3f        Pos;
 	Quatf           Rot;
 	Matrix4f        Mat;
@@ -341,7 +344,10 @@ struct Model
 
 	ShaderFill * plainFill;
 
-	Model(Vector3f pos, ShaderFill * fill) :
+	Model(Vector3f pos, ShaderFill * fill, int client_id, unsigned int model_id) :
+		client_creator(client_id),
+		id(model_id),
+		
 		numVertices(0),
 		numIndices(0),
 		Pos(pos),
@@ -841,6 +847,9 @@ struct LineComponents
 
 struct Scene
 {
+	int client_id;
+	unsigned int model_id;
+	
 	//use map for built-in find function
 	std::map<Model*, int> worldModels;
 	//markers have meaningless int values
@@ -1054,11 +1063,13 @@ struct Scene
 
 	Model * CreateMarker(float size, DWORD color, Vector3f pos, bool worldMode)
 	{
-		Model * marker = new Model(Vector3f(0, 0, 0), (grid_material[0]));
+		Model * marker = new Model(Vector3f(0, 0, 0), (grid_material[0]), client_id, model_id);
 		marker->AddSolidColorBox(-0.5f*size, -0.5f*size, -0.5f*size, 0.5f*size, 0.5f*size, 0.5f*size, color);
 		marker->AllocateBuffers();
 		marker->Pos = pos;
 		//AddRemovableMarker(marker, worldMode);
+
+		model_id += 1;
 
 		return marker;
 	}
@@ -1067,9 +1078,11 @@ struct Scene
 	Model * CreateStraightLine(Vector3f start, Vector3f end, glm::quat handQ, float thickness, DWORD color) {
 		//should be okay to put Pos at origin because the line construction is based on the origin
 		//However, Pos will NOT reflect the actual location of the line!
-		Model * straightLine = new Model(Vector3f(0, 0, 0), (grid_material[0]));
+		Model * straightLine = new Model(Vector3f(0, 0, 0), (grid_material[0]), client_id, model_id);
 		straightLine->AddStraightLine(start, end, handQ, thickness, color);
 		straightLine->AllocateBuffers();
+
+		model_id += 1;
 
 		return straightLine;
 	}
@@ -1078,9 +1091,11 @@ struct Scene
 	Model * CreateCurvedLine(std::vector<Vector3f> lineCore, std::vector<glm::quat> allHandQ, float thickness, DWORD color) {
 		//should be okay to put Pos at origin because the line construction is based on the origin
 		//However, Pos will NOT reflect the actual location of the line!
-		Model * curvedLine = new Model(Vector3f(0, 0, 0), (grid_material[0]));
+		Model * curvedLine = new Model(Vector3f(0, 0, 0), (grid_material[0]), client_id, model_id);
 		curvedLine->AddCurvedLine(lineCore, allHandQ, thickness, color);
 		curvedLine->AllocateBuffers();
+
+		model_id += 1;
 
 		return curvedLine;
 	}
@@ -1088,9 +1103,11 @@ struct Scene
 
 	Model * CreateTextBox(std::vector<Vector3f> defaultVertices, std::vector<Vector3f> texCoord, ShaderFill * text) {
 		//creates the text
-		Model * textForeground = new Model(Vector3f(0, 0, 0), text);
+		Model * textForeground = new Model(Vector3f(0, 0, 0), text, client_id, model_id);
 		textForeground->AddSolidColorRect(defaultVertices, texCoord, 0xFFFFFFFF);
 		textForeground->AllocateBuffers();
+
+		model_id += 1;
 		
 		return textForeground;
 	}
@@ -1369,7 +1386,9 @@ struct Scene
 		std::vector<std::vector<Vector3f>> textVertices = GenerateTextVertices(startCoord, width, height);
 		std::string s = LengthToString(length);
 
-		Model * m = new Model(Vector3f(0, 0, 0), grid_material[5]);
+		Model * m = new Model(Vector3f(0, 0, 0), grid_material[5], client_id, model_id);
+
+		model_id += 1;
 
 		//for (int i = (s.length()-1); i >= 0; i--) { 
 		for (int i = 0; i < s.length(); i++) { 
@@ -2066,9 +2085,11 @@ struct Scene
 	}
 
 	//initialization; when scene created, create textures as well
-	Scene(bool client)
+	Scene(bool client, int clid)
 	{
 		clientMode = client;
+		client_id = clid;
+		model_id = 0;
 		CreateTextures();
 	}
 }; 

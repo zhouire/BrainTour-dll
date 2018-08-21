@@ -206,27 +206,33 @@ void ServerManager::receiveFromClients()
                     break;
 
 				case ADD_REMOVABLE:
+					printf("%i : server received add removable\n", iter->first);
 					serverScene->AddRemovable(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
 				case ADD_TEMP:
+					printf("%i : server received add temp\n", iter->first);
 					serverScene->AddTemp(n);
 					sendSceneUpdate();
 					break;
 
 				case ADD_TEMP_LINE:
+					printf("%i : server received add temp line\n", iter->first);
 					serverScene->AddTempLine(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
 				case ADD_REMOVABLE_MARKER:
+					printf("%i : server received add removable marker\n", iter->first);
 					serverScene->AddRemovableMarker(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
 				case ADD_REMOVABLE_STRAIGHT_LINE:
 				{
+					printf("%i : server received add removable straight line\n", iter->first);
+
 					Vector3f start = (packet->lineCore)[0];
 					Vector3f end = (packet->lineCore)[1];
 					glm::quat handQ = (packet->allHandQ)[0];
@@ -237,34 +243,43 @@ void ServerManager::receiveFromClients()
 				}
 
 				case ADD_REMOVABLE_CURVED_LINE:
+					printf("%i : server received add removable curved line\n", iter->first);
 					serverScene->AddRemovableCurvedLine(n, packet->lineCore, packet->allHandQ, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
 				case REMOVE_MODEL:
+					printf("%i : server received remove model\n", iter->first);
 					serverScene->RemoveModel(n);
 					sendSceneUpdate();
 					break;
 
 				case MOVE_TEMP_MODEL:
+					printf("%i : server received move temp model\n", iter->first);
 					serverScene->moveTempModel(n, (packet->lineCore)[0]);
 					sendSceneUpdate();
 					break;
 
 				case REMOVE_TEMP_LINE:
+					printf("%i : server received remove temp line\n", iter->first);
 					serverScene->removeTempLine(n);
 					sendSceneUpdate();
 					break;
 
 				case REMOVE_TEMP_MARKER:
+					printf("%i : server received remove temp marker\n", iter->first);
 					serverScene->removeTempMarker(n);
 					sendSceneUpdate();
 					break;
 
 				case CLIENT_PROXY_UPDATE:
+					printf("%i : server received client proxy update\n", iter->first);
 					*(serverProxy) = packet->proxy;
 					sendProxyUpdate();
 					break;
+
+				case CLIENT_DEBUG:
+					printf("%i : client debug %i\n", iter->first, packet->clientId);
 
                 default:
 

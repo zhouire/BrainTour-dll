@@ -11,13 +11,13 @@ struct ClientScene : public Scene
 	ClientNetwork * network;
 
 	//constructor
-	ClientScene(bool client, ClientNetwork * n) : Scene(client)
+	ClientScene(bool client, int client_id, ClientNetwork * n) : Scene(client, client_id)
 	{
 		network = n;
 	}
 
 
-	std::string serializeToChar(Packet &packet)
+	std::string serializeToChar(Packet * packet)
 	{
 		// serialize obj into an std::string
 		std::string serial_str;
@@ -33,9 +33,9 @@ struct ClientScene : public Scene
 		return serial_str;
 	}
 
-	Packet deserializeToPacket(const char * buffer, int buflen)
+	Packet * deserializeToPacket(const char * buffer, int buflen)
 	{
-		Packet packet;
+		Packet * packet;
 		// wrap buffer inside a stream and deserialize serial_str into obj
 		boost::iostreams::basic_array_source<char> device(buffer, buflen);
 		boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s(device);
@@ -62,7 +62,7 @@ struct ClientScene : public Scene
 
 
 	//BASIC FUNCTION USED TO SEND EVERY PACKET AFTER CONSTRUCTION
-	void sendPacket(Packet packet) {
+	void sendPacket(Packet * packet) {
 		std::string buffer = serializeToChar(packet);
 		char * packet_data = (char*)(buffer.data());
 		const unsigned int packet_size = buffer.size();
@@ -72,10 +72,10 @@ struct ClientScene : public Scene
 	}
 
 	void AddRemovable(Model * m, bool worldMode) {
-		Packet packet;
-		packet.packet_type = ADD_REMOVABLE;
-		packet.m = *m;
-		packet.worldMode = worldMode;
+		Packet * packet = new Packet();
+		packet->packet_type = ADD_REMOVABLE;
+		packet->m = *m;
+		packet->worldMode = worldMode;
 
 		sendPacket(packet);
 	}
@@ -85,9 +85,9 @@ struct ClientScene : public Scene
 		//for client-side recordkeeping
 		localTempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
 
-		Packet packet;
-		packet.packet_type = ADD_TEMP;
-		packet.m = *n;
+		Packet * packet = new Packet();
+		packet->packet_type = ADD_TEMP;
+		packet->m = *n;
 
 		sendPacket(packet);
 	}
@@ -103,29 +103,29 @@ struct ClientScene : public Scene
 			localTempVolumeLines.insert(std::pair<Model*, int>(n, 1));
 		}
 
-		Packet packet;
-		packet.packet_type = ADD_TEMP_LINE;
-		packet.m = *n;
-		packet.worldMode = worldMode;
+		Packet * packet = new Packet();
+		packet->packet_type = ADD_TEMP_LINE;
+		packet->m = *n;
+		packet->worldMode = worldMode;
 
 		sendPacket(packet);
 	}
 
 	void AddRemovableMarker(Model * n, bool worldMode)
 	{
-		Packet packet;
-		packet.packet_type = ADD_REMOVABLE_MARKER;
-		packet.m = *n;
-		packet.worldMode = worldMode;
+		Packet * packet = new Packet();
+		packet->packet_type = ADD_REMOVABLE_MARKER;
+		packet->m = *n;
+		packet->worldMode = worldMode;
 
 		sendPacket(packet);
 	}
 
 	void AddRemovableStraightLine(Model * n, Vector3f start, Vector3f end, glm::quat handQ, bool worldMode)
 	{
-		Packet packet;
-		packet.packet_type = ADD_REMOVABLE_STRAIGHT_LINE;
-		packet.m = *n;
+		Packet * packet = new Packet();
+		packet->packet_type = ADD_REMOVABLE_STRAIGHT_LINE;
+		packet->m = *n;
 
 		//we need to make sure everything is a pointer
 		//also don't forget to convert the lineCore back to start, end when the Server receives it
@@ -136,48 +136,48 @@ struct ClientScene : public Scene
 		std::vector<glm::quat> allHandQ;
 		allHandQ.push_back(handQ);
 
-		packet.lineCore = lineCore;
-		packet.allHandQ = allHandQ;
+		packet->lineCore = lineCore;
+		packet->allHandQ = allHandQ;
 
 		sendPacket(packet);
 	}
 
 	void AddRemovableCurvedLine(Model * n, std::vector<Vector3f> lineCore, std::vector<glm::quat> allHandQ, bool worldMode)
 	{
-		Packet packet;
-		packet.packet_type = ADD_REMOVABLE_CURVED_LINE;
-		packet.m = *n;
+		Packet * packet = new Packet();
+		packet->packet_type = ADD_REMOVABLE_CURVED_LINE;
+		packet->m = *n;
 
 		std::vector<Vector3f> core;
 		core.assign(lineCore.begin(), lineCore.end());
-		packet.lineCore = core;
+		packet->lineCore = core;
 
 		std::vector<glm::quat> q;
 		q.assign(allHandQ.begin(), allHandQ.end());
-		packet.allHandQ = q;
+		packet->allHandQ = q;
 
-		packet.worldMode = worldMode;
+		packet->worldMode = worldMode;
 
 		sendPacket(packet);
 	}
 
 	void RemoveModel(Model * n) {
-		Packet packet;
-		packet.packet_type = REMOVE_MODEL;
-		packet.m = *n;
+		Packet * packet = new Packet();
+		packet->packet_type = REMOVE_MODEL;
+		packet->m = *n;
 
 		sendPacket(packet);
 	}
 
 	void moveTempModel(Model * m, Vector3f newPos) {
-		Packet packet;
-		packet.packet_type = MOVE_TEMP_MODEL;
-		packet.m = *m;
+		Packet * packet = new Packet();
+		packet->packet_type = MOVE_TEMP_MODEL;
+		packet->m = *m;
 
 		std::vector<Vector3f> lineCore;
 		lineCore.push_back(newPos);
 
-		packet.lineCore = lineCore;
+		packet->lineCore = lineCore;
 
 		sendPacket(packet);
 	}
@@ -187,9 +187,9 @@ struct ClientScene : public Scene
 		localTempWorldLines.erase(m);
 		localTempVolumeLines.erase(m);
 
-		Packet packet;
-		packet.packet_type = REMOVE_TEMP_LINE;
-		packet.m = *m;
+		Packet * packet = new Packet();
+		packet->packet_type = REMOVE_TEMP_LINE;
+		packet->m = *m;
 
 		sendPacket(packet);
 	}
@@ -198,9 +198,9 @@ struct ClientScene : public Scene
 		//for local client record-keeping
 		localTempWorldMarkers.erase(m);
 
-		Packet packet;
-		packet.packet_type = REMOVE_TEMP_MARKER;
-		packet.m = *m;
+		Packet * packet = new Packet();
+		packet->packet_type = REMOVE_TEMP_MARKER;
+		packet->m = *m;
 
 		sendPacket(packet);
 	}

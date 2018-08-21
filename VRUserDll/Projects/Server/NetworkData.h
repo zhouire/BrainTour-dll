@@ -38,6 +38,8 @@ enum PacketTypes {
 	CLIENT_PROXY_UPDATE = 13,
 
 	SERVER_PRESENTATION_MODE = 14,
+
+	CLIENT_DEBUG = 15,
 };
 
 

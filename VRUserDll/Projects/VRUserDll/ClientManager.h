@@ -45,6 +45,8 @@ public:
 
 	void sendClientProxyUpdate();
 
+	void sendClientDebug(unsigned int);
+
 	BasicScene convertClientSceneToBasic(ClientScene);
 
 	void updateClientSceneFromBasic(BasicScene);

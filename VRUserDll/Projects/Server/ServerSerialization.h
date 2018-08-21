@@ -241,6 +241,9 @@ namespace boost {
 		template<class Archive>
 		void serialize(Archive & ar, Model & m, const unsigned int version)
 		{
+			ar & m.client_creator;
+			ar & m.id;
+			
 			ar & m.Pos;
 			ar & m.Rot;
 			ar & m.Mat;

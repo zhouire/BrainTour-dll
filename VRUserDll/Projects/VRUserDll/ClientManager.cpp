@@ -64,13 +64,14 @@ ClientManager::ClientManager(ClientType type)
 	sendSizeData(packet_size);
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 
-
+	/*
 	std::string buffer2 = serializeToChar(packet);
 	char * packet_data2 = (char*)(buffer2.data());
 	const unsigned int packet_size2 = buffer2.size();
 
 	sendSizeData(packet_size2);
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data2, packet_size2);
+	*/
 	
 }
 
@@ -202,6 +203,8 @@ void ClientManager::update()
 			}
 		}
 
+		sendClientDebug(packet->packet_type);
+
         switch (packet->packet_type) {
 			case INIT_CONNECTION:
 				if (!init) {
@@ -270,6 +273,7 @@ void ClientManager::update()
 }
 
 
+/*
 unsigned int lastButtons = 0;
 ovrPosef lastHandPoses[2];
 
@@ -424,12 +428,27 @@ void ClientManager::controllerUpdate(Proxy * p, ovrTrackingState trackState, ovr
 		sendClientProxyUpdate();
 	}
 }
+*/
 
 
 void ClientManager::sendClientProxyUpdate() {
 	Packet * packet = new Packet();
 	packet->packet_type = CLIENT_PROXY_UPDATE;
 	packet->proxy = *clientProxy;
+
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
+
+	sendSizeData(packet_size);
+	NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+
+void ClientManager::sendClientDebug(unsigned int i) {
+	Packet * packet = new Packet();
+	packet->packet_type = CLIENT_DEBUG;
+	packet->clientId = i;
 
 	std::string buffer = serializeToChar(packet);
 	char * packet_data = (char*)(buffer.data());
