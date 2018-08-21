@@ -12,9 +12,9 @@ public:
 
     ~ServerManager(void);
 
-	std::string serializeToChar(Packet&);
+	std::string serializeToChar(Packet*);
 
-	Packet deserializeToPacket(const char *, int);
+	Packet * deserializeToPacket(const char *, int);
 
 	void sendSizeData(int);
 

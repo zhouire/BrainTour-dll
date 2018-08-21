@@ -54,8 +54,8 @@ ClientManager::ClientManager(ClientType type)
 
     // send init packet
 	
-    Packet packet;
-    packet.packet_type = INIT_CONNECTION;
+    Packet * packet = new Packet();
+    packet->packet_type = INIT_CONNECTION;
 
 	std::string buffer = serializeToChar(packet);
 	char * packet_data = (char*)(buffer.data());
@@ -79,7 +79,7 @@ ClientManager::~ClientManager(void)
 }
 
 
-std::string ClientManager::serializeToChar(Packet &packet)
+std::string ClientManager::serializeToChar(Packet * packet)
 {
 	// serialize obj into an std::string
 	std::string serial_str;
@@ -95,9 +95,9 @@ std::string ClientManager::serializeToChar(Packet &packet)
 	return serial_str;
 }
 
-Packet ClientManager::deserializeToPacket(const char * buffer, int buflen)
+Packet * ClientManager::deserializeToPacket(const char * buffer, int buflen)
 {
-	Packet packet;
+	Packet * packet = new Packet();
 	// wrap buffer inside a stream and deserialize serial_str into obj
 	boost::iostreams::basic_array_source<char> device(buffer, buflen);
 	boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s(device);
@@ -193,7 +193,7 @@ void ClientManager::update()
 				int s = tempBuf.size();
 
 				tempBuf.append(&(network_data[i]), (nextDataSize - s));
-				*packet = deserializeToPacket((tempBuf.data()), nextDataSize);
+				packet = deserializeToPacket((tempBuf.data()), nextDataSize);
 				curPacket = !curPacket;
 
 				i += (nextDataSize - s);
@@ -427,9 +427,9 @@ void ClientManager::controllerUpdate(Proxy * p, ovrTrackingState trackState, ovr
 
 
 void ClientManager::sendClientProxyUpdate() {
-	Packet packet;
-	packet.packet_type = CLIENT_PROXY_UPDATE;
-	packet.proxy = *clientProxy;
+	Packet * packet = new Packet();
+	packet->packet_type = CLIENT_PROXY_UPDATE;
+	packet->proxy = *clientProxy;
 
 	std::string buffer = serializeToChar(packet);
 	char * packet_data = (char*)(buffer.data());

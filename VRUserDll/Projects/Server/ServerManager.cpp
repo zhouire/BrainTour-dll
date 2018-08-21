@@ -32,7 +32,7 @@ ServerManager::~ServerManager(void)
 }
 
 
-std::string ServerManager::serializeToChar(Packet &packet)
+std::string ServerManager::serializeToChar(Packet * packet)
 {
 	// serialize obj into an std::string
 	std::string serial_str;
@@ -49,9 +49,9 @@ std::string ServerManager::serializeToChar(Packet &packet)
 }
 
 
-Packet ServerManager::deserializeToPacket(const char * buffer, int buflen)
+Packet * ServerManager::deserializeToPacket(const char * buffer, int buflen)
 {
-	Packet packet;
+	Packet * packet = new Packet();
 	// wrap buffer inside a stream and deserialize serial_str into obj
 	boost::iostreams::basic_array_source<char> device(buffer, buflen);
 	boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s(device);
@@ -174,7 +174,7 @@ void ServerManager::receiveFromClients()
 
 					tempBuf[iter->first].append(&(network_data[i]), (nextDataSize[iter->first] - s));
 					printf("size is %i \n", nextDataSize[iter->first]);
-					*packet = deserializeToPacket((tempBuf[iter->first].data()), (nextDataSize[iter->first]));
+					packet = deserializeToPacket((tempBuf[iter->first].data()), (nextDataSize[iter->first]));
 					curPacket[iter->first] = false;
 
 					i += (nextDataSize[iter->first] - s);
@@ -285,9 +285,9 @@ void ServerManager::sendInitPacket(int client_id)
 	//const unsigned int packet_size = sizeof(Packet);
 	//char packet_data[packet_size];
 
-	Packet packet;
-	packet.packet_type = INIT_CONNECTION;
-	packet.clientId = client_id;
+	Packet * packet = new Packet();
+	packet->packet_type = INIT_CONNECTION;
+	packet->clientId = client_id;
 
 	//packet.serialize(packet_data);
 	std::string buffer = serializeToChar(packet);
@@ -305,9 +305,9 @@ void ServerManager::sendSceneUpdate()
 	//const unsigned int packet_size = sizeof(Packet);
 	//char packet_data[packet_size];
 
-	Packet packet;
-	packet.packet_type = SERVER_SCENE_UPDATE;
-	packet.scene = convertServerSceneToBasic(*serverScene);
+	Packet * packet = new Packet();
+	packet->packet_type = SERVER_SCENE_UPDATE;
+	packet->scene = convertServerSceneToBasic(*serverScene);
 
 	std::string buffer = serializeToChar(packet);
 	char * packet_data = (char*)(buffer.data());
@@ -323,9 +323,9 @@ void ServerManager::sendProxyUpdate()
 	//const unsigned int packet_size = sizeof(Packet);
 	//char packet_data[packet_size];
 
-	Packet packet;
-	packet.packet_type = SERVER_PROXY_UPDATE;
-	packet.proxy = *serverProxy;
+	Packet * packet = new Packet();
+	packet->packet_type = SERVER_PROXY_UPDATE;
+	packet->proxy = *serverProxy;
 	
 	std::string buffer = serializeToChar(packet);
 	char * packet_data = (char*)(buffer.data());
@@ -341,10 +341,10 @@ void ServerManager::sendPresentationMode()
 	//const unsigned int packet_size = sizeof(Packet);
 	//char packet_data[packet_size];
 
-	Packet packet;
-	packet.packet_type = SERVER_PRESENTATION_MODE;
+	Packet * packet = new Packet();
+	packet->packet_type = SERVER_PRESENTATION_MODE;
 	//repurpose the worldMode bool to send presentation mode
-	packet.worldMode = presentationMode;
+	packet->worldMode = presentationMode;
 
 	std::string buffer = serializeToChar(packet);
 	char * packet_data = (char*)(buffer.data());
