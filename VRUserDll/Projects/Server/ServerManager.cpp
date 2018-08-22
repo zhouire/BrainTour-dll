@@ -84,6 +84,8 @@ void ServerManager::update()
 	   sendInitPacket(client_id);
        printf("client %d has been connected to the server\n",client_id);
 
+	   model_log.push_back(std::map<int, Model*>());
+
 	   curPacket[client_id] = false;
 	   nextDataSize[client_id] = sizeof(::Size);
 	   tempBuf.push_back("");
@@ -185,7 +187,7 @@ void ServerManager::receiveFromClients()
 			}
 			
 			
-			Model * n = new Model(Vector3f(0, 0, 0), nullptr);
+			Model * n = new Model(Vector3f(0, 0, 0), nullptr, -1, 0);
 			*n = packet->m;
 
             switch (packet->packet_type) {
@@ -207,24 +209,28 @@ void ServerManager::receiveFromClients()
 
 				case ADD_REMOVABLE:
 					printf("%i : server received add removable\n", iter->first);
+					model_log[packet->clientId][packet->modelId] = n;
 					serverScene->AddRemovable(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
 				case ADD_TEMP:
 					printf("%i : server received add temp\n", iter->first);
+					model_log[packet->clientId][packet->modelId] = n;
 					serverScene->AddTemp(n);
 					sendSceneUpdate();
 					break;
 
 				case ADD_TEMP_LINE:
 					printf("%i : server received add temp line\n", iter->first);
+					model_log[packet->clientId][packet->modelId] = n;
 					serverScene->AddTempLine(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
 				case ADD_REMOVABLE_MARKER:
 					printf("%i : server received add removable marker\n", iter->first);
+					model_log[packet->clientId][packet->modelId] = n;
 					serverScene->AddRemovableMarker(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
@@ -237,6 +243,8 @@ void ServerManager::receiveFromClients()
 					Vector3f end = (packet->lineCore)[1];
 					glm::quat handQ = (packet->allHandQ)[0];
 
+					model_log[packet->clientId][packet->modelId] = n;
+
 					serverScene->AddRemovableStraightLine(n, start, end, handQ, packet->worldMode);
 					sendSceneUpdate();
 					break;
@@ -244,31 +252,41 @@ void ServerManager::receiveFromClients()
 
 				case ADD_REMOVABLE_CURVED_LINE:
 					printf("%i : server received add removable curved line\n", iter->first);
+					model_log[packet->clientId][packet->modelId] = n;
 					serverScene->AddRemovableCurvedLine(n, packet->lineCore, packet->allHandQ, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
 				case REMOVE_MODEL:
 					printf("%i : server received remove model\n", iter->first);
+					//serverScene->RemoveModel(n);
+					n = model_log[packet->clientId][packet->modelId];
 					serverScene->RemoveModel(n);
+
 					sendSceneUpdate();
 					break;
 
 				case MOVE_TEMP_MODEL:
 					printf("%i : server received move temp model\n", iter->first);
+					n = model_log[packet->clientId][packet->modelId];
 					serverScene->moveTempModel(n, (packet->lineCore)[0]);
+
 					sendSceneUpdate();
 					break;
 
 				case REMOVE_TEMP_LINE:
 					printf("%i : server received remove temp line\n", iter->first);
+					n = model_log[packet->clientId][packet->modelId];
 					serverScene->removeTempLine(n);
+
 					sendSceneUpdate();
 					break;
 
 				case REMOVE_TEMP_MARKER:
 					printf("%i : server received remove temp marker\n", iter->first);
+					n = model_log[packet->clientId][packet->modelId];
 					serverScene->removeTempMarker(n);
+
 					sendSceneUpdate();
 					break;
 

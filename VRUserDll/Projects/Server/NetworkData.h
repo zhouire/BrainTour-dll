@@ -118,10 +118,11 @@ struct Packet {
 	std::vector<Vector3f> lineCore;
 	std::vector<glm::quat> allHandQ;
 	int clientId;
+	int modelId;
 	bool active;
 
 	Packet() :
-		m(Vector3f(0, 0, 0), nullptr)
+		m(Vector3f(0,0,0), nullptr, -1, 0)
 	{}
 
 
@@ -135,6 +136,7 @@ struct Packet {
 		ar & lineCore;
 		ar & allHandQ;
 		ar & clientId;
+		ar & modelId;
 		ar & active;
 	}
 };

@@ -48,6 +48,9 @@ private:
 	//ID of the currently-active client, when bool PresentationMode = true
 	unsigned int activeClient;
 
+	//vector of maps defining the models associated with each client
+	std::vector<std::map<int, Model*>> model_log;
+
 //old
    // IDs for the clients connecting for table in ServerNetwork 
     static unsigned int client_id;

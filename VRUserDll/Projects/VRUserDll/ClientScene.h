@@ -11,7 +11,7 @@ struct ClientScene : public Scene
 	ClientNetwork * network;
 
 	//constructor
-	ClientScene(bool client, int client_id, ClientNetwork * n) : Scene(client, client_id)
+	ClientScene(bool client, ClientNetwork * n) : Scene(client)
 	{
 		network = n;
 	}
@@ -83,7 +83,7 @@ struct ClientScene : public Scene
 	void AddTemp(Model * n)
 	{
 		//for client-side recordkeeping
-		localTempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
+		//localTempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
 
 		Packet * packet = new Packet();
 		packet->packet_type = ADD_TEMP;
@@ -94,7 +94,8 @@ struct ClientScene : public Scene
 
 	void AddTempLine(Model * n, bool worldMode)
 	{
-		//for client-side recordkeeping
+		
+		/*//for client-side recordkeeping
 		if (worldMode) {
 			localTempWorldLines.insert(std::pair<Model*, int>(n, 1));
 		}
@@ -102,6 +103,7 @@ struct ClientScene : public Scene
 		else {
 			localTempVolumeLines.insert(std::pair<Model*, int>(n, 1));
 		}
+		*/
 
 		Packet * packet = new Packet();
 		packet->packet_type = ADD_TEMP_LINE;
@@ -164,7 +166,9 @@ struct ClientScene : public Scene
 	void RemoveModel(Model * n) {
 		Packet * packet = new Packet();
 		packet->packet_type = REMOVE_MODEL;
-		packet->m = *n;
+		//packet->m = *n;
+		packet->clientId = n->client_creator;
+		packet->modelId = n->id;
 
 		sendPacket(packet);
 	}
@@ -172,7 +176,9 @@ struct ClientScene : public Scene
 	void moveTempModel(Model * m, Vector3f newPos) {
 		Packet * packet = new Packet();
 		packet->packet_type = MOVE_TEMP_MODEL;
-		packet->m = *m;
+		//packet->m = *m;
+		packet->clientId = m->client_creator;
+		packet->modelId = m->id;
 
 		std::vector<Vector3f> lineCore;
 		lineCore.push_back(newPos);
@@ -184,23 +190,27 @@ struct ClientScene : public Scene
 
 	void removeTempLine(Model * m) {
 		//for local client record-keeping
-		localTempWorldLines.erase(m);
-		localTempVolumeLines.erase(m);
+		//localTempWorldLines.erase(m);
+		//localTempVolumeLines.erase(m);
 
 		Packet * packet = new Packet();
 		packet->packet_type = REMOVE_TEMP_LINE;
-		packet->m = *m;
+		//packet->m = *m;
+		packet->clientId = m->client_creator;
+		packet->modelId = m->id;
 
 		sendPacket(packet);
 	}
 
 	void removeTempMarker(Model * m) {
 		//for local client record-keeping
-		localTempWorldMarkers.erase(m);
+		//localTempWorldMarkers.erase(m);
 
 		Packet * packet = new Packet();
 		packet->packet_type = REMOVE_TEMP_MARKER;
-		packet->m = *m;
+		//packet->m = *m;
+		packet->clientId = m->client_creator;
+		packet->modelId = m->id;
 
 		sendPacket(packet);
 	}

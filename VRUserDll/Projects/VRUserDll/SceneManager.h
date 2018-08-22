@@ -867,9 +867,9 @@ struct Scene
 	std::map<Model*, int> tempVolumeLines;
 
 	//local temp models; Client can only edit its own temp models
-	std::map<Model*, int> localTempWorldMarkers;
-	std::map<Model*, int> localTempWorldLines;
-	std::map<Model*, int> localTempVolumeLines;
+	//std::map<Model*, int> localTempWorldMarkers;
+	//std::map<Model*, int> localTempWorldLines;
+	//std::map<Model*, int> localTempVolumeLines;
 
 	float MARKER_SIZE = 0.02f;
 	float TARGET_SIZE = 0.01f;
@@ -950,7 +950,7 @@ struct Scene
 		tempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
 
 		//for clients; local editing
-		localTempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
+		//localTempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
 	}
 
 	virtual void AddTempLine(Model * n, bool worldMode)
@@ -958,13 +958,13 @@ struct Scene
 		if (worldMode) {
 			tempWorldLines.insert(std::pair<Model *, int>(n, 1));
 			//for clients; local editing
-			localTempWorldLines.insert(std::pair<Model*, int>(n, 1));
+			//localTempWorldLines.insert(std::pair<Model*, int>(n, 1));
 		}
 
 		else {
 			tempVolumeLines.insert(std::pair<Model *, int>(n, 1));
 			//for clients; local editing
-			localTempVolumeLines.insert(std::pair<Model*, int>(n, 1));
+			//localTempVolumeLines.insert(std::pair<Model*, int>(n, 1));
 		}
 	}
 
@@ -1815,7 +1815,7 @@ struct Scene
 
 				Model *newMarker = CreateMarker(MARKER_SIZE, PHANTOM_COLOR, pos, true);
 
-				AddRemovableMarker(newMarker, worldMode);
+				//AddRemovableMarker(newMarker, worldMode);
 				
 				AddTemp(newMarker);
 
@@ -1911,11 +1911,22 @@ struct Scene
 		new_pos = gHeadOrientation.Inverted().Transform(new_pos - gHeadPos);
 		Vector3f trans_rightP = view.Inverted().Transform(new_pos);
 		
-		//for (auto const &m : tempWorldMarkers) {
-		for (auto const &m : localTempWorldMarkers) {
+		for (auto const &m : tempWorldMarkers) {
+		//for (auto const &m : localTempWorldMarkers) {
 			auto model = m.first;
+
+			if (clientMode) {
+				if (model->client_creator == client_id) {
+					moveTempModel(model, trans_rightP);
+				}
+			}
+
+			//this generally shouldn't happen
+			else {
+				moveTempModel(model, trans_rightP);
+			}
+			
 			//model->Pos = trans_rightP;
-			moveTempModel(model, trans_rightP);
 		}
 
 		removeTempLines();
@@ -1935,16 +1946,21 @@ struct Scene
 	void removeTempLines()
 	{
 		if (clientMode) {
-			for (auto const &m : localTempWorldLines) {
+			//for (auto const &m : localTempWorldLines) {
+			for (auto const &m : tempWorldLines) {
 				auto model = m.first;
 				//tempWorldLines.erase(model);
-				removeTempLine(model);
+				if (model->client_creator == client_id) {
+					removeTempLine(model);
+				}
 			}
 
-			for (auto const &m : localTempVolumeLines) {
+			for (auto const &m : tempVolumeLines) {
 				auto model = m.first;
 				//tempVolumeLines.erase(model);
-				removeTempLine(model);
+				if (model->client_creator == client_id) {
+					removeTempLine(model);
+				}
 			}
 		}
 
@@ -1975,8 +1991,8 @@ struct Scene
 		tempWorldLines.erase(m);
 		tempVolumeLines.erase(m);
 		//the server's local maps are not broadcast to clients; they don't have a real purpose
-		localTempWorldLines.erase(m);
-		localTempVolumeLines.erase(m);
+		//localTempWorldLines.erase(m);
+		//localTempVolumeLines.erase(m);
 
 	}
 	
@@ -1984,14 +2000,13 @@ struct Scene
 	void removeTempMarkers()
 	{	
 		if (clientMode) {
-			for (auto const &m : localTempWorldMarkers) {
+			//for (auto const &m : localTempWorldMarkers) {
+			for (auto const &m : tempWorldMarkers) {
 				auto model = m.first;
-				/*
-				tempWorldMarkers.erase(model);
-				//possibly redundant
-				RemoveModel(model);
-				*/
-				removeTempMarker(model);
+				
+				if (model->client_creator == client_id) {
+					removeTempMarker(model);
+				}
 			}
 		}
 
@@ -2013,7 +2028,7 @@ struct Scene
 	virtual void removeTempMarker(Model * model) {
 		tempWorldMarkers.erase(model);
 		
-		localTempWorldMarkers.erase(model);
+		//localTempWorldMarkers.erase(model);
 
 		//possibly redundant
 		RemoveModel(model);
@@ -2085,10 +2100,9 @@ struct Scene
 	}
 
 	//initialization; when scene created, create textures as well
-	Scene(bool client, int clid)
+	Scene(bool client)
 	{
 		clientMode = client;
-		client_id = clid;
 		model_id = 0;
 		CreateTextures();
 	}

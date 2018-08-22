@@ -210,6 +210,8 @@ void ClientManager::update()
 				if (!init) {
 					clientId = packet->clientId;
 					init = true;
+
+					clientScene->client_id = clientId;
 				}
 
 				break;
