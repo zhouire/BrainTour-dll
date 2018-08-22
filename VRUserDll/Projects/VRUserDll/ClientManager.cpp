@@ -10,6 +10,7 @@
 /**********************************
 this was at the head of VRUserDll.cpp
 ***************************************/
+/*
 template <class T>
 inline T Clip(T d0, T d1, T d) {
 	return std::min<T>(d1, std::max<T>(d0, d));
@@ -29,6 +30,7 @@ inline void DPrintf(const char *format, ...) {
 bool OnDown(unsigned int last, unsigned int current, unsigned int mask) {
 	return (last&mask) == 0 && (current&mask);
 }
+*/
 
 //Scene * tempScene = new Scene(true);
 //ShaderFill * plainFill = tempScene->grid_material[0];
@@ -37,6 +39,9 @@ ClientManager::ClientManager(ClientType type)
 {
     network = new ClientNetwork();
 	client_type = type;
+
+	clientProxy = new Proxy();
+
 	clientScene = new ClientScene(true, network);
 
 	//clientProxy = p;
@@ -72,7 +77,6 @@ ClientManager::ClientManager(ClientType type)
 	sendSizeData(packet_size2);
 	NetworkServices::sendMessage(network->ConnectSocket, packet_data2, packet_size2);
 	*/
-	
 }
 
 ClientManager::~ClientManager(void)
@@ -202,8 +206,6 @@ void ClientManager::update()
 				tempBuf.clear();
 			}
 		}
-
-		sendClientDebug(packet->packet_type);
 
         switch (packet->packet_type) {
 			case INIT_CONNECTION:

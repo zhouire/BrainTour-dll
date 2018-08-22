@@ -9,7 +9,7 @@
 //#include "SceneManager.h"
 #include "ClientManager.h"
 
-//#include <process.h>
+#include <process.h>
 
 #include <algorithm>
 #include <vector>
@@ -74,6 +74,8 @@ namespace VRUserProxy {
 		OVR::GLEContext::SetCurrentContext(context);
 
 		VRclient = new ClientManager(VR);
+
+		VRclient->update();
 
 		return 0;
 	}
@@ -178,9 +180,10 @@ namespace VRUserProxy {
 	*/
 
 	VRUSERDLL_API void OnHandleTouch(void *recv, ovrTrackingState& trackState, ovrInputState &inputState, OVR::Matrix4f& view) {
-		VRclient->update();
 
 		using namespace OVR;
+		
+		VRclient->update();
 
 		DPrintf("VRUserProxy::OnHadleTouch\n");
 
@@ -354,6 +357,7 @@ namespace VRUserProxy {
 			proxy->SetRoI(2, 0.1f);
 		}
 
+		
 
 		/*************************************************
 		Updating the clientProxy

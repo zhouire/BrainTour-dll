@@ -109,6 +109,7 @@ struct Packet {
 	friend class boost::serialization::access;
 
 	unsigned int packet_type;
+	int clientId;
 
 	//used in INIT_CONNECTION
 	Proxy proxy;
@@ -117,7 +118,7 @@ struct Packet {
 	bool worldMode;
 	std::vector<Vector3f> lineCore;
 	std::vector<glm::quat> allHandQ;
-	int clientId;
+	//int clientId;
 	int modelId;
 	bool active;
 
@@ -129,13 +130,15 @@ struct Packet {
 	template<class Archive>
 	void serialize(Archive & ar, const unsigned int version) {
 		ar & packet_type;
+		ar & clientId;
+
 		ar & proxy;
 		ar & scene;
 		ar & m;
 		ar & worldMode;
 		ar & lineCore;
 		ar & allHandQ;
-		ar & clientId;
+		//ar & clientId;
 		ar & modelId;
 		ar & active;
 	}

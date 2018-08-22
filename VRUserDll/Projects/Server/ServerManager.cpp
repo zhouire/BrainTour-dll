@@ -209,28 +209,28 @@ void ServerManager::receiveFromClients()
 
 				case ADD_REMOVABLE:
 					printf("%i : server received add removable\n", iter->first);
-					model_log[packet->clientId][packet->modelId] = n;
+					model_log[n->client_creator][n->id] = n;
 					serverScene->AddRemovable(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
 				case ADD_TEMP:
 					printf("%i : server received add temp\n", iter->first);
-					model_log[packet->clientId][packet->modelId] = n;
+					model_log[n->client_creator][n->id] = n;
 					serverScene->AddTemp(n);
 					sendSceneUpdate();
 					break;
 
 				case ADD_TEMP_LINE:
 					printf("%i : server received add temp line\n", iter->first);
-					model_log[packet->clientId][packet->modelId] = n;
+					model_log[n->client_creator][n->id] = n;
 					serverScene->AddTempLine(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
 
 				case ADD_REMOVABLE_MARKER:
 					printf("%i : server received add removable marker\n", iter->first);
-					model_log[packet->clientId][packet->modelId] = n;
+					model_log[n->client_creator][n->id] = n;
 					serverScene->AddRemovableMarker(n, packet->worldMode);
 					sendSceneUpdate();
 					break;
@@ -243,7 +243,7 @@ void ServerManager::receiveFromClients()
 					Vector3f end = (packet->lineCore)[1];
 					glm::quat handQ = (packet->allHandQ)[0];
 
-					model_log[packet->clientId][packet->modelId] = n;
+					model_log[n->client_creator][n->id] = n;
 
 					serverScene->AddRemovableStraightLine(n, start, end, handQ, packet->worldMode);
 					sendSceneUpdate();
@@ -252,7 +252,7 @@ void ServerManager::receiveFromClients()
 
 				case ADD_REMOVABLE_CURVED_LINE:
 					printf("%i : server received add removable curved line\n", iter->first);
-					model_log[packet->clientId][packet->modelId] = n;
+					model_log[n->client_creator][n->id] = n;
 					serverScene->AddRemovableCurvedLine(n, packet->lineCore, packet->allHandQ, packet->worldMode);
 					sendSceneUpdate();
 					break;
@@ -298,6 +298,7 @@ void ServerManager::receiveFromClients()
 
 				case CLIENT_DEBUG:
 					printf("%i : client debug %i\n", iter->first, packet->clientId);
+					break;
 
                 default:
 

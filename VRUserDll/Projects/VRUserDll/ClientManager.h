@@ -41,7 +41,7 @@ public:
 
     void update();
 	
-	void controllerUpdate(Proxy *, ovrTrackingState, ovrInputState, int&);
+	//void controllerUpdate(Proxy *, ovrTrackingState, ovrInputState, int&);
 
 	void sendClientProxyUpdate();
 
