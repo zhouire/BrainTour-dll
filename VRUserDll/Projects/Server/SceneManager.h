@@ -1536,16 +1536,24 @@ else {
 					targetMode = (volumeModels.count(model) == 0);
 
 					Model *newMarker = CreateMarker(MARKER_SIZE, TARGET_COLOR, modelPos, targetMode);
+					//targetModel can survive server scene updates, but newMarker cannot.
+					targetModel = newMarker;
+					targetModelType = "marker";
+					targetModelClient = newMarker->client_creator;
+					targetModelId = newMarker->id;
+
 					//removing the old green model; replaced by new red one
 					RemoveModel(model);
 					//removed this from CreateMarker function; put here
-					AddRemovableMarker(newMarker, targetMode);
+					//AddRemovableMarker(newMarker, targetMode);
+					AddRemovableMarker(targetModel, targetMode);
 					
-
+					/*
 					targetModel = newMarker;
 					targetModelType = "marker";
 					targetModelClient = newMarker->client_creator; 
 					targetModelId = newMarker->id;
+					*/
 					
 					return newMarker;
 				}
@@ -1570,8 +1578,15 @@ else {
 					Model *newStraightLine = CreateStraightLine(lc.Core[0], lc.Core[1],
 						lc.Q[0], LINE_THICKNESS, TARGET_COLOR);
 
+					//targetModel can survive a scene update, newStraightLine cannot
+					targetModel = newStraightLine;
+					targetModelType = "straight line";
+					targetModelClient = newStraightLine->client_creator;
+					targetModelId = newStraightLine->id;
+
 					RemoveModel(model);
-					AddRemovableStraightLine(newStraightLine, lc.Core[0], lc.Core[1], lc.Q[0], targetMode);
+					//AddRemovableStraightLine(newStraightLine, lc.Core[0], lc.Core[1], lc.Q[0], targetMode);
+					AddRemovableStraightLine(targetModel, lc.Core[0], lc.Core[1], lc.Q[0], targetMode);
 
 					/*
 					Model *newStraightLine = CreateStraightLine((m.second).Core[0], (m.second).Core[1],
@@ -1581,11 +1596,12 @@ else {
 					//removing the old model from all maps
 					RemoveModel(model);
 					*/
-
+					/*
 					targetModel = newStraightLine;
 					targetModelType = "straight line";
 					targetModelClient = newStraightLine->client_creator;
 					targetModelId = newStraightLine->id;
+					*/
 
 					return newStraightLine;
 				}
@@ -1614,8 +1630,15 @@ else {
 						LineComponents lc = m.second;
 						Model * newCurvedLine = CreateCurvedLine(lc.Core, lc.Q, LINE_THICKNESS, TARGET_COLOR);
 
+						//targetModel can survive a scene update, newCurvedLine cannot
+						targetModel = newCurvedLine;
+						targetModelType = "curved line";
+						targetModelClient = newCurvedLine->client_creator;
+						targetModelId = newCurvedLine->id;
+
 						RemoveModel(model);
-						AddRemovableCurvedLine(newCurvedLine, lc.Core, lc.Q, targetMode);
+						//AddRemovableCurvedLine(newCurvedLine, lc.Core, lc.Q, targetMode);
+						AddRemovableCurvedLine(targetModel, lc.Core, lc.Q, targetMode);
 						
 						/*
 						Model *newCurvedLine = CreateCurvedLine((m.second).Core, (m.second).Q, LINE_THICKNESS, TARGET_COLOR);
@@ -1624,11 +1647,13 @@ else {
 						//removing the old model from all maps
 						RemoveModel(model);
 						*/
-
+						/*
 						targetModel = newCurvedLine;
 						targetModelType = "curved line";
 						targetModelClient = newCurvedLine->client_creator;
 						targetModelId = newCurvedLine->id;
+						*/
+
 
 						return newCurvedLine;
 					}
