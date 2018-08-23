@@ -207,7 +207,7 @@ void ClientManager::update()
 			}
 		}
 
-        switch (packet->packet_type) {
+		switch (packet->packet_type) {
 			case INIT_CONNECTION:
 				if (!init) {
 					clientId = packet->clientId;
@@ -234,7 +234,7 @@ void ClientManager::update()
 				*/
 
 				updateClientSceneFromBasic(packet->scene);
-				clientScene->targetModelRefresh();
+				//clientScene->targetModelRefresh();
 
 				break;
 
@@ -268,13 +268,15 @@ void ClientManager::update()
 
 				break;
 
-            default:
+			default:
 
-                printf("error in packet types\n");
+				printf("error in packet types\n");
 
-                break;
-        }
-    }
+				break;
+		}
+	}
+
+	clientScene->targetModelRefresh();
 }
 
 
