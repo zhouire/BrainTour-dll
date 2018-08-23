@@ -267,6 +267,7 @@ struct Vertex
 };
 
 
+
 struct VertexBuffer
 {
 	GLuint    buffer;
@@ -1480,7 +1481,7 @@ struct Scene
 				Model *model = m.first;
 				Vector3f modelPos = (*model).Pos;
 				//true if world, false if volume
-				bool mode = (volumeModels.count(model) == 0);
+				//bool mode = (volumeModels.count(model) == 0);
 				//resetting rightP value
 				rightP = volumeP;
 
@@ -1494,7 +1495,7 @@ struct Scene
 
 					Model *newMarker = CreateMarker(MARKER_SIZE, TARGET_COLOR, modelPos, targetMode);
 					//removed this from CreateMarker function; put here
-					AddRemovableMarker(newMarker, worldMode);
+					AddRemovableMarker(newMarker, targetMode);
 
 					//removing the old green model; replaced by new red one
 					RemoveModel(model);
@@ -1588,7 +1589,7 @@ struct Scene
 			Vector3f targetPos = targetModel->Pos;
 			Model *newMarker = CreateMarker(MARKER_SIZE, color, targetPos, targetMode);
 
-			AddRemovableMarker(newMarker, worldMode);
+			AddRemovableMarker(newMarker, targetMode);
 		}
 
 		else if (targetModelType == "straight line") {
@@ -1718,6 +1719,7 @@ struct Scene
 		static bool canCreateMarker = true;
 		static bool drawingStraightLine = false;
 		static bool drawingCurvedLine = false;
+		static bool phantomMarkerExists = false;
 
 		static bool canSwitchHUD = true;
 
@@ -1785,17 +1787,27 @@ struct Scene
 
 			//stop showing the phantom marker if not pressing A
 			if (!(inputState.Buttons & ovrButton_A)) {
-				removeTempMarkers();
+				if (phantomMarkerExists) {
+					removeTempMarkers();
+					phantomMarkerExists = false;
+				}
 
+				if (targetModel) {
+					ResetTargetModel();
+				}
 			}
+			//allow user to create a new marker if they have stopped pressing X
 			//allow user to create a new marker if they have stopped pressing X
 			if (!(inputState.Buttons & ovrButton_X) && !canCreateMarker) {
 				canCreateMarker = true;
 			}
+			/*
 			//clear the target model if the user stops pressing A
 			if (!(inputState.Buttons & ovrButton_A) && targetModel) {
 				ResetTargetModel();
 			}
+			*/
+
 			//create a new marker if the user is pressing A+X and the user is allowed to
 			if (inputState.Buttons & ovrButton_X && canCreateMarker) {
 				if (inputState.Buttons & ovrButton_A) {
@@ -1813,11 +1825,11 @@ struct Scene
 					pos = other_rightP;
 				}
 
-				Model *newMarker = CreateMarker(MARKER_SIZE, PHANTOM_COLOR, pos, true);
-
-				//AddRemovableMarker(newMarker, worldMode);
-				
-				AddTemp(newMarker);
+				if (!phantomMarkerExists) {
+					Model * newMarker = CreateMarker(MARKER_SIZE, PHANTOM_COLOR, pos, true);
+					AddTemp(newMarker);
+					phantomMarkerExists = true;
+				}
 
 				//try to find a targetModel if there is not one currently
 				if (!targetModel) {
