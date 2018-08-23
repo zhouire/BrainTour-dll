@@ -234,6 +234,7 @@ void ClientManager::update()
 				*/
 
 				updateClientSceneFromBasic(packet->scene);
+				clientScene->targetModelRefresh();
 
 				break;
 

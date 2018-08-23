@@ -890,6 +890,8 @@ struct Scene
 	std::string targetModelType;
 	//targetMode is true if world, false if volume
 	bool targetMode;
+	int targetModelClient;
+	unsigned int targetModelId;
 
 	bool clientMode;
 	bool worldMode = true;
@@ -956,17 +958,17 @@ struct Scene
 
 	virtual void AddTempLine(Model * n, bool worldMode)
 	{
-		if (worldMode) {
-			tempWorldLines.insert(std::pair<Model *, int>(n, 1));
-			//for clients; local editing
-			//localTempWorldLines.insert(std::pair<Model*, int>(n, 1));
-		}
+if (worldMode) {
+	tempWorldLines.insert(std::pair<Model *, int>(n, 1));
+	//for clients; local editing
+	//localTempWorldLines.insert(std::pair<Model*, int>(n, 1));
+}
 
-		else {
-			tempVolumeLines.insert(std::pair<Model *, int>(n, 1));
-			//for clients; local editing
-			//localTempVolumeLines.insert(std::pair<Model*, int>(n, 1));
-		}
+else {
+	tempVolumeLines.insert(std::pair<Model *, int>(n, 1));
+	//for clients; local editing
+	//localTempVolumeLines.insert(std::pair<Model*, int>(n, 1));
+}
 	}
 
 	virtual void AddRemovableMarker(Model * n, bool worldMode)
@@ -986,7 +988,7 @@ struct Scene
 
 		AddRemovable(n, worldMode);
 	}
-	
+
 	virtual void AddRemovableCurvedLine(Model * n, std::vector<Vector3f> lineCore, std::vector<glm::quat> allHandQ, bool worldMode)
 	{
 		LineComponents line;
@@ -1008,7 +1010,7 @@ struct Scene
 		volumeModels.erase(n);
 	}
 
-	
+
 
 	void Render(Matrix4f view, Matrix4f proj, Matrix4f rot)
 	{
@@ -1046,6 +1048,46 @@ struct Scene
 			m.first->Render(view, proj, rot);
 		}
 	}
+
+
+	//this function finds and sets the new pointer to the targetModel when the Scene is updated, and if targetModel is not currently nullptr
+	//we call this function after the client receives a Scene update from the Server
+	//we do not ever call this function within the Scene struct
+	void targetModelRefresh()
+	{
+		if (targetModel) {
+			if (targetModelType == "marker") {
+				for (auto const m : removableMarkers) {
+					if ((m.first->client_creator) == targetModelClient && (m.first->id) == targetModelId) {
+						delete targetModel;
+						targetModel = m.first;
+						break;
+					}
+				}
+			}
+
+			else if (targetModelType == "straight line") {
+				for (auto const m : removableStraightLines) {
+					if ((m.first->client_creator) == targetModelClient && (m.first->id) == targetModelId) {
+						delete targetModel;
+						targetModel = m.first;
+						break;
+					}
+				}
+			}
+
+			else if (targetModelType == "curved line") {
+				for (auto const m : removableCurvedLines) {
+					if ((m.first->client_creator) == targetModelClient && (m.first->id) == targetModelId) {
+						delete targetModel;
+						targetModel = m.first;
+						break;
+					}
+				}
+			}
+		}
+	}
+
 
 	//rotates the marker pos to accomodate for controller orientation and place it in front of pointer finger
 	Vector3f MarkerTranslateToPointer(Vector3f handPos, glm::quat handQuat)
@@ -1502,6 +1544,8 @@ struct Scene
 
 					targetModel = newMarker;
 					targetModelType = "marker";
+					targetModelClient = newMarker->client_creator; 
+					targetModelId = newMarker->id;
 					
 					return newMarker;
 				}
@@ -1530,6 +1574,8 @@ struct Scene
 					RemoveModel(model);
 					targetModel = newStraightLine;
 					targetModelType = "straight line";
+					targetModelClient = newStraightLine->client_creator;
+					targetModelId = newStraightLine->id;
 
 					return newStraightLine;
 				}
@@ -1563,6 +1609,8 @@ struct Scene
 
 						targetModel = newCurvedLine;
 						targetModelType = "curved line";
+						targetModelClient = newCurvedLine->client_creator;
+						targetModelId = newCurvedLine->id;
 
 						return newCurvedLine;
 					}
@@ -1608,6 +1656,7 @@ struct Scene
 		
 		//removing the red target model from all maps; has been replaced already with a green model
 		RemoveModel(targetModel);
+		delete targetModel;
 		targetModel = nullptr;
 	}
 
@@ -1842,6 +1891,7 @@ struct Scene
 						RemoveModel(targetModel);
 
 						//clear targetModel because the model in question has been removed
+						delete targetModel;
 						targetModel = nullptr;
 					}
 					//try to clear targetModel by seeing if the user has moved away if there is one currently
@@ -2043,7 +2093,7 @@ struct Scene
 		//localTempWorldMarkers.erase(model);
 
 		//possibly redundant
-		RemoveModel(model);
+		//RemoveModel(model);
 	}
 
 
