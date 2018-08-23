@@ -1536,11 +1536,11 @@ else {
 					targetMode = (volumeModels.count(model) == 0);
 
 					Model *newMarker = CreateMarker(MARKER_SIZE, TARGET_COLOR, modelPos, targetMode);
-					//removed this from CreateMarker function; put here
-					AddRemovableMarker(newMarker, targetMode);
-
 					//removing the old green model; replaced by new red one
 					RemoveModel(model);
+					//removed this from CreateMarker function; put here
+					AddRemovableMarker(newMarker, targetMode);
+					
 
 					targetModel = newMarker;
 					targetModelType = "marker";
@@ -1566,12 +1566,22 @@ else {
 					//true if world, false if volume; needed to make a new red marker
 					targetMode = (volumeModels.count(model) == 0);
 
+					LineComponents lc = m.second;
+					Model *newStraightLine = CreateStraightLine(lc.Core[0], lc.Core[1],
+						lc.Q[0], LINE_THICKNESS, TARGET_COLOR);
+
+					RemoveModel(model);
+					AddRemovableStraightLine(newStraightLine, lc.Core[0], lc.Core[1], lc.Q[0], targetMode);
+
+					/*
 					Model *newStraightLine = CreateStraightLine((m.second).Core[0], (m.second).Core[1],
 						(m.second).Q[0], LINE_THICKNESS, TARGET_COLOR);
 					//adding the new model to appropriate maps
 					AddRemovableStraightLine(newStraightLine, (m.second).Core[0], (m.second).Core[1], (m.second).Q[0], targetMode);
 					//removing the old model from all maps
 					RemoveModel(model);
+					*/
+
 					targetModel = newStraightLine;
 					targetModelType = "straight line";
 					targetModelClient = newStraightLine->client_creator;
@@ -1601,11 +1611,19 @@ else {
 						//true if world, false if volume; needed to make a new red marker
 						targetMode = (volumeModels.count(model) == 0);
 
+						LineComponents lc = m.second;
+						Model * newCurvedLine = CreateCurvedLine(lc.Core, lc.Q, LINE_THICKNESS, TARGET_COLOR);
+
+						RemoveModel(model);
+						AddRemovableCurvedLine(newCurvedLine, lc.Core, lc.Q, targetMode);
+						
+						/*
 						Model *newCurvedLine = CreateCurvedLine((m.second).Core, (m.second).Q, LINE_THICKNESS, TARGET_COLOR);
 						//adding the new model to appropriate maps
 						AddRemovableCurvedLine(newCurvedLine, (m.second).Core, (m.second).Q, targetMode);
 						//removing the old model from all maps
 						RemoveModel(model);
+						*/
 
 						targetModel = newCurvedLine;
 						targetModelType = "curved line";
