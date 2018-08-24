@@ -128,6 +128,7 @@ struct ClientScene : public Scene
 		Packet * packet = new Packet();
 		packet->packet_type = ADD_REMOVABLE_STRAIGHT_LINE;
 		packet->m = *n;
+		packet->worldMode = worldMode;
 
 		//we need to make sure everything is a pointer
 		//also don't forget to convert the lineCore back to start, end when the Server receives it
