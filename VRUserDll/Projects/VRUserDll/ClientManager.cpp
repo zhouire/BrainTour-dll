@@ -484,34 +484,34 @@ BasicScene ClientManager::convertClientSceneToBasic(ClientScene c) {
 void ClientManager::updateClientSceneFromBasic(BasicScene & b) {
 	clientScene->deleteMapPointerKeys(clientScene->worldModels);
 	clientScene->worldModels = b.worldModels;
-	clientScene->deleteMapPointerKeys(b.worldModels);
+	//clientScene->deleteMapPointerKeys(b.worldModels);
 
 	clientScene->deleteMapPointerKeys(clientScene->tempWorldMarkers);
 	clientScene->tempWorldMarkers = b.tempWorldMarkers;
-	clientScene->deleteMapPointerKeys(b.tempWorldMarkers);
+	//clientScene->deleteMapPointerKeys(b.tempWorldMarkers);
 
 	clientScene->deleteMapPointerKeys(clientScene->tempWorldLines);
 	clientScene->tempWorldLines = b.tempWorldLines;
-	clientScene->deleteMapPointerKeys(b.tempWorldLines);
+	//clientScene->deleteMapPointerKeys(b.tempWorldLines);
 
 	clientScene->deleteMapPointerKeys(clientScene->volumeModels);
 	clientScene->volumeModels = b.volumeModels;
-	clientScene->deleteMapPointerKeys(b.volumeModels);
+	//clientScene->deleteMapPointerKeys(b.volumeModels);
 
 	clientScene->deleteMapPointerKeys(clientScene->tempVolumeLines);
 	clientScene->tempVolumeLines = b.tempVolumeLines;
-	clientScene->deleteMapPointerKeys(b.tempVolumeLines);
+	//clientScene->deleteMapPointerKeys(b.tempVolumeLines);
 
 	clientScene->deleteMapPointerKeys(clientScene->removableMarkers);
 	clientScene->removableMarkers = b.removableMarkers;
-	clientScene->deleteMapPointerKeys(b.removableMarkers);
+	//clientScene->deleteMapPointerKeys(b.removableMarkers);
 
 	clientScene->deleteMapPointerKeys(clientScene->removableStraightLines);
 	clientScene->removableStraightLines = b.removableStraightLines;
-	clientScene->deleteMapPointerKeys(b.removableStraightLines);
+	//clientScene->deleteMapPointerKeys(b.removableStraightLines);
 
 	clientScene->deleteMapPointerKeys(clientScene->removableCurvedLines);
 	clientScene->removableCurvedLines = b.removableCurvedLines;
-	clientScene->deleteMapPointerKeys(b.removableCurvedLines);
+	//clientScene->deleteMapPointerKeys(b.removableCurvedLines);
 }
 
