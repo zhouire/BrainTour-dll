@@ -1059,7 +1059,7 @@ struct Scene
 			if (targetModelType == "marker") {
 				for (auto const m : removableMarkers) {
 					if ((m.first->client_creator) == targetModelClient && (m.first->id) == targetModelId) {
-						delete targetModel;
+						//delete targetModel;
 						targetModel = m.first;
 						break;
 					}
@@ -1069,7 +1069,7 @@ struct Scene
 			else if (targetModelType == "straight line") {
 				for (auto const m : removableStraightLines) {
 					if ((m.first->client_creator) == targetModelClient && (m.first->id) == targetModelId) {
-						delete targetModel;
+						//delete targetModel;
 						targetModel = m.first;
 						break;
 					}
@@ -1079,7 +1079,7 @@ struct Scene
 			else if (targetModelType == "curved line") {
 				for (auto const m : removableCurvedLines) {
 					if ((m.first->client_creator) == targetModelClient && (m.first->id) == targetModelId) {
-						delete targetModel;
+						//delete targetModel;
 						targetModel = m.first;
 						break;
 					}

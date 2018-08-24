@@ -260,8 +260,8 @@ void ServerManager::receiveFromClients()
 				case REMOVE_MODEL:
 					printf("%i : server received remove model\n", iter->first);
 					//serverScene->RemoveModel(n);
-					n = model_log[packet->clientId][packet->modelId];
-					serverScene->RemoveModel(n);
+					//n = model_log[packet->clientId][packet->modelId];
+					serverScene->RemoveModel(model_log[packet->clientId][packet->modelId]);
 
 					sendSceneUpdate();
 					break;
