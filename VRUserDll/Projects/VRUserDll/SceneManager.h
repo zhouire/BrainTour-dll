@@ -1546,7 +1546,16 @@ struct Scene
 					targetModelType = "marker";
 					targetModelClient = newMarker->client_creator; 
 					targetModelId = newMarker->id;
-					
+
+					//have to manually add targetModel to maps now (no function), so the rest of the code can detect it before the Scene update
+					removableMarkers.insert(std::pair<Model*, int>(targetModel, 1));
+					if (targetMode) {
+						worldModels.insert(std::pair<Model*, int>(targetModel, 1));
+					}
+					else {
+						volumeModels.insert(std::pair<Model*, int>(targetModel, 1));
+					}
+
 					
 					return newMarker;
 				}
@@ -1588,6 +1597,15 @@ struct Scene
 					targetModelType = "straight line";
 					targetModelClient = newStraightLine->client_creator;
 					targetModelId = newStraightLine->id;
+
+					//have to manually add targetModel to maps now (no function), so the rest of the code can detect it before the Scene update
+					removableStraightLines.insert(std::pair<Model*, LineComponents>(targetModel, lc));
+					if (targetMode) {
+						worldModels.insert(std::pair<Model*, int>(targetModel, 1));
+					}
+					else {
+						volumeModels.insert(std::pair<Model*, int>(targetModel, 1));
+					}
 					
 
 					return newStraightLine;
@@ -1633,6 +1651,15 @@ struct Scene
 						targetModelType = "curved line";
 						targetModelClient = newCurvedLine->client_creator;
 						targetModelId = newCurvedLine->id;
+
+						//have to manually add targetModel to maps now (no function), so the rest of the code can detect it before the Scene update
+						removableCurvedLines.insert(std::pair<Model*, LineComponents>(targetModel, lc));
+						if (targetMode) {
+							worldModels.insert(std::pair<Model*, int>(targetModel, 1));
+						}
+						else {
+							volumeModels.insert(std::pair<Model*, int>(targetModel, 1));
+						}
 
 
 						return newCurvedLine;
