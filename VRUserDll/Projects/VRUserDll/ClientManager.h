@@ -49,6 +49,6 @@ public:
 
 	BasicScene convertClientSceneToBasic(ClientScene);
 
-	void updateClientSceneFromBasic(BasicScene);
+	void updateClientSceneFromBasic(BasicScene&);
 };
 

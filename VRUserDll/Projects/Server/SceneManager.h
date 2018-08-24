@@ -1003,11 +1003,15 @@ struct Scene
 	//calling this removes non-temp models from all "removable" maps
 	virtual void RemoveModel(Model * n)
 	{
+		Model * copy = n;
+
 		worldModels.erase(n);
 		removableMarkers.erase(n);
 		removableStraightLines.erase(n);
 		removableCurvedLines.erase(n);
 		volumeModels.erase(n);
+
+		delete copy;
 	}
 
 
