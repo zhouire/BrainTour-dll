@@ -218,23 +218,57 @@ struct ClientScene : public Scene
 
 	//this function deletes every pointer key from a map of Model*, int
 	//this is used for deallocating memory, especially when the Scene updates
-	void deleteMapPointerKeys(std::map<Model*, int> & map)
+
+	
+	void deleteMapPointerKeys(std::map<Model*, int> & map, std::set<Model*> & deletedPtrs)
 	{
 		for (auto const m : map) {
 			Model * keyCopy = m.first;
 			map.erase(m.first);
-			delete keyCopy;
+
+			//if (keyCopy) {
+			if ((deletedPtrs.insert(keyCopy)).second){
+				delete keyCopy;
+			}
 		}
+	}
+
+	//this function takes a different type of map
+	void deleteMapPointerKeys(std::map<Model*, LineComponents> & map, std::set<Model*> & deletedPtrs)
+	{
+		for (auto const m : map) {
+			Model * keyCopy = m.first;
+			map.erase(m.first);
+
+			if ((deletedPtrs.insert(keyCopy)).second) {
+				delete keyCopy;
+			}
+		}
+	}
+	
+
+	/*
+	void deleteMapPointerKeys(std::map<Model*, int> & map)
+	{
+		for (auto & m : map) {
+			if (m.first) {
+				delete m.first;
+			}
+		}
+
+		map.clear();
 	}
 
 	//this function takes a different type of map
 	void deleteMapPointerKeys(std::map<Model*, LineComponents> & map)
 	{
-		for (auto const m : map) {
-			Model * keyCopy = m.first;
-			map.erase(m.first);
-			delete keyCopy;
+		for (auto & m : map) {
+			delete m.first;
 		}
+
+		map.clear();
 	}
+	*/
+	
 
 };

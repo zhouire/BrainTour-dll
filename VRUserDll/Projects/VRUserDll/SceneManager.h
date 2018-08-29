@@ -949,7 +949,7 @@ struct Scene
 
 	virtual void AddTemp(Model * n)
 	{
-		RemoveModel(n);
+		//RemoveModel(n);
 		tempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
 
 		//for clients; local editing
@@ -1011,7 +1011,7 @@ struct Scene
 		removableCurvedLines.erase(n);
 		volumeModels.erase(n);
 
-		delete n;
+		//delete n;
 	}
 
 
@@ -1898,7 +1898,7 @@ struct Scene
 					ResetTargetModel();
 				}
 			}
-			//allow user to create a new marker if they have stopped pressing X
+
 			//allow user to create a new marker if they have stopped pressing X
 			if (!(inputState.Buttons & ovrButton_X) && !canCreateMarker) {
 				canCreateMarker = true;

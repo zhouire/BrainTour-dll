@@ -949,7 +949,7 @@ struct Scene
 
 	virtual void AddTemp(Model * n)
 	{
-		RemoveModel(n);
+		//RemoveModel(n);
 		tempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
 
 		//for clients; local editing
@@ -1011,9 +1011,8 @@ struct Scene
 		removableCurvedLines.erase(n);
 		volumeModels.erase(n);
 
-		delete n;
+		//delete n;
 	}
-
 
 
 	void Render(Matrix4f view, Matrix4f proj, Matrix4f rot)

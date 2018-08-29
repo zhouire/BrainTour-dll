@@ -131,7 +131,8 @@ void ClientManager::sendSizeData(int packet_size) {
 void ClientManager::update()
 {
     //Packet packet;
-	Packet * packet = new Packet();
+	//Packet * packet = new Packet();
+	Packet * packet = nullptr;
 	//Scene * curScene;
 	::Size size;
 
@@ -481,36 +482,38 @@ BasicScene ClientManager::convertClientSceneToBasic(ClientScene c) {
 	return basic;
 }
 
-void ClientManager::updateClientSceneFromBasic(BasicScene & b) {
-	clientScene->deleteMapPointerKeys(clientScene->worldModels);
+void ClientManager::updateClientSceneFromBasic(BasicScene b) {
+	std::set<Model*> deleted;
+
+	clientScene->deleteMapPointerKeys(clientScene->worldModels, deleted);
 	clientScene->worldModels = b.worldModels;
 	//clientScene->deleteMapPointerKeys(b.worldModels);
 
-	clientScene->deleteMapPointerKeys(clientScene->tempWorldMarkers);
+	clientScene->deleteMapPointerKeys(clientScene->tempWorldMarkers, deleted);
 	clientScene->tempWorldMarkers = b.tempWorldMarkers;
 	//clientScene->deleteMapPointerKeys(b.tempWorldMarkers);
 
-	clientScene->deleteMapPointerKeys(clientScene->tempWorldLines);
+	clientScene->deleteMapPointerKeys(clientScene->tempWorldLines, deleted);
 	clientScene->tempWorldLines = b.tempWorldLines;
 	//clientScene->deleteMapPointerKeys(b.tempWorldLines);
 
-	clientScene->deleteMapPointerKeys(clientScene->volumeModels);
+	clientScene->deleteMapPointerKeys(clientScene->volumeModels, deleted);
 	clientScene->volumeModels = b.volumeModels;
 	//clientScene->deleteMapPointerKeys(b.volumeModels);
 
-	clientScene->deleteMapPointerKeys(clientScene->tempVolumeLines);
+	clientScene->deleteMapPointerKeys(clientScene->tempVolumeLines, deleted);
 	clientScene->tempVolumeLines = b.tempVolumeLines;
 	//clientScene->deleteMapPointerKeys(b.tempVolumeLines);
 
-	clientScene->deleteMapPointerKeys(clientScene->removableMarkers);
+	//clientScene->deleteMapPointerKeys(clientScene->removableMarkers, deleted);
 	clientScene->removableMarkers = b.removableMarkers;
 	//clientScene->deleteMapPointerKeys(b.removableMarkers);
 
-	clientScene->deleteMapPointerKeys(clientScene->removableStraightLines);
+	//clientScene->deleteMapPointerKeys(clientScene->removableStraightLines, deleted);
 	clientScene->removableStraightLines = b.removableStraightLines;
 	//clientScene->deleteMapPointerKeys(b.removableStraightLines);
 
-	clientScene->deleteMapPointerKeys(clientScene->removableCurvedLines);
+	//clientScene->deleteMapPointerKeys(clientScene->removableCurvedLines, deleted);
 	clientScene->removableCurvedLines = b.removableCurvedLines;
 	//clientScene->deleteMapPointerKeys(b.removableCurvedLines);
 }

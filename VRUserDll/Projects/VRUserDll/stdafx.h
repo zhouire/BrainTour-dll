@@ -37,6 +37,7 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <set>
 
 #include "GL/CAPI_GLE.h"
 #include "Extras/OVR_Math.h"
