@@ -470,6 +470,8 @@ void ClientManager::sendClientDebug(unsigned int i) {
 BasicScene ClientManager::convertClientSceneToBasic(ClientScene c) {
 	BasicScene basic;
 
+	basic.ModelPtrSet = c.ModelPtrSet;
+
 	basic.worldModels = c.worldModels;
 	basic.tempWorldMarkers = c.tempWorldMarkers;
 	basic.tempWorldLines = c.tempWorldLines;
@@ -483,25 +485,25 @@ BasicScene ClientManager::convertClientSceneToBasic(ClientScene c) {
 }
 
 void ClientManager::updateClientSceneFromBasic(BasicScene b) {
-	std::set<Model*> deleted;
+	//std::set<Model*> deleted;
 
-	clientScene->deleteMapPointerKeys(clientScene->worldModels, deleted);
+	//clientScene->deleteMapPointerKeys(clientScene->worldModels, deleted);
 	clientScene->worldModels = b.worldModels;
 	//clientScene->deleteMapPointerKeys(b.worldModels);
 
-	clientScene->deleteMapPointerKeys(clientScene->tempWorldMarkers, deleted);
+	//clientScene->deleteMapPointerKeys(clientScene->tempWorldMarkers, deleted);
 	clientScene->tempWorldMarkers = b.tempWorldMarkers;
 	//clientScene->deleteMapPointerKeys(b.tempWorldMarkers);
 
-	clientScene->deleteMapPointerKeys(clientScene->tempWorldLines, deleted);
+	//clientScene->deleteMapPointerKeys(clientScene->tempWorldLines, deleted);
 	clientScene->tempWorldLines = b.tempWorldLines;
 	//clientScene->deleteMapPointerKeys(b.tempWorldLines);
 
-	clientScene->deleteMapPointerKeys(clientScene->volumeModels, deleted);
+	//clientScene->deleteMapPointerKeys(clientScene->volumeModels, deleted);
 	clientScene->volumeModels = b.volumeModels;
 	//clientScene->deleteMapPointerKeys(b.volumeModels);
 
-	clientScene->deleteMapPointerKeys(clientScene->tempVolumeLines, deleted);
+	//clientScene->deleteMapPointerKeys(clientScene->tempVolumeLines, deleted);
 	clientScene->tempVolumeLines = b.tempVolumeLines;
 	//clientScene->deleteMapPointerKeys(b.tempVolumeLines);
 
@@ -516,5 +518,10 @@ void ClientManager::updateClientSceneFromBasic(BasicScene b) {
 	//clientScene->deleteMapPointerKeys(clientScene->removableCurvedLines, deleted);
 	clientScene->removableCurvedLines = b.removableCurvedLines;
 	//clientScene->deleteMapPointerKeys(b.removableCurvedLines);
+
+	clientScene->deleteModelPtrs();
+	clientScene->ModelPtrSet = b.ModelPtrSet;
 }
+
+
 

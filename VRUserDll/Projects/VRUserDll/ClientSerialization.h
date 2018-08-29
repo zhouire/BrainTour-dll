@@ -7,6 +7,8 @@ struct BasicScene
 {
 	friend class boost::serialization::access;
 
+	std::set<Model*> ModelPtrSet;
+
 	std::map<Model*, int> worldModels;
 	std::map<Model*, int> tempWorldMarkers;
 	std::map<Model*, int> tempWorldLines;
@@ -19,6 +21,8 @@ struct BasicScene
 
 	template<class Archive>
 	void serialize(Archive & ar, const unsigned int version) {
+		ar & ModelPtrSet;
+
 		ar & worldModels;
 		ar & tempWorldMarkers;
 		ar & tempWorldLines;

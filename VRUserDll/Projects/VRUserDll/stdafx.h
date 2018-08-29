@@ -28,6 +28,7 @@
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/string.hpp>
+#include <boost/serialization/set.hpp>
 //#include <boost/serialization/assume_abstract.hpp>
 
 #include <boost/iostreams/stream.hpp>

@@ -245,6 +245,16 @@ struct ClientScene : public Scene
 			}
 		}
 	}
+
+	//this function deletes all the pointers in the ModelPtrSet to effectively deallocate memory
+	void deleteModelPtrs()
+	{
+		for (Model * m : ModelPtrSet) {
+			delete m;
+		}
+		
+		ModelPtrSet.clear();
+	}
 	
 
 	/*

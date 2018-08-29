@@ -393,6 +393,8 @@ BasicScene ServerManager::convertServerSceneToBasic(Scene s)
 {
 	BasicScene basic;
 
+	basic.ModelPtrSet = s.ModelPtrSet;
+
 	basic.worldModels = s.worldModels;
 	basic.tempWorldMarkers = s.tempWorldMarkers;
 	basic.tempWorldLines = s.tempWorldLines;
@@ -408,6 +410,8 @@ BasicScene ServerManager::convertServerSceneToBasic(Scene s)
 
 void ServerManager::updateServerSceneFromBasic(BasicScene b)
 {
+	serverScene->ModelPtrSet = b.ModelPtrSet;
+
 	serverScene->worldModels = b.worldModels;
 	serverScene->tempWorldMarkers = b.tempWorldMarkers;
 	serverScene->tempWorldLines = b.tempWorldLines;

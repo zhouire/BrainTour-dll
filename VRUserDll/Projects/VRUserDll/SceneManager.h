@@ -850,6 +850,9 @@ struct Scene
 {
 	int client_id;
 	unsigned int model_id;
+
+	//this set is for keeping track of pointers and memory management
+	std::set<Model*> ModelPtrSet;
 	
 	//use map for built-in find function
 	std::map<Model*, int> worldModels;
@@ -937,6 +940,8 @@ struct Scene
 
 	virtual void AddRemovable(Model * n, bool worldMode)
 	{
+		ModelPtrSet.insert(n);
+
 		//don't actually care about the values
 		if (worldMode) {
 			worldModels.insert(std::pair<Model*, int>(n, 1));
@@ -949,6 +954,7 @@ struct Scene
 
 	virtual void AddTemp(Model * n)
 	{
+		ModelPtrSet.insert(n);
 		//RemoveModel(n);
 		tempWorldMarkers.insert(std::pair<Model*, int>(n, 1));
 
@@ -958,6 +964,8 @@ struct Scene
 
 	virtual void AddTempLine(Model * n, bool worldMode)
 	{
+		ModelPtrSet.insert(n);
+
 		if (worldMode) {
 			tempWorldLines.insert(std::pair<Model *, int>(n, 1));
 			//for clients; local editing
@@ -1551,6 +1559,7 @@ struct Scene
 					targetModelId = newMarker->id;
 
 					//have to manually add targetModel to maps now (no function), so the rest of the code can detect it before the Scene update
+					ModelPtrSet.insert(newMarker);
 					removableMarkers.insert(std::pair<Model*, int>(targetModel, 1));
 					if (targetMode) {
 						worldModels.insert(std::pair<Model*, int>(targetModel, 1));
@@ -1602,6 +1611,7 @@ struct Scene
 					targetModelId = newStraightLine->id;
 
 					//have to manually add targetModel to maps now (no function), so the rest of the code can detect it before the Scene update
+					ModelPtrSet.insert(newStraightLine);
 					removableStraightLines.insert(std::pair<Model*, LineComponents>(targetModel, lc));
 					if (targetMode) {
 						worldModels.insert(std::pair<Model*, int>(targetModel, 1));
@@ -1656,6 +1666,7 @@ struct Scene
 						targetModelId = newCurvedLine->id;
 
 						//have to manually add targetModel to maps now (no function), so the rest of the code can detect it before the Scene update
+						ModelPtrSet.insert(newCurvedLine);
 						removableCurvedLines.insert(std::pair<Model*, LineComponents>(targetModel, lc));
 						if (targetMode) {
 							worldModels.insert(std::pair<Model*, int>(targetModel, 1));
