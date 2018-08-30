@@ -494,7 +494,7 @@ void ClientManager::updateClientSceneFromBasic(BasicScene b) {
 	//clientScene->deleteMapPointerKeys(clientScene->tempWorldMarkers, deleted);
 	clientScene->tempWorldMarkers = b.tempWorldMarkers;
 	//clientScene->deleteMapPointerKeys(b.tempWorldMarkers);
-
+	
 	//clientScene->deleteMapPointerKeys(clientScene->tempWorldLines, deleted);
 	clientScene->tempWorldLines = b.tempWorldLines;
 	//clientScene->deleteMapPointerKeys(b.tempWorldLines);
