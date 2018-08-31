@@ -30,9 +30,31 @@ public:
 
 	void sendInitPacket(int);
 
-	void changePresentationMode();
+	void sendAddRemovable(Model, bool);
 
-	void changeActiveClient();
+	void sendAddTemp(Model);
+
+	void sendAddTempLine(Model, bool);
+
+	void sendAddRemovableMarker(Model, bool);
+
+	void sendAddRemovableStraightLine(Model, std::vector<Vector3f>, std::vector<glm::quat>, bool);
+
+	void sendAddRemovableCurvedLine(Model, std::vector<Vector3f>, std::vector<glm::quat>, bool);
+
+	void sendRemoveModel(int, unsigned int);
+
+	void sendMoveTempModel(int, unsigned int, std::vector<Vector3f>);
+
+	void sendRemoveTempLine(int, unsigned int);
+
+	void sendRemoveTempMarker(int, unsigned int);
+
+
+
+	//void changePresentationMode();
+
+	//void changeActiveClient();
 
 	BasicScene convertServerSceneToBasic(Scene);
 

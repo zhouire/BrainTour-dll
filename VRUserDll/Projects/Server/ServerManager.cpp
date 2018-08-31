@@ -211,28 +211,32 @@ void ServerManager::receiveFromClients()
 					printf("%i : server received add removable\n", iter->first);
 					model_log[n->client_creator][n->id] = n;
 					serverScene->AddRemovable(n, packet->worldMode);
-					sendSceneUpdate();
+					//sendSceneUpdate();
+					sendAddRemovable(*n, packet->worldMode);
 					break;
 
 				case ADD_TEMP:
 					printf("%i : server received add temp\n", iter->first);
 					model_log[n->client_creator][n->id] = n;
 					serverScene->AddTemp(n);
-					sendSceneUpdate();
+					//sendSceneUpdate();
+					sendAddTemp(*n);
 					break;
 
 				case ADD_TEMP_LINE:
 					printf("%i : server received add temp line\n", iter->first);
 					model_log[n->client_creator][n->id] = n;
 					serverScene->AddTempLine(n, packet->worldMode);
-					sendSceneUpdate();
+					//sendSceneUpdate();
+					sendAddTempLine(*n, packet->worldMode);
 					break;
 
 				case ADD_REMOVABLE_MARKER:
 					printf("%i : server received add removable marker\n", iter->first);
 					model_log[n->client_creator][n->id] = n;
 					serverScene->AddRemovableMarker(n, packet->worldMode);
-					sendSceneUpdate();
+					//sendSceneUpdate();
+					sendAddRemovableMarker(*n, packet->worldMode);
 					break;
 
 				case ADD_REMOVABLE_STRAIGHT_LINE:
@@ -246,7 +250,8 @@ void ServerManager::receiveFromClients()
 					model_log[n->client_creator][n->id] = n;
 
 					serverScene->AddRemovableStraightLine(n, start, end, handQ, packet->worldMode);
-					sendSceneUpdate();
+					//sendSceneUpdate();
+					sendAddRemovableStraightLine(*n, packet->lineCore, packet->allHandQ, packet->worldMode);
 					break;
 				}
 
@@ -254,7 +259,8 @@ void ServerManager::receiveFromClients()
 					printf("%i : server received add removable curved line\n", iter->first);
 					model_log[n->client_creator][n->id] = n;
 					serverScene->AddRemovableCurvedLine(n, packet->lineCore, packet->allHandQ, packet->worldMode);
-					sendSceneUpdate();
+					//sendSceneUpdate();
+					sendAddRemovableCurvedLine(*n, packet->lineCore, packet->allHandQ, packet->worldMode);
 					break;
 
 				case REMOVE_MODEL:
@@ -263,7 +269,8 @@ void ServerManager::receiveFromClients()
 					//n = model_log[packet->clientId][packet->modelId];
 					serverScene->RemoveModel(model_log[packet->clientId][packet->modelId]);
 
-					sendSceneUpdate();
+					//sendSceneUpdate();
+					sendRemoveModel(packet->clientId, packet->modelId);
 					break;
 
 				case MOVE_TEMP_MODEL:
@@ -271,7 +278,8 @@ void ServerManager::receiveFromClients()
 					n = model_log[packet->clientId][packet->modelId];
 					serverScene->moveTempModel(n, (packet->lineCore)[0]);
 
-					sendSceneUpdate();
+					//sendSceneUpdate();
+					sendMoveTempModel(packet->clientId, packet->modelId, packet->lineCore);
 					break;
 
 				case REMOVE_TEMP_LINE:
@@ -279,7 +287,8 @@ void ServerManager::receiveFromClients()
 					n = model_log[packet->clientId][packet->modelId];
 					serverScene->removeTempLine(n);
 
-					sendSceneUpdate();
+					//sendSceneUpdate();
+					sendRemoveTempLine(packet->clientId, packet->modelId);
 					break;
 
 				case REMOVE_TEMP_MARKER:
@@ -287,7 +296,8 @@ void ServerManager::receiveFromClients()
 					n = model_log[packet->clientId][packet->modelId];
 					serverScene->removeTempMarker(n);
 
-					sendSceneUpdate();
+					//sendSceneUpdate();
+					sendRemoveTempMarker(packet->clientId, packet->modelId);
 					break;
 
 				case CLIENT_PROXY_UPDATE:
@@ -387,6 +397,171 @@ void ServerManager::sendPresentationMode()
 	sendSizeData(packet_size);
 	network->sendToAll(packet_data, packet_size);
 }
+
+
+void ServerManager::sendAddRemovable(Model m, bool worldMode)
+{
+	Packet * packet = new Packet();
+	packet->packet_type = STC_ADD_REMOVABLE;
+	packet->worldMode = worldMode;
+	packet->m = m;
+
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
+
+	sendSizeData(packet_size);
+	network->sendToAll(packet_data, packet_size);
+}
+
+
+void ServerManager::sendAddTemp(Model m)
+{
+	Packet * packet = new Packet();
+	packet->packet_type = STC_ADD_TEMP;
+	packet->m = m;
+
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
+
+	sendSizeData(packet_size);
+	network->sendToAll(packet_data, packet_size);
+}
+
+
+void ServerManager::sendAddTempLine(Model m, bool worldMode)
+{
+	Packet * packet = new Packet();
+	packet->packet_type = STC_ADD_TEMP_LINE;
+	packet->m = m;
+	packet->worldMode = worldMode;
+
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
+
+	sendSizeData(packet_size);
+	network->sendToAll(packet_data, packet_size);
+}
+
+
+void ServerManager::sendAddRemovableMarker(Model m, bool worldMode)
+{
+	Packet * packet = new Packet();
+	packet->packet_type = STC_ADD_REMOVABLE_MARKER;
+	packet->m = m;
+	packet->worldMode = worldMode;
+
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
+
+	sendSizeData(packet_size);
+	network->sendToAll(packet_data, packet_size);
+}
+
+
+void ServerManager::sendAddRemovableStraightLine(Model m, std::vector<Vector3f> lineCore, std::vector<glm::quat> allHandQ, bool worldMode)
+{
+	Packet * packet = new Packet();
+	packet->packet_type = STC_ADD_REMOVABLE_STRAIGHT_LINE;
+	packet->m = m;
+	packet->lineCore = lineCore;
+	packet->allHandQ = allHandQ;
+	packet->worldMode = worldMode;
+
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
+
+	sendSizeData(packet_size);
+	network->sendToAll(packet_data, packet_size);
+}
+
+
+void ServerManager::sendAddRemovableCurvedLine(Model m, std::vector<Vector3f> lineCore, std::vector<glm::quat> allHandQ, bool worldMode)
+{
+	Packet * packet = new Packet();
+	packet->packet_type = STC_ADD_REMOVABLE_CURVED_LINE;
+	packet->m = m;
+	packet->lineCore = lineCore;
+	packet->allHandQ = allHandQ;
+	packet->worldMode = worldMode;
+
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
+
+	sendSizeData(packet_size);
+	network->sendToAll(packet_data, packet_size);
+}
+
+
+void ServerManager::sendRemoveModel(int client_id, unsigned int model_id)
+{
+	Packet * packet = new Packet();
+	packet->packet_type = STC_REMOVE_MODEL;
+	packet->clientId = client_id;
+	packet->modelId = model_id;
+	
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
+
+	sendSizeData(packet_size);
+	network->sendToAll(packet_data, packet_size);
+}
+
+
+void ServerManager::sendMoveTempModel(int client_id, unsigned int model_id, std::vector<Vector3f> newPos)
+{
+	Packet * packet = new Packet();
+	packet->packet_type = STC_MOVE_TEMP_MODEL;
+	packet->clientId = client_id;
+	packet->modelId = model_id;
+	packet->lineCore = newPos;
+
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
+
+	sendSizeData(packet_size);
+	network->sendToAll(packet_data, packet_size);
+}
+
+
+void ServerManager::sendRemoveTempLine(int client_id, unsigned int model_id)
+{
+	Packet * packet = new Packet();
+	packet->packet_type = STC_REMOVE_TEMP_LINE;
+	packet->clientId = client_id;
+	packet->modelId = model_id;
+	
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
+
+	sendSizeData(packet_size);
+	network->sendToAll(packet_data, packet_size);
+}
+
+
+void ServerManager::sendRemoveTempMarker(int client_id, unsigned int model_id)
+{
+	Packet * packet = new Packet();
+	packet->packet_type = STC_REMOVE_TEMP_MARKER;
+	packet->clientId = client_id;
+	packet->modelId = model_id;
+
+	std::string buffer = serializeToChar(packet);
+	char * packet_data = (char*)(buffer.data());
+	const unsigned int packet_size = buffer.size();
+
+	sendSizeData(packet_size);
+	network->sendToAll(packet_data, packet_size);
+}
+
 
 
 BasicScene ServerManager::convertServerSceneToBasic(Scene s) 
