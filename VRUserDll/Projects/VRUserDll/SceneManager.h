@@ -895,7 +895,7 @@ struct Scene
 	bool targetMode;
 	int targetModelClient;
 	unsigned int targetModelId;
-	bool targetModelRefreshed;
+	bool targetModelRefreshed = true;
 
 	bool clientMode;
 	bool worldMode = true;

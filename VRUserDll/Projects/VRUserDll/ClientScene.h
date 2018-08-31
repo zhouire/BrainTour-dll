@@ -269,6 +269,7 @@ struct ClientScene : public Scene
 			if ((targetModelClient == m->client_creator) && (targetModelId == m->id)) {
 				//RemoveModel function, not the message-sending version
 				Scene::RemoveModel(targetModel);
+				ModelPtrSet.erase(targetModel);
 				delete targetModel;
 
 				targetModel = m;
