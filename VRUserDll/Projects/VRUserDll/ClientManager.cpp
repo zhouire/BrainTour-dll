@@ -319,10 +319,20 @@ void ClientManager::update()
 			case STC_REMOVE_MODEL:
 			{
 				Model * rm = nullptr;
-				for (Model* m : clientScene->ModelPtrSet) {
-					if ((m->client_creator == packet->clientId) && (m->id == packet->modelId)) {
-						rm = m;
+				//for (Model* m : clientScene->ModelPtrSet) {
+				for (auto m : clientScene->worldModels) {
+					if (((m.first)->client_creator == packet->clientId) && ((m.first)->id == packet->modelId)) {
+						rm = m.first;
 						break;
+					}
+				}
+
+				if (!rm) {
+					for (auto m : clientScene->volumeModels) {
+						if (((m.first)->client_creator == packet->clientId) && ((m.first)->id == packet->modelId)) {
+							rm = m.first;
+							break;
+						}
 					}
 				}
 
