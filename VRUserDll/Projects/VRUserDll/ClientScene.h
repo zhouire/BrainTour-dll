@@ -80,6 +80,7 @@ struct ClientScene : public Scene
 		sendPacket(packet);
 	}
 
+	/*
 	void AddTemp(Model * n)
 	{
 		//for client-side recordkeeping
@@ -91,6 +92,7 @@ struct ClientScene : public Scene
 
 		sendPacket(packet);
 	}
+	*/
 
 	void AddTempLine(Model * n, bool worldMode)
 	{
@@ -174,6 +176,7 @@ struct ClientScene : public Scene
 		sendPacket(packet);
 	}
 
+	/*
 	void moveTempModel(Model * m, Vector3f newPos) {
 		Packet * packet = new Packet();
 		packet->packet_type = MOVE_TEMP_MODEL;
@@ -188,6 +191,7 @@ struct ClientScene : public Scene
 
 		sendPacket(packet);
 	}
+	*/
 
 	void removeTempLine(Model * m) {
 		//for local client record-keeping
@@ -203,6 +207,7 @@ struct ClientScene : public Scene
 		sendPacket(packet);
 	}
 
+	/*
 	void removeTempMarker(Model * m) {
 		//for local client record-keeping
 		//localTempWorldMarkers.erase(m);
@@ -215,6 +220,7 @@ struct ClientScene : public Scene
 
 		sendPacket(packet);
 	}
+	*/
 
 	//this function deletes every pointer key from a map of Model*, int
 	//this is used for deallocating memory, especially when the Scene updates
@@ -254,6 +260,21 @@ struct ClientScene : public Scene
 		}
 		
 		ModelPtrSet.clear();
+	}
+
+
+	//new version of targetModelRefresh that is called after add functions, when a new targetModel has been chosen
+	void targetModelRefresh(Model * m) {
+		if (!targetModelRefreshed) {
+			if ((targetModelClient == m->client_creator) && (targetModelId == m->id)) {
+				//RemoveModel function, not the message-sending version
+				Scene::RemoveModel(targetModel);
+				delete targetModel;
+
+				targetModel = m;
+				targetModelRefreshed = true;
+			}
+		}
 	}
 	
 

@@ -215,6 +215,7 @@ void ServerManager::receiveFromClients()
 					sendAddRemovable(*n, packet->worldMode);
 					break;
 
+				/*
 				case ADD_TEMP:
 					printf("%i : server received add temp\n", iter->first);
 					model_log[n->client_creator][n->id] = n;
@@ -222,6 +223,7 @@ void ServerManager::receiveFromClients()
 					//sendSceneUpdate();
 					sendAddTemp(*n);
 					break;
+				*/
 
 				case ADD_TEMP_LINE:
 					printf("%i : server received add temp line\n", iter->first);
@@ -273,6 +275,7 @@ void ServerManager::receiveFromClients()
 					sendRemoveModel(packet->clientId, packet->modelId);
 					break;
 
+				/*
 				case MOVE_TEMP_MODEL:
 					printf("%i : server received move temp model\n", iter->first);
 					n = model_log[packet->clientId][packet->modelId];
@@ -281,6 +284,7 @@ void ServerManager::receiveFromClients()
 					//sendSceneUpdate();
 					sendMoveTempModel(packet->clientId, packet->modelId, packet->lineCore);
 					break;
+				*/
 
 				case REMOVE_TEMP_LINE:
 					printf("%i : server received remove temp line\n", iter->first);
@@ -291,6 +295,7 @@ void ServerManager::receiveFromClients()
 					sendRemoveTempLine(packet->clientId, packet->modelId);
 					break;
 
+				/*
 				case REMOVE_TEMP_MARKER:
 					printf("%i : server received remove temp marker\n", iter->first);
 					n = model_log[packet->clientId][packet->modelId];
@@ -299,6 +304,7 @@ void ServerManager::receiveFromClients()
 					//sendSceneUpdate();
 					sendRemoveTempMarker(packet->clientId, packet->modelId);
 					break;
+				*/
 
 				case CLIENT_PROXY_UPDATE:
 					printf("%i : server received client proxy update\n", iter->first);
@@ -414,7 +420,7 @@ void ServerManager::sendAddRemovable(Model m, bool worldMode)
 	network->sendToAll(packet_data, packet_size);
 }
 
-
+/*
 void ServerManager::sendAddTemp(Model m)
 {
 	Packet * packet = new Packet();
@@ -428,6 +434,7 @@ void ServerManager::sendAddTemp(Model m)
 	sendSizeData(packet_size);
 	network->sendToAll(packet_data, packet_size);
 }
+*/
 
 
 void ServerManager::sendAddTempLine(Model m, bool worldMode)
@@ -513,7 +520,7 @@ void ServerManager::sendRemoveModel(int client_id, unsigned int model_id)
 	network->sendToAll(packet_data, packet_size);
 }
 
-
+/*
 void ServerManager::sendMoveTempModel(int client_id, unsigned int model_id, std::vector<Vector3f> newPos)
 {
 	Packet * packet = new Packet();
@@ -529,6 +536,7 @@ void ServerManager::sendMoveTempModel(int client_id, unsigned int model_id, std:
 	sendSizeData(packet_size);
 	network->sendToAll(packet_data, packet_size);
 }
+*/
 
 
 void ServerManager::sendRemoveTempLine(int client_id, unsigned int model_id)
@@ -546,7 +554,7 @@ void ServerManager::sendRemoveTempLine(int client_id, unsigned int model_id)
 	network->sendToAll(packet_data, packet_size);
 }
 
-
+/*
 void ServerManager::sendRemoveTempMarker(int client_id, unsigned int model_id)
 {
 	Packet * packet = new Packet();
@@ -561,6 +569,7 @@ void ServerManager::sendRemoveTempMarker(int client_id, unsigned int model_id)
 	sendSizeData(packet_size);
 	network->sendToAll(packet_data, packet_size);
 }
+*/
 
 
 
@@ -571,7 +580,7 @@ BasicScene ServerManager::convertServerSceneToBasic(Scene s)
 	basic.ModelPtrSet = s.ModelPtrSet;
 
 	basic.worldModels = s.worldModels;
-	basic.tempWorldMarkers = s.tempWorldMarkers;
+	//basic.tempWorldMarkers = s.tempWorldMarkers;
 	basic.tempWorldLines = s.tempWorldLines;
 	basic.volumeModels = s.volumeModels;
 	basic.tempVolumeLines = s.tempVolumeLines;
@@ -588,7 +597,7 @@ void ServerManager::updateServerSceneFromBasic(BasicScene b)
 	serverScene->ModelPtrSet = b.ModelPtrSet;
 
 	serverScene->worldModels = b.worldModels;
-	serverScene->tempWorldMarkers = b.tempWorldMarkers;
+	//serverScene->tempWorldMarkers = b.tempWorldMarkers;
 	serverScene->tempWorldLines = b.tempWorldLines;
 	serverScene->volumeModels = b.volumeModels;
 	serverScene->tempVolumeLines = b.tempVolumeLines;

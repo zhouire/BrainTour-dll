@@ -11,7 +11,7 @@ struct BasicScene
 	std::set<Model*> ModelPtrSet;
 
 	std::map<Model*, int> worldModels;
-	std::map<Model*, int> tempWorldMarkers;
+	//std::map<Model*, int> tempWorldMarkers;
 	std::map<Model*, int> tempWorldLines;
 	std::map<Model*, int> volumeModels;
 	std::map<Model*, int> tempVolumeLines;
@@ -25,7 +25,7 @@ struct BasicScene
 		ar & ModelPtrSet;
 
 		ar & worldModels;
-		ar & tempWorldMarkers;
+		//ar & tempWorldMarkers;
 		ar & tempWorldLines;
 		ar & volumeModels;
 		ar & tempVolumeLines;

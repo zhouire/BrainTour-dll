@@ -895,6 +895,7 @@ struct Scene
 	bool targetMode;
 	int targetModelClient;
 	unsigned int targetModelId;
+	bool targetModelRefreshed;
 
 	bool clientMode;
 	bool worldMode = true;
@@ -952,7 +953,8 @@ struct Scene
 		}
 	}
 
-	virtual void AddTemp(Model * n)
+	//virtual void AddTemp(Model * n)
+	void AddTemp(Model * n)
 	{
 		ModelPtrSet.insert(n);
 		//RemoveModel(n);
@@ -1064,6 +1066,8 @@ struct Scene
 	//this function finds and sets the new pointer to the targetModel when the Scene is updated, and if targetModel is not currently nullptr
 	//we call this function after the client receives a Scene update from the Server
 	//we do not ever call this function within the Scene struct
+
+	/*
 	void targetModelRefresh()
 	{
 		if (targetModel) {
@@ -1098,6 +1102,7 @@ struct Scene
 			}
 		}
 	}
+	*/
 
 
 	//rotates the marker pos to accomodate for controller orientation and place it in front of pointer finger
@@ -1559,6 +1564,7 @@ struct Scene
 					targetModelId = newMarker->id;
 
 					//have to manually add targetModel to maps now (no function), so the rest of the code can detect it before the Scene update
+					
 					ModelPtrSet.insert(newMarker);
 					removableMarkers.insert(std::pair<Model*, int>(targetModel, 1));
 					if (targetMode) {
@@ -1567,6 +1573,7 @@ struct Scene
 					else {
 						volumeModels.insert(std::pair<Model*, int>(targetModel, 1));
 					}
+					targetModelRefreshed = false;
 
 					
 					return newMarker;
@@ -1611,6 +1618,7 @@ struct Scene
 					targetModelId = newStraightLine->id;
 
 					//have to manually add targetModel to maps now (no function), so the rest of the code can detect it before the Scene update
+					
 					ModelPtrSet.insert(newStraightLine);
 					removableStraightLines.insert(std::pair<Model*, LineComponents>(targetModel, lc));
 					if (targetMode) {
@@ -1619,6 +1627,7 @@ struct Scene
 					else {
 						volumeModels.insert(std::pair<Model*, int>(targetModel, 1));
 					}
+					targetModelRefreshed = false;
 					
 
 					return newStraightLine;
@@ -1666,6 +1675,7 @@ struct Scene
 						targetModelId = newCurvedLine->id;
 
 						//have to manually add targetModel to maps now (no function), so the rest of the code can detect it before the Scene update
+						
 						ModelPtrSet.insert(newCurvedLine);
 						removableCurvedLines.insert(std::pair<Model*, LineComponents>(targetModel, lc));
 						if (targetMode) {
@@ -1674,7 +1684,8 @@ struct Scene
 						else {
 							volumeModels.insert(std::pair<Model*, int>(targetModel, 1));
 						}
-
+						targetModelRefreshed = false;
+						
 
 						return newCurvedLine;
 					}
@@ -2060,7 +2071,9 @@ struct Scene
 
 	//overridden in ClientScene to send a message to the Server
 	//do not move the model locally, because it should be moved here via the pointer (try moving it in ClientScene if doesn't work)
-	virtual void moveTempModel(Model * m, Vector3f newPos)
+	//virtual void moveTempModel(Model * m, Vector3f newPos)
+
+	void moveTempModel(Model * m, Vector3f newPos)
 	{
 		m->Pos = newPos;
 	}
@@ -2151,13 +2164,10 @@ struct Scene
 	}
 
 	//in a Client Scene, this will be overriden to send a message and remove locally
-	virtual void removeTempMarker(Model * model) {
+	//virtual void removeTempMarker(Model * model) {
+	void removeTempMarker(Model * model)
+	{
 		tempWorldMarkers.erase(model);
-		
-		//localTempWorldMarkers.erase(model);
-
-		//possibly redundant
-		//RemoveModel(model);
 	}
 
 

@@ -274,16 +274,24 @@ void ClientManager::update()
 
 			case STC_ADD_REMOVABLE:
 				clientScene->Scene::AddRemovable(n, packet->worldMode);
+				if (!clientScene->targetModelRefreshed) {
+					clientScene->targetModelRefresh(n);
+				}
 
 				break;
 
+			/*
 			case STC_ADD_TEMP:
 				clientScene->Scene::AddTemp(n);
 
 				break;
+			*/
 
 			case STC_ADD_REMOVABLE_MARKER:
 				clientScene->Scene::AddRemovableMarker(n, packet->worldMode);
+				if (!clientScene->targetModelRefreshed) {
+					clientScene->targetModelRefresh(n);
+				}
 
 				break;
 
@@ -294,11 +302,17 @@ void ClientManager::update()
 
 			case STC_ADD_REMOVABLE_STRAIGHT_LINE:
 				clientScene->Scene::AddRemovableStraightLine(n, packet->lineCore[0], packet->lineCore[1], packet->allHandQ[0], packet->worldMode);
+				if (!clientScene->targetModelRefreshed) {
+					clientScene->targetModelRefresh(n);
+				}
 
 				break;
 
 			case STC_ADD_REMOVABLE_CURVED_LINE:
 				clientScene->Scene::AddRemovableCurvedLine(n, packet->lineCore, packet->allHandQ, packet->worldMode);
+				if (!clientScene->targetModelRefreshed) {
+					clientScene->targetModelRefresh(n);
+				}
 
 				break;
 
@@ -317,6 +331,7 @@ void ClientManager::update()
 				break;
 			}
 
+			/*
 			case STC_MOVE_TEMP_MODEL:
 			{
 				Model * rm = nullptr;
@@ -331,6 +346,7 @@ void ClientManager::update()
 
 				break;
 			}
+			*/
 
 			case STC_REMOVE_TEMP_LINE:
 			{
@@ -357,6 +373,7 @@ void ClientManager::update()
 				break;
 			}
 
+			/*
 			case STC_REMOVE_TEMP_MARKER:
 			{
 				Model * rm = nullptr;
@@ -371,6 +388,7 @@ void ClientManager::update()
 
 				break;
 			}
+			*/
 
 
 
@@ -382,7 +400,7 @@ void ClientManager::update()
 		}
 	}
 
-	clientScene->targetModelRefresh();
+	//clientScene->targetModelRefresh();
 }
 
 
@@ -420,7 +438,7 @@ BasicScene ClientManager::convertClientSceneToBasic(ClientScene c) {
 	basic.ModelPtrSet = c.ModelPtrSet;
 
 	basic.worldModels = c.worldModels;
-	basic.tempWorldMarkers = c.tempWorldMarkers;
+	//basic.tempWorldMarkers = c.tempWorldMarkers;
 	basic.tempWorldLines = c.tempWorldLines;
 	basic.volumeModels = c.volumeModels;
 	basic.tempVolumeLines = c.tempVolumeLines;
@@ -439,7 +457,7 @@ void ClientManager::updateClientSceneFromBasic(BasicScene b) {
 	//clientScene->deleteMapPointerKeys(b.worldModels);
 
 	//clientScene->deleteMapPointerKeys(clientScene->tempWorldMarkers, deleted);
-	clientScene->tempWorldMarkers = b.tempWorldMarkers;
+	//clientScene->tempWorldMarkers = b.tempWorldMarkers;
 	//clientScene->deleteMapPointerKeys(b.tempWorldMarkers);
 	
 	//clientScene->deleteMapPointerKeys(clientScene->tempWorldLines, deleted);
