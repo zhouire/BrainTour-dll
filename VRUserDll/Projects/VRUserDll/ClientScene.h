@@ -176,6 +176,35 @@ struct ClientScene : public Scene
 		sendPacket(packet);
 	}
 
+	//these functions are imitations of the original Scene functions which call other virtual Scene functions
+	void SceneAddRemovableMarker(Model * n, bool worldMode)
+	{
+		removableMarkers.insert(std::pair<Model*, int>(n, 1));
+		Scene::AddRemovable(n, worldMode);
+	}
+
+	void SceneAddRemovableStraightLine(Model * n, Vector3f start, Vector3f end, glm::quat handQ, bool worldMode)
+	{
+		std::vector<Vector3f> core{ start,end };
+		LineComponents line;
+		line.Core = core;
+		std::vector<glm::quat> quat{ handQ };
+		line.Q = quat;
+		removableStraightLines.insert(std::pair<Model*, LineComponents>(n, line));
+
+		Scene::AddRemovable(n, worldMode);
+	}
+
+	void SceneAddRemovableCurvedLine(Model * n, std::vector<Vector3f> lineCore, std::vector<glm::quat> allHandQ, bool worldMode)
+	{
+		LineComponents line;
+		line.Core = lineCore;
+		line.Q = allHandQ;
+		removableCurvedLines.insert(std::pair<Model*, LineComponents>(n, line));
+
+		Scene::AddRemovable(n, worldMode);
+	}
+
 	/*
 	void moveTempModel(Model * m, Vector3f newPos) {
 		Packet * packet = new Packet();
@@ -265,7 +294,7 @@ struct ClientScene : public Scene
 
 	//new version of targetModelRefresh that is called after add functions, when a new targetModel has been chosen
 	void targetModelRefresh(Model * m) {
-		if (!targetModelRefreshed) {
+		if (!targetModelRefreshed && targetModel) {
 			if ((targetModelClient == m->client_creator) && (targetModelId == m->id)) {
 				//RemoveModel function, not the message-sending version
 				Scene::RemoveModel(targetModel);

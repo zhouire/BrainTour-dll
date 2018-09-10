@@ -288,7 +288,8 @@ void ClientManager::update()
 			*/
 
 			case STC_ADD_REMOVABLE_MARKER:
-				clientScene->Scene::AddRemovableMarker(n, packet->worldMode);
+				//clientScene->Scene::AddRemovableMarker(n, packet->worldMode);
+				clientScene->SceneAddRemovableMarker(n, packet->worldMode);
 				if (!clientScene->targetModelRefreshed) {
 					clientScene->targetModelRefresh(n);
 				}
@@ -301,7 +302,8 @@ void ClientManager::update()
 				break;
 
 			case STC_ADD_REMOVABLE_STRAIGHT_LINE:
-				clientScene->Scene::AddRemovableStraightLine(n, packet->lineCore[0], packet->lineCore[1], packet->allHandQ[0], packet->worldMode);
+				//clientScene->Scene::AddRemovableStraightLine(n, packet->lineCore[0], packet->lineCore[1], packet->allHandQ[0], packet->worldMode);
+				clientScene->SceneAddRemovableStraightLine(n, packet->lineCore[0], packet->lineCore[1], packet->allHandQ[0], packet->worldMode);
 				if (!clientScene->targetModelRefreshed) {
 					clientScene->targetModelRefresh(n);
 				}
@@ -309,7 +311,8 @@ void ClientManager::update()
 				break;
 
 			case STC_ADD_REMOVABLE_CURVED_LINE:
-				clientScene->Scene::AddRemovableCurvedLine(n, packet->lineCore, packet->allHandQ, packet->worldMode);
+				//clientScene->Scene::AddRemovableCurvedLine(n, packet->lineCore, packet->allHandQ, packet->worldMode);
+				clientScene->SceneAddRemovableCurvedLine(n, packet->lineCore, packet->allHandQ, packet->worldMode);
 				if (!clientScene->targetModelRefreshed) {
 					clientScene->targetModelRefresh(n);
 				}
@@ -320,6 +323,7 @@ void ClientManager::update()
 			{
 				Model * rm = nullptr;
 				//for (Model* m : clientScene->ModelPtrSet) {
+
 				for (auto m : clientScene->worldModels) {
 					if (((m.first)->client_creator == packet->clientId) && ((m.first)->id == packet->modelId)) {
 						rm = m.first;
