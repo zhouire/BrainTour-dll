@@ -1712,6 +1712,10 @@ struct Scene
 			Vector3f targetPos = targetModel->Pos;
 			Model *newMarker = CreateMarker(MARKER_SIZE, color, targetPos, targetMode);
 
+			RemoveModel(targetModel);
+			//delete targetModel;
+			targetModel = nullptr;
+
 			AddRemovableMarker(newMarker, targetMode);
 		}
 
@@ -1719,6 +1723,11 @@ struct Scene
 			std::vector<Vector3f> core = (removableStraightLines.find(targetModel)->second).Core;
 			std::vector<glm::quat> handQ = (removableStraightLines.find(targetModel)->second).Q;
 			Model *newStraightLine = CreateStraightLine(core[0], core[1], handQ[0], LINE_THICKNESS, color);
+
+			RemoveModel(targetModel);
+			//delete targetModel;
+			targetModel = nullptr;
+
 			AddRemovableStraightLine(newStraightLine, core[0], core[1], handQ[0], targetMode);
 		}
 
@@ -1726,13 +1735,18 @@ struct Scene
 			std::vector<Vector3f> core = (removableCurvedLines.find(targetModel)->second).Core;
 			std::vector<glm::quat> handQ = (removableCurvedLines.find(targetModel)->second).Q;
 			Model *newCurvedLine = CreateCurvedLine(core, handQ, LINE_THICKNESS, color);
+
+			RemoveModel(targetModel);
+			//delete targetModel;
+			targetModel = nullptr;
+
 			AddRemovableCurvedLine(newCurvedLine, core, handQ, targetMode);
 		}
 		
 		//removing the red target model from all maps; has been replaced already with a green model
-		RemoveModel(targetModel);
+		//RemoveModel(targetModel);
 		//delete targetModel;
-		targetModel = nullptr;
+		//targetModel = nullptr;
 	}
 
 
