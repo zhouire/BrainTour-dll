@@ -5,6 +5,10 @@
 
 #include "K8UserDll.hpp"
 
+#include "ClientManager.h"
+
+#include <process.h>
+
 #include <GL/freeglut.h>
 
 static void drawCube(float size)
@@ -52,12 +56,19 @@ static float view_matrix[16];
 static float model_matrix[16];
 
 
+static ClientManager * K8client = nullptr;
+
 namespace K8UserProxy {
 	APIBundle *proxy;
 	K8USERDLL_API int OnInit(APIBundle *p) {
 		proxy = p;
 		init_matrix(view_matrix);
 		init_matrix(model_matrix);
+
+		K8client = new ClientManager(Screen);
+
+		K8client->update();
+
 		return 0;
 	}
 
