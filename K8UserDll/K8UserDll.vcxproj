@@ -77,9 +77,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRPlatform\Include;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRAvatar\Include;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVRKernel\Src;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVR\Include;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\glm;C:\Program Files\boost_1_67_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRPlatform\Windows;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRAvatar\Windows;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVR\Lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\boost\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRPlatform\Include;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRAvatar\Include;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVRKernel\Src;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVR\Include;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\glm;C:\Program Files\boost_1_67_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRPlatform\Windows;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRAvatar\Windows;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVR\Lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\boost\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -125,6 +129,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRPlatform\Windows;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRAvatar\Windows;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVR\Lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\boost\stage\lib\libboost_serialization-vc140-mt-s-x64-1_67.lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVR\Lib\LibOVR.lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVRKernel\Lib\LibOVRKernel.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,8 +149,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew64.lib;$(OVRSDKROOT)LibOVR/Lib/Windows/$(Platform)/$(Configuration)/VS2015/LibOVR.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\ProgramData\NVIDIA Corporation\CUDA Samples\v9.1\common\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\boost\stage\lib\libboost_serialization-vc140-mt-s-x64-1_67.lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVR\Lib\LibOVR.lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVRKernel\Lib\LibOVRKernel.lib;glew64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\ProgramData\NVIDIA Corporation\CUDA Samples\v9.1\common\lib\x64;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRPlatform\Windows;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OVRAvatar\Windows;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVRKernel\Lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\OculusSDK\LibOVR\Lib;C:\Users\zhoui\Documents\8keXm\BrainTour-dll\K8UserDll\Dependencies\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
