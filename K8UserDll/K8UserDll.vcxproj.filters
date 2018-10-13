@@ -27,30 +27,6 @@
     <ClInclude Include="K8UserDll.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ClientManager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ClientNetwork.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ClientScene.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ClientSerialization.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkData.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkServices.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -60,18 +36,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ClientManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ClientNetwork.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ClientSerialization.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkServices.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

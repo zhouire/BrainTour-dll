@@ -9,7 +9,7 @@ set WindowH=2160
 set TileX=512
 set TileY=512
 set ShowUI=0
-set AutoRotation=1
+set AutoRotation=0
 set AutoRotationY=10
 
 set AutoDetail=1
