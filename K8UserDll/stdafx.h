@@ -36,11 +36,15 @@
 #include <tchar.h>
 #include <set>
 
+#include <GL/glew.h>
+
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 
 #include <GL/freeglut.h>
+
+#include "MathHelpers.h"
 
 // TODO: reference additional headers your program requires here

@@ -5,7 +5,10 @@
 
 #include "K8UserDll.hpp"
 
-//#include <GL/freeglut.h>
+#include <GL/freeglut.h>
+
+#include "SceneManager.h"
+
 
 static void drawCube(float size)
 {
